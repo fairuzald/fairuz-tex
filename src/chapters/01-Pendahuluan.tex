@@ -182,7 +182,7 @@ Ketercapaian setiap tujuan diukur melalui kriteria berikut.
     \begin{enumerate}[label=\alph*.]
         \item Setiap hasil \emph{chunking} memiliki identitas yang jelas dan dapat ditelusuri kembali ke dokumen, bagian dokumen, posisi sumber, serta struktur yang menjadi dasar pembentukannya, termasuk hubungan antar-\emph{chunk} seperti relasi \emph{previous} dan \emph{next}.
         \item \emph{Chunker} menghasilkan unit informasi yang dapat digunakan oleh \emph{indexer} dan \emph{knowledge graph}.
-        \item Hasil terbaik dari perbandingan beberapa strategi \emph{chunking} pada \emph{domain} \emph{User Manual} Netgear dan dokumen hukum pendidikan Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
+        \item Hasil terbaik dari perbandingan beberapa strategi \emph{chunking} pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
         \item Penambahan strategi \emph{chunking} untuk sumber atau \emph{domain} baru dapat dilakukan melalui komponen tambahan tanpa mengubah kode inti.
     \end{enumerate}
 
@@ -190,7 +190,7 @@ Ketercapaian setiap tujuan diukur melalui kriteria berikut.
     \begin{enumerate}[label=\alph*.]
         \item Sistem dapat menyediakan beberapa strategi pencarian, yaitu pencarian berbasis istilah atau \emph{sparse retrieval}, pencarian berbasis representasi vektor atau \emph{dense retrieval}, serta kombinasi keduanya melalui \emph{hybrid retrieval}.
         \item Setiap hasil indeks mempertahankan identitas \emph{chunk}, identitas dokumen, \emph{metadata}, konfigurasi, model, dan informasi asal yang diperlukan untuk penelusuran.
-        \item Hasil terbaik dari perbandingan strategi pencarian pada \emph{domain} \emph{User Manual} Netgear dan dokumen hukum pendidikan Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
+        \item Hasil terbaik dari perbandingan strategi pencarian pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
         \item Penambahan strategi \emph{indexer} untuk sumber atau \emph{domain} baru dapat dilakukan melalui komponen tambahan tanpa mengubah kode inti.
     \end{enumerate}
 
@@ -198,7 +198,7 @@ Ketercapaian setiap tujuan diukur melalui kriteria berikut.
     \begin{enumerate}[label=\alph*.]
         \item \emph{Knowledge graph} dapat dibangun dari \emph{artifact} \emph{chunk} yang sama dengan yang digunakan oleh \emph{indexer} tanpa melakukan pemotongan ulang atau menggunakan sumber yang berbeda.
         \item \emph{Knowledge graph} menghasilkan hubungan antarentitas yang dapat ditelusuri dari satu atau beberapa dokumen.
-        \item Hasil terbaik pembentukan hubungan pada \emph{domain} \emph{User Manual} Netgear dan dokumen hukum pendidikan Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
+        \item Hasil terbaik pembentukan hubungan pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
         \item Penambahan mekanisme pembentukan \emph{knowledge graph} untuk sumber atau \emph{domain} baru dapat dilakukan melalui komponen tambahan tanpa mengubah kode inti.
     \end{enumerate}
 \end{enumerate}
@@ -215,7 +215,7 @@ ketercapaian tujuan. Adapun batasan penelitian yang ditetapkan adalah sebagai
 berikut.
 
 \begin{enumerate}
-    \item Omni-RAG dirancang sebagai arsitektur \emph{multi-domain}, dengan evaluasi utama menggunakan korpus dokumen hukum pendidikan di Indonesia dan dokumen \emph{User Manual} Netgear.
+    \item Omni-RAG dirancang sebagai arsitektur \emph{multi-domain}, dengan evaluasi utama menggunakan korpus peraturan perundang-undangan bidang pendidikan di Indonesia serta \emph{User Manual} yang dibatasi pada produk Netgear.
     \item Kontribusi penelitian berfokus pada sistem \emph{plugin}, \emph{chunker}, \emph{indexer}, \emph{knowledge graph}, dan prapemrosesan kueri yang meliputi \emph{guardrail}, \emph{context PII}, serta \emph{history compactor}. Komponen lain dikerjakan oleh anggota penelitian yang berbeda.
     \item Sistem \emph{plugin} hanya ditujukan untuk memungkinkan pengguna melakukan kustomisasi logika komponen melalui \emph{adapter} tanpa mengubah kode inti. Kebutuhan yang berkaitan dengan perubahan infrastruktur, akses basis data, atau integrasi eksternal berada di luar cakupan \emph{plugin} dan dapat memerlukan perubahan pada kode inti.
     \item Representasi dokumen yang digunakan dalam penelitian hanya berbentuk teks. Gambar dan tabel tidak menjadi bagian dari representasi yang diproses.
