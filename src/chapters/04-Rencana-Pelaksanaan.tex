@@ -2,7 +2,7 @@
 \label{chap:eksperimen-evaluasi}
 
 Bab ini memaparkan bagaimana eksperimen dirancang, dijalankan, dan dievaluasi.
-Pembahasan mencakup dua kasus penggunaan, yaitu \emph{customer service} dan kasus hukum. Untuk
+Pembahasan mencakup dua kasus penggunaan, yaitu \emph{User Manual} dan kasus hukum. Untuk
 masing-masing \emph{use case}, bab ini menyajikan \emph{dataset}, konfigurasi eksperimen, serta
 hasil evaluasinya.
 
@@ -40,19 +40,19 @@ Semua kondisi menggunakan API dan \emph{worker} dengan jumlah serta konfigurasi 
 sama. Infrastruktur dijaga setara pada setiap kondisi sehingga hasil dapat dibandingkan
 secara adil dan perubahan yang diamati dapat dikaitkan dengan komponen yang diuji.
 
-\section{Eksperimen pada \emph{Use Case} \emph{Customer Service}}
-\label{sec:eksperimen-customer-service}
+\section{Eksperimen pada \emph{Use Case} \emph{User Manual}}
+\label{sec:eksperimen-user-manual}
 
 \subsection{\emph{Dataset} Eksperimen}
-\label{subsec:dataset-customer-service}
+\label{subsec:dataset-user-manual}
 
-\emph{Dataset} \emph{customer service} dibangun menggunakan sembilan manual produk Netgear yang
+\emph{Dataset} \emph{User Manual} dibangun menggunakan sembilan manual produk Netgear yang
 tersedia, sebagaimana ditunjukkan pada tabel berikut.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Cakupan dokumen pada \emph{dataset} \emph{customer service}}
+\caption{Cakupan dokumen pada \emph{dataset} \emph{User Manual}}
 \label{tab:customer-corpus-coverage}
 \begin{tabularx}{0.75\textwidth}{@{}>{\RaggedRight\arraybackslash}X r@{}}
 \toprule
@@ -74,9 +74,9 @@ XR500 & 214\\
 \end{table}
 
 \subsubsection{Pembentukan \emph{Dataset} Pertanyaan dan Jawaban}
-\label{subsubsec:customer-question-dataset}
+\label{subsubsec:user-manual-question-dataset}
 
-Subbab ini merangkum cara mengubah isi dokumen \emph{customer service} menjadi pertanyaan dan jawaban acuan untuk
+Subbab ini merangkum cara mengubah isi dokumen \emph{User Manual} menjadi pertanyaan dan jawaban acuan untuk
 evaluasi \emph{retrieval}. Prosesnya terdiri atas empat tahap berikut.
 
 \begin{enumerate}[leftmargin=*, itemsep=0.25em]
@@ -102,14 +102,14 @@ evaluasi \emph{retrieval}. Prosesnya terdiri atas empat tahap berikut.
 \end{enumerate}
 
 \subsubsection{Distribusi \emph{Dataset}}
-\label{subsubsec:customer-dataset-distribution}
+\label{subsubsec:user-manual-dataset-distribution}
 
 Distribusi pertanyaan dibuat seimbang antara bahasa Inggris dan bahasa Indonesia. Kedua bahasa
 menggunakan \emph{intent} yang sama, perbedaannya hanya pada penerjemahan. Lokasi konteks dipilih dari
 seluruh dokumen dan disebar berdasarkan posisi halaman relatif.
 
 Gambar~\ref{fig:customer-question-count-by-document} memperlihatkan jumlah pertanyaan
-bahasa Inggris dan Indonesia yang sama pada setiap dokumen untuk \emph{use case} \emph{customer service}.
+bahasa Inggris dan Indonesia yang sama pada setiap dokumen untuk \emph{use case} \emph{User Manual}.
 
 \begin{figure}[H]
 \centering
@@ -136,7 +136,7 @@ yang memenuhi syarat pada bagian akhir dan alokasi sampling memberikan slot tamb
 kelompok tersebut.
 
 \subsection{Konfigurasi dan Metodologi Eksperimen}
-\label{subsec:customer-config-method}
+\label{subsec:user-manual-config-method}
 
 Eksperimen dijalankan sebagai evaluasi \emph{retrieval} tanpa pembentukan jawaban. Lima kondisi dibandingkan
 menggunakan 200 pertanyaan yang sama, terdiri atas 100 pertanyaan bahasa Inggris dan 100
@@ -153,7 +153,7 @@ bahasa Inggris tidak dijadikan satu-satunya acuan.
 \begin{table}[htbp]
 \centering
 \scriptsize
-\caption{Konfigurasi eksperimen \emph{customer service}}
+\caption{Konfigurasi eksperimen \emph{User Manual}}
 \label{tab:customer-config}
 \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{5.0cm}>{\RaggedRight\arraybackslash}X@{}}
 \toprule
@@ -177,10 +177,10 @@ nilainya diharapkan meningkat apabila hasil \emph{retrieval} diproses kembali ol
 tahap \emph{downstream}.
 
 \subsection{Evaluasi Per Komponen}
-\label{subsec:customer-evaluation-components}
+\label{subsec:user-manual-evaluation-components}
 
 \subsubsection{Strategi \emph{Chunking}}
-\label{subsubsec:customer-chunking}
+\label{subsubsec:user-manual-chunking}
 
 Perbandingan \emph{chunker} mempertahankan \emph{indexer} \emph{hybrid} dan hanya mengganti \emph{plugin} \emph{chunker}.
 Konfigurasi yang dibandingkan diringkas pada Tabel~\ref{tab:customer-chunker-config}.
@@ -188,7 +188,7 @@ Konfigurasi yang dibandingkan diringkas pada Tabel~\ref{tab:customer-chunker-con
 \begin{table}[htbp]
 \centering
 \scriptsize
-\caption{Konfigurasi \emph{chunker} pada eksperimen \emph{customer service}}
+\caption{Konfigurasi \emph{chunker} pada eksperimen \emph{User Manual}}
 \label{tab:customer-chunker-config}
 \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.1cm}>{\RaggedRight\arraybackslash}p{4.2cm}>{\RaggedRight\arraybackslash}X@{}}
 \toprule
@@ -269,7 +269,7 @@ bahasa Inggris.
 \end{figure}
 
 \subsubsection{Strategi \emph{Indexing}}
-\label{subsubsec:customer-indexing}
+\label{subsubsec:user-manual-indexing}
 
 Perbandingan \emph{indexer} mempertahankan \emph{chunker} \emph{baseline} dan hanya mengganti \emph{plugin} \emph{indexer}.
 Konfigurasi yang dibandingkan diringkas pada Tabel~\ref{tab:customer-indexer-config}.
@@ -277,7 +277,7 @@ Konfigurasi yang dibandingkan diringkas pada Tabel~\ref{tab:customer-indexer-con
 \begin{table}[htbp]
 \centering
 \scriptsize
-\caption{Konfigurasi \emph{indexer} pada eksperimen \emph{customer service}}
+\caption{Konfigurasi \emph{indexer} pada eksperimen \emph{User Manual}}
 \label{tab:customer-indexer-config}
 \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.1cm}>{\RaggedRight\arraybackslash}p{4.2cm}>{\RaggedRight\arraybackslash}X@{}}
 \toprule
@@ -342,7 +342,7 @@ muncul lebih awal.
 Pada \emph{sweet spot} masing-masing, \emph{dense} memperoleh \emph{recall} gabungan 0,830, lebih tinggi daripada
 \emph{hybrid} 0,740 dan \emph{sparse} 0,465. Nilai \emph{nDCG} \emph{dense} juga paling tinggi, yaitu 0,374, dibandingkan
 \emph{hybrid} 0,328 dan \emph{sparse} 0,177 (Tabel~\ref{tab:customer-indexing-results}). Keunggulan ini
-sesuai dengan karakteristik pertanyaan \emph{customer service}. Pelanggan biasanya menjelaskan
+sesuai dengan karakteristik pertanyaan \emph{User Manual}. Pengguna biasanya menjelaskan
 gejala, tujuan, atau kendala dengan bahasa sehari-hari, sedangkan \emph{manual} menggunakan istilah
 teknis dan variasi kalimat yang berbeda. Pertanyaan tersebut karena itu tidak selalu memuat
 kata yang sama dengan \emph{context reference}. \emph{Dense} membandingkan kedekatan makna sehingga tetap dapat
@@ -366,7 +366,7 @@ Indonesia.
 \end{figure}
 
 \subsection{Evaluasi Sistem \emph{Retrieval}}
-\label{subsec:customer-system-retrieval}
+\label{subsec:user-manual-system-retrieval}
 
 Evaluasi sistem membandingkan seluruh kondisi pada satu \emph{cutoff} bersama, yaitu \emph{sweet spot}
 \(K=45\). Nilai ini dipilih karena kurva \emph{recall} sudah mulai mendatar pada sebagian besar
@@ -420,7 +420,7 @@ banyak \emph{context reference}, tetapi juga menempatkannya lebih dekat ke awal 
 \begin{table}[htbp]
 \centering
 \scriptsize
-\caption{Hasil evaluasi sistem \emph{retrieval} \emph{customer service} pada \emph{sweet spot} bersama}
+\caption{Hasil evaluasi sistem \emph{retrieval} \emph{User Manual} pada \emph{sweet spot} bersama}
 \label{tab:customer-system-results}
 \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{4.2cm} r r r r@{}}
 \toprule
@@ -449,7 +449,7 @@ kondisi terlemah. Garis putus-putus pada kurva sebelumnya menandai \emph{cutoff}
 \end{figure}
 
 \subsection{Analisis dan Keterbatasan Eksperimen}
-\label{subsec:customer-analysis-limitations}
+\label{subsec:user-manual-analysis-limitations}
 
 Perbedaan bahasa tetap perlu diperhatikan karena pencocokan leksikal lebih sensitif terhadap
 perubahan istilah antara bahasa Inggris dan bahasa Indonesia. Nilai pada tabel merupakan
@@ -935,7 +935,7 @@ Keterbatasan eksperimen adalah sebagai berikut.
 \subsection{Kesimpulan Bab}
 \label{subsec:kesimpulan-bab}
 
-Pada \emph{use case} \emph{customer service}, konfigurasi terbaik menggunakan
+Pada \emph{use case} \emph{User Manual}, konfigurasi terbaik menggunakan
 \emph{generic structure-aware chunker} sebagai \emph{chunker} dan \emph{dense indexer}
 dengan model BAAI/BGE-M3. Pada \emph{sweet spot} bersama \(K=45\), konfigurasi ini
 mencapai \emph{recall} 0,835. Hasil tersebut menunjukkan bahwa struktur dokumen tetap

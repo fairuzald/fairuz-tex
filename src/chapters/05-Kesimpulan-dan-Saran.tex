@@ -2,7 +2,7 @@
 \label{chap:kesimpulan-saran}
 
 Bab ini merangkum hasil perancangan dan evaluasi Omni-RAG pada dua konteks, yaitu
-\emph{customer service} dan dokumen hukum. Kesimpulan disusun untuk menjawab tiga
+\emph{User Manual} dan dokumen hukum. Kesimpulan disusun untuk menjawab tiga
 rumusan masalah penelitian.
 
 \section{Kesimpulan}
@@ -12,7 +12,7 @@ rumusan masalah penelitian.
   \item \textbf{Pembentukan unit informasi.} Sistem menyediakan beberapa strategi
   \emph{chunking} melalui kontrak \emph{plugin} yang sama, sehingga unit hasil
   \emph{chunking} tetap memiliki identitas sumber, struktur, dan \emph{context reference}.
-  Pada \emph{customer service}, \emph{structure-aware chunker} memperoleh \emph{recall}
+  Pada \emph{User Manual}, \emph{structure-aware chunker} memperoleh \emph{recall}
   gabungan 0,740 pada \(K=25\) karena membawa konteks induk bersama blok yang dicari.
   Pada dokumen hukum, \emph{legal structure-aware chunker} memperoleh \emph{recall}
   0,64 pada \(K=25\). Strategi ini paling sesuai untuk hukum karena mempertahankan batas
@@ -22,11 +22,11 @@ rumusan masalah penelitian.
   \item \textbf{Strategi pencarian.} Sistem mendukung pencarian \emph{sparse},
   \emph{dense}, dan \emph{hybrid} dengan konfigurasi \emph{chunker}, \emph{indexer},
   dan model \emph{embedding} yang dapat dibandingkan secara terpisah. Pada
-  \emph{customer service}, \emph{dense indexer} memperoleh \emph{recall} gabungan
+  \emph{User Manual}, \emph{dense indexer} memperoleh \emph{recall} gabungan
   0,830 pada \(K=40\) dan tetap menjadi konfigurasi terbaik pada bahasa Inggris maupun
   Indonesia. Pada dokumen hukum, \emph{hybrid indexer} memperoleh \emph{recall} 0,67
   pada \(K=25\). Hasil ini menunjukkan bahwa strategi pencarian perlu disesuaikan dengan
-  karakteristik pertanyaan: kemiripan makna lebih membantu pada \emph{customer service},
+  karakteristik pertanyaan: kemiripan makna lebih membantu pada \emph{User Manual},
   sedangkan kombinasi istilah dan makna lebih sesuai untuk pertanyaan hukum.
 
   \item \textbf{Knowledge graph dan keterlacakan hubungan.} \emph{Knowledge graph}
@@ -55,7 +55,7 @@ memperluas cakupan pengujian sebagai berikut.
   kontribusi tiap komponen ketika komponen lainnya dibuat tetap.
 
   \item \textbf{Memperkuat validasi korpus dan \emph{dataset}.} Uji sistem pada korpus
-  hukum yang lebih beragam dan manual \emph{customer service} dari produk lain.
+  hukum yang lebih beragam dan \emph{User Manual} dari produk lain.
   Pertahankan pembagian strata, \emph{context reference}, dan evaluasi per bahasa agar
   hasil dapat dibandingkan secara adil.
 

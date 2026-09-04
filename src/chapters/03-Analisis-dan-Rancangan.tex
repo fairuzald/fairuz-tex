@@ -155,13 +155,13 @@ penanda seperti ``Pasal I'' dan ``Pasal II'' tidak selalu bermakna sebagai
 Pasal biasa. Kesalahan dalam memahami hierarki dan konteks tersebut dapat
 menyebabkan informasi hukum menjadi tidak lengkap atau kehilangan makna.
 
-\subsection{Karakteristik dan Tantangan Dokumen \emph{Customer Service}}
-\label{subsec:analisis-dokumen-customer-service}
+\subsection{Karakteristik dan Tantangan Dokumen \emph{User Manual}}
+\label{subsec:analisis-dokumen-user-manual}
 
-Dokumen \emph{customer service}, yang pada studi kasus ini berupa \emph{manual} produk
+Dokumen \emph{User Manual} pada studi kasus ini berupa \emph{manual} produk
 NETGEAR, umumnya berupa \emph{manual} pengguna, panduan instalasi, dokumentasi fitur,
 prosedur pemecahan masalah, dan informasi teknis produk. Namun, struktur dokumen
-pada \emph{use case} \emph{customer service} tidak dapat dipukul rata. Perbedaan \emph{use case},
+pada \emph{use case} \emph{User Manual} tidak dapat dipukul rata. Perbedaan \emph{use case},
 produsen, jenis produk, versi perangkat, dan tujuan dokumentasi dapat menghasilkan
 susunan dokumen yang berbeda. Sebuah \emph{manual} dapat memiliki bab, bagian,
 subbagian, langkah bernomor, tabel, catatan, peringatan, dan gambar, sedangkan
@@ -458,7 +458,7 @@ Analisis solusi menerjemahkan kebutuhan pada Subbab~\ref{sec:analisis-masalah} m
 
 \subsubsection{Arsitektur Berbasis \emph{Plugin}}
 \label{subsubsec:arsitektur-berbasis-plugin}
-Omni-RAG ditujukan untuk digunakan pada berbagai \emph{domain}. Setiap \emph{domain} dapat mempunyai bentuk dokumen dan aturan pengolahan yang berbeda. Dokumen hukum, misalnya, mengikuti hierarki peraturan, sedangkan dokumen \emph{customer service} tidak memiliki struktur atau hierarki yang harus diikuti secara menyeluruh. Dengan kata lain, struktur dokumen \emph{customer service} tidak memiliki standar yang seragam. Perbedaan ini perlu ditangani tanpa mengubah kode inti setiap kali \emph{domain} baru ditambahkan. Jika aturan setiap \emph{domain} ditulis langsung di dalam orkestrator, perubahan akan menyebar ke banyak bagian \emph{pipeline} dan pemeliharaan menjadi lebih sulit.
+Omni-RAG ditujukan untuk digunakan pada berbagai \emph{domain}. Setiap \emph{domain} dapat mempunyai bentuk dokumen dan aturan pengolahan yang berbeda. Dokumen hukum, misalnya, mengikuti hierarki peraturan, sedangkan dokumen \emph{User Manual} tidak memiliki struktur atau hierarki yang harus diikuti secara menyeluruh. Dengan kata lain, struktur dokumen \emph{User Manual} tidak memiliki standar yang seragam. Perbedaan ini perlu ditangani tanpa mengubah kode inti setiap kali \emph{domain} baru ditambahkan. Jika aturan setiap \emph{domain} ditulis langsung di dalam orkestrator, perubahan akan menyebar ke banyak bagian \emph{pipeline} dan pemeliharaan menjadi lebih sulit.
 
 Solusi yang dipilih adalah arsitektur berbasis \emph{plugin}. \emph{Plugin} adalah komponen tambahan yang menangani satu tahap pengolahan, misalnya \emph{parser}, \emph{chunker}, \emph{indexer}, atau \emph{knowledge graph}. Setiap \emph{plugin} mengikuti kontrak \emph{input} dan \emph{output} yang sama. Dengan demikian, orkestrator cukup memanggil \emph{plugin} melalui antarmuka yang seragam tanpa perlu mengetahui detail implementasinya. Penyesuaian antar-\emph{domain} cukup dilakukan pada \emph{plugin} yang sesuai.
 
