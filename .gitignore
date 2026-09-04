@@ -18,6 +18,8 @@ src/*.loa
 src/*.out
 src/*.run.xml
 src/*.toc
+src/**/*.aux
+src/**/*.log
 
 # Generated text extracts and transient saved error files
 src/main.txt
