@@ -1,0 +1,42 @@
+{
+  "answer_status": "codex_current_model_reference_answers_frozen",
+  "datasource": "netgear-customer-service",
+  "evidence_blocks_per_question": {
+    "distribution": {
+      "1": 32,
+      "2": 136,
+      "3": 26,
+      "4": 4,
+      "5": 2
+    },
+    "max": 5,
+    "min": 1
+  },
+  "external_api_used": false,
+  "family_counts": {
+    "facts_specifications": 50,
+    "features_security_maintenance_limitations": 50,
+    "setup_configuration": 50,
+    "troubleshooting_diagnostics": 50
+  },
+  "generation_method": "codex_current_model_from_complete_context_text",
+  "input_hashes": {
+    "context_packets": "5e81a6a3774b4fce18fffc3be278c81adff9bb5c9d66c61dd3b72163b9f61f70",
+    "database_context_audit": "1068ba927eb52af7c88bac42230b5d29f170ca16f4728736c1617df118dfcbdd",
+    "draft": "d44c86065abacea2730e4f9b79d465ecec831a857938b8ae01a57219d4f1c64e",
+    "source_frame": "f1058eb82d4542c257f56689be0d40656cd4397776cd98ec9f9837ed1f8f51de"
+  },
+  "language_counts": {
+    "en": 100,
+    "id": 100
+  },
+  "outputs": {
+    "context": "03-frozen/question-context.jsonl",
+    "gold": "03-frozen/gold-evidence.jsonl",
+    "question_set": "03-frozen/question-set.csv"
+  },
+  "process": "02.03-question-generation-and-gold",
+  "question_count": 200,
+  "question_pair_count": 100,
+  "ready_for_retrieval": true
+}

@@ -1,0 +1,88 @@
+% Layout and formatting commands
+\setstretch{1.5}
+% Keep ordinary justification without introducing visibly stretched word spaces.
+\AtBeginDocument{\justifying\parfillskip=0pt plus 1fil}
+\pretolerance=1000
+\tolerance=2000
+\emergencystretch=3em
+\brokenpenalty=10000
+\hyphenpenalty=200
+\exhyphenpenalty=200
+
+\renewcommand{\thechapter}{\Roman{chapter}}
+\titleformat{\chapter}[display]{\centering\parindent=0pt\normalfont\bfseries\fontsize{14}{17}\selectfont}{BAB\ \thechapter}{0.5em}{\MakeUppercase}
+\titleformat{name=\chapter,numberless}[block]{\centering\parindent=0pt\normalfont\bfseries\fontsize{14}{17}\selectfont}{}{0pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{1.5em}
+\titleformat{\section}{\normalfont\bfseries\fontsize{12}{14}\selectfont\parfillskip=0pt plus 1fil}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries\fontsize{12}{14}\selectfont\parfillskip=0pt plus 1fil}{\thesubsection}{1em}{}
+% Number the bold fourth-level headings as III.x.y.z so their position in the
+% chapter hierarchy is explicit rather than relying on an unnumbered run-in
+% paragraph heading.
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\titleformat{\paragraph}[block]{\normalfont\bfseries\fontsize{12}{14}\selectfont\parfillskip=0pt plus 1fil}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{1.0em}{0.4em}
+
+\providecommand{\frontmatter}{\pagenumbering{roman}}
+\providecommand{\mainmatter}{\clearpage\pagenumbering{arabic}}
+\providecommand{\backmatter}{}
+
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\headheight}{0pt}
+\raggedbottom
+\pagestyle{plain}
+\setlist[enumerate]{
+    before={\justifying\rightskip=0pt plus 0.5em\parfillskip=0pt plus 1fil},
+    itemsep=0.25\baselineskip,
+    topsep=0.25\baselineskip,
+    parsep=0pt,
+    partopsep=0pt
+}
+\setlist[enumerate,2]{
+    itemsep=0.1\baselineskip,
+    topsep=0.1\baselineskip
+}
+\setlist[itemize]{
+    before={\justifying\rightskip=0pt plus 0.5em\parfillskip=0pt plus 1fil},
+    itemsep=0.25\baselineskip,
+    topsep=0.25\baselineskip,
+    parsep=0pt,
+    partopsep=0pt
+}
+\renewcommand{\contentsname}{DAFTAR ISI}
+\renewcommand{\listfigurename}{DAFTAR GAMBAR}
+\renewcommand{\listtablename}{DAFTAR TABEL}
+
+% Front-matter lists use compact dot leaders and explicit Indonesian labels,
+% matching the reference thesis (e.g. "Gambar III.1." and "Tabel III.1.").
+\makeatletter
+\renewcommand{\@dotsep}{1.5}
+\renewcommand*{\l@chapter}[2]{%
+    \ifnum\c@tocdepth>-1\relax
+        \addpenalty{-\@highpenalty}%
+        \begingroup
+        \def\numberline##1{\hb@xt@\@tempdima{BAB\space##1\hfil}}%
+        \@dottedtocline{0}{0em}{3.8em}{\bfseries #1}{\bfseries #2}%
+        \endgroup
+    \fi}
+\renewcommand*{\l@figure}[2]{%
+    \ifnum\c@tocdepth>0\relax
+        \begingroup
+        \def\numberline##1{\hb@xt@\@tempdima{Gambar\space##1.\hfil}\hspace{0.35em}}%
+        \@dottedtocline{1}{0em}{6.2em}{#1}{#2}%
+        \endgroup
+    \fi}
+\renewcommand*{\l@table}[2]{%
+    \ifnum\c@tocdepth>0\relax
+        \begingroup
+        \def\numberline##1{\hb@xt@\@tempdima{Tabel\space##1.\hfil}\hspace{0.35em}}%
+        \@dottedtocline{1}{0em}{4.9em}{#1}{#2}%
+        \endgroup
+    \fi}
+\makeatother
+
+% The front-matter lists are opened with the reference's one-and-a-half
+% spacing in main.tex, while their dot leaders and labels are defined above.

@@ -1,0 +1,62 @@
+\clearpage
+\chapter*{DAFTAR ISTILAH}
+\addcontentsline{toc}{chapter}{DAFTAR ISTILAH}
+
+Daftar berikut menjelaskan istilah teknis yang digunakan dalam laporan ini. Definisi
+ditulis sesuai konteks rancangan dan implementasi Omni-RAG.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.18}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{3.7cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-3.7cm-2\tabcolsep\relax}@{}}
+\toprule
+Istilah & Pengertian \\
+\midrule
+\endfirsthead
+\toprule
+Istilah & Pengertian (lanjutan) \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+API & Antarmuka terprogram yang digunakan oleh aplikasi atau modul untuk mengirim permintaan dan menerima respons dari \emph{service}. \\
+\textit{Artifact} & Hasil antara atau keluaran suatu tahap pemrosesan yang disimpan agar dapat dibaca oleh tahap berikutnya. \\
+\textit{Cascade} & Aturan penghapusan pada basis data yang ikut menghapus baris turunan ketika baris induknya dihapus. \\
+\textit{Child Chunk} & Potongan yang lebih kecil dan digunakan sebagai kandidat pencarian. Potongan ini dapat menunjuk ke \textit{parent chunk} sebagai konteks lengkap. \\
+\textit{Chunk} & Unit teks hasil segmentasi dokumen yang digunakan sebagai satuan penyimpanan, pengindeksan, atau pencarian. \\
+\textit{Chunking} & Proses membagi dokumen menjadi beberapa \textit{chunk} dengan aturan ukuran dan struktur tertentu. \\
+\textit{Context PII} & Komponen yang mendeteksi informasi pribadi pada pertanyaan dan konteks, menggantinya dengan \textit{placeholder}, serta memulihkan nilai tersebut pada batas yang diizinkan. \\
+\textit{Context Window} & Jumlah maksimum isi teks yang dapat diproses model bahasa dalam satu permintaan, termasuk instruksi, pertanyaan, dan konteks. \\
+\textit{Cutoff K} & Nilai batas jumlah hasil teratas yang dipertimbangkan atau dikembalikan oleh sistem pencarian. \\
+\textit{Data Source} & Sumber dokumen yang disimpan terpisah dari konfigurasi pemrosesan sehingga dapat digunakan bersama oleh beberapa konfigurasi. \\
+\textit{Downstream} & Tahap atau komponen yang berada setelah komponen yang menjadi fokus pembahasan dan menerima keluaran dari tahap sebelumnya. \\
+\textit{Embedding} & Representasi numerik berbentuk vektor yang menangkap karakteristik semantik teks. \\
+\textit{Event} & Catatan kejadian atau pesan yang menyatakan bahwa suatu tahap pemrosesan diminta, dimulai, atau selesai. \\
+\textit{Fan-out} & Penyebaran satu peristiwa atau dokumen ke beberapa konfigurasi atau tujuan pemrosesan yang aktif. \\
+\textit{Guardrail} & Pemeriksaan keselamatan dan kebijakan yang menentukan apakah masukan atau keluaran boleh diteruskan, diubah, atau diblokir. \\
+\textit{Handoff} & Serah-terima kendali antartahap melalui pesan, sementara isi data tetap dibaca dari \textit{artifact} pada \textit{object storage}. \\
+LLM & Singkatan dari \textit{Large Language Model}, yaitu model bahasa berskala besar yang menghasilkan atau menganalisis teks berdasarkan konteks masukan. \\
+\textit{Metadata} & Data yang menjelaskan data utama, misalnya sumber, waktu, jenis, status, atau atribut penyaring suatu dokumen. \\
+\textit{Manifest} & Deklarasi identitas, kemampuan, versi, dan kompatibilitas sebuah \textit{plugin}. \\
+\textit{Multi-domain} & Kemampuan sistem untuk memproses beberapa ranah pengetahuan dengan struktur atau aturan dokumen yang berbeda. \\
+\textit{Named Entity Recognition (NER)} & Proses mengenali entitas tertentu dalam teks, seperti nama, lokasi, nomor identitas, atau alamat. \\
+\textit{Object Storage} & Penyimpanan berkas berbasis objek yang diakses melalui kunci objek dan digunakan untuk menyimpan dokumen atau \textit{artifact}. \\
+OCR & Singkatan dari \textit{Optical Character Recognition}, yaitu proses mengubah citra halaman menjadi teks yang dapat diproses. \\
+\textit{Parent Chunk} & Potongan yang memuat konteks unit dokumen lebih lengkap dan diberikan kepada model ketika \textit{child chunk} ditemukan. \\
+PII & Singkatan dari \textit{Personally Identifiable Information}, yaitu informasi yang dapat mengidentifikasi seseorang secara langsung atau tidak langsung. \\
+\textit{Parser} & Komponen yang membaca dokumen mentah dan menghasilkan dokumen terstruktur dalam bentuk blok. \\
+\textit{Plugin} & Implementasi komponen yang mengikuti kontrak tertentu sehingga dapat dipasang, dipilih, atau diganti tanpa mengubah orkestrator inti. \\
+\textit{Placeholder} & Penanda sementara yang menggantikan nilai PII selama data melewati komponen atau \emph{service} yang tidak boleh menerima nilai aslinya. \\
+RAG & Singkatan dari \textit{Retrieval-Augmented Generation}, yaitu pendekatan yang mengambil informasi relevan sebelum model bahasa menyusun jawaban. \\
+\textit{Retrieval} & Tahap mengambil kandidat dokumen atau \textit{chunk} yang paling relevan terhadap pertanyaan. \\
+SSE & Singkatan dari \textit{Server-Sent Events}, yaitu mekanisme pengiriman pembaruan dari server ke klien melalui satu koneksi HTTP. \\
+\textit{State} & Nilai keadaan suatu entitas atau proses, misalnya \texttt{queued}, \texttt{running}, \texttt{succeeded}, \texttt{failed}, atau \texttt{cancelled}. \\
+\textit{Upstream} & Tahap atau komponen yang berada sebelum komponen yang menjadi fokus pembahasan, misalnya akuisisi dan parsing dokumen mentah. \\
+\textit{Vector Database} & \emph{service} untuk menyimpan dan mencari vektor \textit{embedding} berdasarkan kedekatan semantik. \\
+\textit{Worker} & Proses pelaksana yang membaca pesan, memvalidasi masukan, menjalankan satu tahap atau \textit{plugin}, lalu menyimpan dan menerbitkan hasilnya. \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\clearpage

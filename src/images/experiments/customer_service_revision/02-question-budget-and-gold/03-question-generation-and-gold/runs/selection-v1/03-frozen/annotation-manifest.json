@@ -1,0 +1,33 @@
+{
+  "external_api_used": false,
+  "family_counts": {
+    "facts_specifications": 50,
+    "features_security_maintenance_limitations": 50,
+    "setup_configuration": 50,
+    "troubleshooting_diagnostics": 50
+  },
+  "generation_method": "authored_draft_validated_offline",
+  "generation_model": "manual-customer-question-bank",
+  "input_hashes": {
+    "context_packets": "7864889a92621a945e801279767341968ebd1cb04008999d3ba3ae493e260c1a",
+    "draft": "1c875faff6c4b28167153c812343adb0de88a13775027060cfd2ca9389e3ed89",
+    "question_slots": "d469d3c5240dab9fc3ac16cc10449be8267f02c2716576ffa7a988b1b38210ee"
+  },
+  "language_counts": {
+    "en": 100,
+    "id": 100
+  },
+  "outputs": {
+    "candidates": "01-candidates/question-candidates.jsonl",
+    "checkpoints": "03-frozen/generation-checkpoints.json",
+    "gold": "03-frozen/gold-evidence.jsonl",
+    "question_context": "03-frozen/question-context.jsonl",
+    "question_set": "03-frozen/question-set.csv",
+    "review": "02-review/question-review.csv"
+  },
+  "process": "02.03-question-generation-and-gold",
+  "question_count": 200,
+  "question_style": "general_customer_facing_awam",
+  "ready_for_retrieval": true,
+  "semantic_question_pair_count": 100
+}

@@ -1,0 +1,14 @@
+%%{init: {"theme":"base", "themeVariables": {"fontFamily":"Arial, sans-serif", "fontSize":"22px", "primaryTextColor":"#111827", "lineColor":"#475569"}, "flowchart": {"htmlLabels":true, "curve":"linear"}}}%%
+flowchart TB
+    start((Start)) --> queued["Queued"]
+    queued -->|claim| running["Running"]
+    queued -->|cancel| cancelled["Cancelled"]
+    running -->|success| succeeded["Succeeded"]
+    running -->|error| failed["Failed"]
+    running -->|cancel| cancelled["Cancelled"]
+    succeeded -->|retry| queued
+    failed -->|retryable| queued
+    cancelled -->|retry| queued
+    succeeded --> finish((End))
+    failed --> finish
+    cancelled --> finish

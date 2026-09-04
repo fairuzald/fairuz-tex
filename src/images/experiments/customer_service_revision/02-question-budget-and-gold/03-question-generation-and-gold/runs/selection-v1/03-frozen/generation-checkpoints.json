@@ -1,0 +1,31 @@
+{
+  "checkpoint_order": [
+    25,
+    50,
+    100,
+    150,
+    200
+  ],
+  "checkpoints": {
+    "100": {
+      "auto_validated": 100,
+      "questions_processed": 100
+    },
+    "150": {
+      "auto_validated": 150,
+      "questions_processed": 150
+    },
+    "200": {
+      "auto_validated": 200,
+      "questions_processed": 200
+    },
+    "25": {
+      "auto_validated": 25,
+      "questions_processed": 25
+    },
+    "50": {
+      "auto_validated": 50,
+      "questions_processed": 50
+    }
+  }
+}

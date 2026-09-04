@@ -1,0 +1,50 @@
+{
+  "analysis": "customer-service-single-block-retrieval",
+  "generated_at_utc": "2026-09-02T01:40:50.478547+00:00",
+  "run_dir": "/home/fairuz/Documents/TA/FR/dpo/experiments/offline-rag-experiments/customer_service_revision/03-implementation/runs/single-block/raw-e2e-existing-k60",
+  "condition_ids": [
+    "baseline-generic-hybrid",
+    "chunker-generic-recursive",
+    "chunker-generic-sliding-window",
+    "indexer-generic-sparse",
+    "indexer-generic-dense"
+  ],
+  "question_count_per_condition": 200,
+  "cutoffs": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60
+  ],
+  "metrics": {
+    "chunk_precision": "hit chunks divided by K",
+    "chunk_success": "1 if any hit chunk exists in top K, otherwise 0",
+    "gold_block_recall": "unique gold blocks found through source_block_ids divided by all gold blocks",
+    "chunk_ndcg": "binary hit-chunk NDCG in returned ranking"
+  },
+  "outputs": [
+    "overall-by-cutoff.csv",
+    "language-by-cutoff.csv",
+    "family-by-cutoff.csv",
+    "product-by-cutoff.csv",
+    "pair-metrics.csv",
+    "condition-diagnostics.csv",
+    "question-metrics.csv",
+    "retrieval-quality-by-cutoff.png",
+    "language-quality-by-cutoff.png",
+    "condition-quality-at-k10-k60.png",
+    "execution-latency.png",
+    "product-recall-at-k10-k60.png",
+    "first-hit-rank-cdf.png",
+    "language-paired-delta-at-k10-k60.png",
+    "precision-recall-tradeoff.png"
+  ]
+}

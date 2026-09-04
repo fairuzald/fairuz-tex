@@ -1,0 +1,6 @@
+condition_id,empty_rate_at_10
+baseline-generic-hybrid,0.000000
+chunker-generic-recursive,0.000000
+chunker-generic-sliding-window,0.000000
+indexer-generic-sparse,0.015000
+indexer-generic-dense,0.000000

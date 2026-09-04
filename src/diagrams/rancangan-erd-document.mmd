@@ -1,0 +1,59 @@
+%% ERD Data Source: relasi sumber, dokumen, dan riwayat scraper.
+%%{init: {"theme":"base", "themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"10px","primaryTextColor":"#111827","lineColor":"#475569"},"er":{"layoutDirection":"TB"}}}%%
+erDiagram
+    direction TB
+    datasources {
+        uuid id PK
+        text name
+        text description
+        datasource_status status
+        jsonb file_extensions
+        uuid scraper_plugin_id FK
+        jsonb scraper_config_json
+        text schedule_cron
+        text schedule_timezone
+        boolean scraper_enabled
+        datasource_scrape_stop_mode scraper_stop_mode
+        integer scraper_stop_value
+        double enumerate_delay_min
+        double enumerate_delay_max
+        double download_delay_min
+        double download_delay_max
+        integer download_concurrency
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz archived_at
+    }
+    datasource_documents {
+        uuid id PK
+        uuid datasource_id FK
+        text source_identifier
+        text source_url
+        text content_sha256
+        text filename
+        text extension
+        text object_key
+        bigint byte_size
+        text content_type
+        jsonb metadata_json
+        datasource_document_origin origin
+        datasource_document_status status
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    datasource_scrape_runs {
+        uuid id PK
+        uuid datasource_id FK
+        datasource_scrape_run_status status
+    }
+    datasource_scrape_run_entries {
+        uuid id PK
+        uuid run_id FK
+        uuid document_id FK
+        datasource_scrape_entry_status status
+    }
+
+    datasources ||--o{ datasource_documents : "datasource_id"
+    datasources ||--o{ datasource_scrape_runs : "datasource_id"
+    datasource_scrape_runs ||--o{ datasource_scrape_run_entries : "run_id"
+    datasource_documents o|--o{ datasource_scrape_run_entries : "document_id"

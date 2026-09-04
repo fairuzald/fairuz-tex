@@ -1,0 +1,27 @@
+%% Sequence diagram UC4: profile deletion.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"16px"},"sequence":{"actorMargin":24,"messageMargin":18,"boxMargin":6,"boxTextMargin":4,"noteMargin":6,"useMaxWidth":true}}}%%
+sequenceDiagram
+    actor Admin as User
+    participant UI as Admin UI
+    participant API as HTTP API
+    participant Profile as Profile Service
+    participant DB as PostgreSQL
+    participant Store as Vector and Graph Store
+    participant Objects as Object Storage
+    Admin->>UI: Open profile page
+    UI->>API: GET /api/v1/profiles
+    API-->>UI: Profile list
+    Admin->>UI: Select Delete
+    UI-->>Admin: Show confirmation dialog
+    Admin->>UI: Confirm deletion
+    UI->>API: DELETE /api/v1/profiles/{profile_id}
+    API->>Profile: Delete profile data
+    Profile->>Store: Remove vector and graph projections
+    Profile->>Objects: Remove profile artifacts
+    Profile->>DB: Delete profile, nodes, and runs
+    DB-->>Profile: Commit deletion
+    Profile-->>API: Deletion completed
+    API-->>UI: Success response
+    UI->>API: GET /api/v1/profiles
+    API-->>UI: Updated list
+    UI-->>Admin: Show Profile deleted toast

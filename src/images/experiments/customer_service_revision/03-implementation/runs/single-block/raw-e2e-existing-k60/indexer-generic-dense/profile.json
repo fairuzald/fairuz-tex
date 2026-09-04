@@ -1,0 +1,124 @@
+{
+  "profile": {
+    "id": "ebfdd1ad-df71-4b99-b0d7-ccda978c8c0b",
+    "name": "customer-service-e2e-indexer-generic-dense-se-final",
+    "description": "Customer Service Revision E2E; condition=indexer-generic-dense; deterministic retrieval only; no LLM generation, intent, reranker, or KG.",
+    "status": "active",
+    "version": "1.0.0",
+    "datasource_id": "077b19c1-b65c-4447-8394-d96a91d07337"
+  },
+  "nodes": [
+    {
+      "node_id": "parser-1",
+      "component_type": "parser",
+      "plugin_name": "generic-outline",
+      "plugin_version": "1.0.0",
+      "config": {
+        "outline": {
+          "header_margin_ratio": 0.075,
+          "footer_margin_ratio": 0.9,
+          "anchor_search_window_points": 150,
+          "line_merge_tolerance_points": 4,
+          "text_decoration": true,
+          "excluded_section_titles": [
+            "contents",
+            "table of contents"
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "chunker-1",
+      "component_type": "chunker",
+      "plugin_name": "generic-structure-aware",
+      "plugin_version": "1.0.0",
+      "config": {
+        "target_level": "text_block",
+        "include_parent_context": true,
+        "size_unit": "character",
+        "max_size": 512
+      }
+    },
+    {
+      "node_id": "indexer-1",
+      "component_type": "indexer",
+      "plugin_name": "dense-semantic",
+      "plugin_version": "1.0.0",
+      "config": {
+        "embedding": {
+          "provider": "local",
+          "model": "BAAI/bge-m3",
+          "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+          "local_backend": "sentence-transformers",
+          "batch_size": 16,
+          "device": "cpu",
+          "base_url": "https://openrouter.ai/api/v1",
+          "timeout_seconds": 30
+        }
+      }
+    },
+    {
+      "node_id": "retrieval-orchestrator-1",
+      "component_type": "retrieval_orchestrator",
+      "plugin_name": "dense-semantic-orchestrator",
+      "plugin_version": "1.0.0",
+      "config": {
+        "top_k": 60,
+        "kg_mode": "none",
+        "use_reranker": false,
+        "candidate_limit": 60,
+        "parent_hydration_enabled": false
+      }
+    }
+  ],
+  "xai": {
+    "intent": {
+      "method": "noop",
+      "config": {}
+    },
+    "retrieval": {
+      "method": "noop",
+      "config": {}
+    },
+    "reranking": {
+      "method": "noop",
+      "config": {}
+    },
+    "generation": {
+      "method": "noop",
+      "config": {}
+    }
+  },
+  "domain": {
+    "name": "customer-service",
+    "system_prompt": null,
+    "out_of_scope_reply": null,
+    "guardrail_denied_reply": null,
+    "normal_chat_reply": null,
+    "clarification_reply": null,
+    "language": "multi",
+    "ingestion_mode": "full",
+    "component_mode": "full",
+    "artifact_source_profile_id": null,
+    "search_scope_profile_id": null,
+    "temperature": 0.0,
+    "intent_provider": "passthrough",
+    "query_resolution_provider": "passthrough",
+    "intent_dispatch": "orchestrator",
+    "subdomain": null,
+    "custom_domain": null,
+    "display_name": null,
+    "logo_url": null,
+    "primary_color": null,
+    "welcome_heading": null,
+    "welcome_subtext": null,
+    "example_prompts": null,
+    "common_questions": null,
+    "enabled_features": [],
+    "graph_layout": null,
+    "graph_taxonomy": null,
+    "graph_display": null,
+    "show_source_documents": true
+  },
+  "intent_configs": {}
+}

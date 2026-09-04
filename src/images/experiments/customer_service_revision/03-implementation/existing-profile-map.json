@@ -1,0 +1,7 @@
+{
+  "baseline-generic-hybrid": "0d686771-6d7e-489d-a702-fc0c713f3b77",
+  "chunker-generic-recursive": "8afcc61b-3bda-425a-9f65-d4a12d0aa8ec",
+  "chunker-generic-sliding-window": "ca7a6f31-08b7-4674-8a41-757a81631fbc",
+  "indexer-generic-sparse": "797ce799-a957-4eaa-be52-5f27067622cc",
+  "indexer-generic-dense": "ebfdd1ad-df71-4b99-b0d7-ccda978c8c0b"
+}

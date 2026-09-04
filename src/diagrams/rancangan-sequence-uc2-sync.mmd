@@ -1,0 +1,30 @@
+%% Sequence diagram UC2: datasource document synchronization to a profile.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"16px"},"sequence":{"actorMargin":24,"messageMargin":18,"boxMargin":6,"boxTextMargin":4,"noteMargin":6,"useMaxWidth":true}}}%%
+sequenceDiagram
+    actor Admin as User
+    participant UI as Admin UI
+    participant API as HTTP API
+    participant Profile as Profile Service
+    participant Source as Datasource Repository
+    participant Monitor as Run Repository
+    participant Broker as RabbitMQ
+    Admin->>UI: Open processing tab
+    UI->>API: GET /api/v1/profiles/{id}/documents
+    API->>Monitor: Read latest run summaries
+    Monitor-->>API: Status, attempt, updated_at
+    API-->>UI: Processing list
+    Admin->>UI: Start synchronization
+    UI->>API: POST /api/v1/profiles/{id}/sync
+    API->>Profile: Resolve profile and datasource
+    Profile->>Source: List active documents
+    loop Each active document
+        Profile->>Monitor: Find or create profile-document run
+        alt Projection already exists
+            Monitor-->>Profile: already_present
+        else New projection required
+            Profile->>Broker: Publish rag.parse.requested
+            Monitor-->>Profile: dispatched
+        end
+    end
+    Profile-->>API: Counts and per-document results
+    API-->>UI: Updated processing summary

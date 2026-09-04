@@ -1,0 +1,35 @@
+{
+  "analysis": "customer-service-single-block-k-sweet-spot",
+  "input": "/home/fairuz/Documents/TA/FR/dpo/experiments/offline-rag-experiments/customer_service_revision/03-implementation/runs/single-block/analysis/question-metrics.csv",
+  "cutoffs": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60
+  ],
+  "language_counts": {
+    "en": 100,
+    "id": 100
+  },
+  "recall_practical_delta": 0.02,
+  "ndcg_practical_delta": 0.01,
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260902,
+    "confidence": 0.95
+  },
+  "outputs": [
+    "k-sweet-spot-report.md",
+    "k-sweet-spot-summary.csv",
+    "k-marginal-deltas.csv",
+    "k-sweet-spot-recall.png"
+  ]
+}

@@ -1,0 +1,71 @@
+%% ERD gabungan: profile, node, plugin, pipeline run, dan node run.
+%%{init: {"theme":"base", "themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"10px","primaryTextColor":"#111827","lineColor":"#475569"},"er":{"layoutDirection":"TB"}}}%%
+erDiagram
+    direction TB
+    plugin_registry {
+        uuid id PK
+        text name
+        text version
+        timestamptz created_at
+        text description
+        component_type component_type
+        plugin_status status
+        text entrypoint
+        json config_schema_json
+        jsonb manifest_json
+    }
+    pipeline_profiles {
+        uuid id PK
+        text name
+        text description
+        text version
+        timestamptz created_at
+        pipeline_profile_status status
+        json xai_config_json
+        json intent_configs_json
+        json domain_config_json
+        uuid datasource_id FK "NULL, RESTRICT"
+    }
+    pipeline_profile_nodes {
+        uuid id PK
+        uuid profile_id FK
+        text node_id
+        component_type component_type
+        uuid plugin_id FK
+        integer sort_order
+        json config_json
+    }
+    rag_pipeline_runs {
+        uuid id PK
+        uuid request_id UK
+        text document_id "NULL"
+        text filename
+        uuid profile_id FK "NULL, SET NULL"
+        rag_run_status status
+        jsonb error_json
+        timestamptz created_at
+        timestamptz started_at
+        timestamptz finished_at
+        timestamptz updated_at
+        integer pipeline_attempt
+    }
+    rag_node_runs {
+        uuid id PK
+        uuid run_id FK "CASCADE"
+        rag_component_type component_type
+        text plugin_name "NULL"
+        text plugin_version "NULL"
+        rag_run_status status
+        integer attempt
+        integer pipeline_attempt
+        text artifact_object_key "NULL"
+        jsonb error_json
+        timestamptz created_at
+        timestamptz started_at
+        timestamptz finished_at
+        timestamptz updated_at
+    }
+    pipeline_profiles ||--o{ pipeline_profile_nodes : "profile_id -> id"
+    plugin_registry ||--o{ pipeline_profile_nodes : "plugin_id -> id"
+    pipeline_profiles o|--o{ rag_pipeline_runs : "profile_id -> id"
+    rag_pipeline_runs ||--o{ rag_node_runs : "run_id -> id"

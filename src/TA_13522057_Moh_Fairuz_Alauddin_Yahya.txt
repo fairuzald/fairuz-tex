@@ -1,0 +1,8 @@
+Zou, W., Geng, R., Wang, B., & Jia, J. (2025). PoisonedRAG: Knowledge Corruption
+Attacks to Retrieval-Augmented Generation of Large Language Models. 34th
+USENIX Security Symposium (USENIX Security 25), 3827–3844. https://w
+ww.usenix.org/conference/usenixsecurity25/presentation/zou-poisonedrag
+
+157
+
+

@@ -1,0 +1,950 @@
+\chapter[EKSPERIMEN DAN EVALUASI]{Eksperimen dan Evaluasi}
+\label{chap:eksperimen-evaluasi}
+
+Bab ini memaparkan bagaimana eksperimen dirancang, dijalankan, dan dievaluasi.
+Pembahasan mencakup dua kasus penggunaan, yaitu \emph{customer service} dan kasus hukum. Untuk
+masing-masing \emph{use case}, bab ini menyajikan \emph{dataset}, konfigurasi eksperimen, serta
+hasil evaluasinya.
+
+\section{Lingkungan Eksperimen}
+\label{sec:lingkungan-eksperimen}
+
+Eksperimen dijalankan pada perangkat keras dan perangkat lunak yang mendukung
+seluruh subsistem pemrosesan dan evaluasi. Spesifikasinya disajikan pada
+Tabel~\ref{tab:lingkungan-eksperimen}.
+
+\begin{table}[H]
+  \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{0.9}
+  \caption{Spesifikasi lingkungan eksperimen}
+  \label{tab:lingkungan-eksperimen}
+  \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.4cm}>{\RaggedRight\arraybackslash}X@{}}
+    \toprule
+    \textbf{Komponen} & \textbf{Spesifikasi} \\
+    \midrule
+    Prosesor & Intel Core Ultra 9 185H, 16 \emph{core} dan 22 \emph{logical processor}, arsitektur x86-64 \\
+    Memori & 32 GB RAM \\
+    Perangkat grafis & Intel Arc Graphics terintegrasi. \emph{Embedding} menggunakan distribusi PyTorch CPU tanpa CUDA \\
+    Sistem operasi & Ubuntu 26.04 LTS, kernel Linux 7.0.0-30-generic \\
+    Kontainer & Docker 29.1.3 dan Docker Compose 2.40.3 \\
+    Bahasa dan \emph{runtime} & Python 3.13 pada Debian Bookworm Slim. Pengelolaan \emph{dependency} dilakukan dengan \code{uv} 0.9.2 \\
+    \emph{Framework} aplikasi & FastAPI, Pydantic, SQLAlchemy, dan \emph{worker} asinkron berbasis \code{aio-pika} \\
+    Infrastruktur data & PostgreSQL 16, \emph{object storage}, RabbitMQ 3.13, OpenSearch 3.3.0, dan Neo4j 5.26 \\
+    \emph{Model embedding} & BAAI/BGE-M3 dan Indo-LegalBERT pada pemilihan \emph{model} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Semua kondisi menggunakan API dan \emph{worker} dengan jumlah serta konfigurasi yang
+sama. Infrastruktur dijaga setara pada setiap kondisi sehingga hasil dapat dibandingkan
+secara adil dan perubahan yang diamati dapat dikaitkan dengan komponen yang diuji.
+
+\section{Eksperimen pada \emph{Use Case} \emph{Customer Service}}
+\label{sec:eksperimen-customer-service}
+
+\subsection{\emph{Dataset} Eksperimen}
+\label{subsec:dataset-customer-service}
+
+\emph{Dataset} \emph{customer service} dibangun menggunakan sembilan manual produk Netgear yang
+tersedia, sebagaimana ditunjukkan pada tabel berikut.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Cakupan dokumen pada \emph{dataset} \emph{customer service}}
+\label{tab:customer-corpus-coverage}
+\begin{tabularx}{0.75\textwidth}{@{}>{\RaggedRight\arraybackslash}X r@{}}
+\toprule
+\textbf{Model produk} & \textbf{Halaman}\\
+\midrule
+CM2000 & 26\\
+LM1200 & 105\\
+R6350 & 204\\
+R7000 & 186\\
+RAX120 & 175\\
+RAX50 & 160\\
+RAXE500 & 169\\
+RBK852 & 161\\
+XR500 & 214\\
+\midrule
+\textbf{Total} & \textbf{1.400}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Pembentukan \emph{Dataset} Pertanyaan dan Jawaban}
+\label{subsubsec:customer-question-dataset}
+
+Subbab ini merangkum cara mengubah isi dokumen \emph{customer service} menjadi pertanyaan dan jawaban acuan untuk
+evaluasi \emph{retrieval}. Prosesnya terdiri atas empat tahap berikut.
+
+\begin{enumerate}[leftmargin=*, itemsep=0.25em]
+  \item \textbf{Menetapkan sumber dan kandidat.} Sembilan manual Netgear dipakai sebagai korpus.
+  \emph{Parser} membentuk judul dan blok teks berdasarkan \emph{outline} pada setiap dokumen. Bagian
+  akhir \emph{outline} yang tidak memiliki struktur turunan digunakan sebagai simpul akhir. Blok teks
+  terakhir pada setiap bagian tersebut yang memiliki teks langsung kemudian dijadikan kandidat konteks.
+  \item \textbf{Memilih \emph{intent} dan bahasa.} Kandidat konteks dipetakan untuk memilih dan
+  membekukan 100 \emph{intent}, dengan \emph{seed} \texttt{20260831} agar seluruh dokumen serta posisi
+  halaman tetap terwakili. Setiap \emph{intent} kemudian dirumuskan menjadi satu pertanyaan dalam
+  bahasa Inggris dan satu pertanyaan dalam bahasa Indonesia. Dengan demikian, \emph{dataset}
+  berisi 200 pertanyaan, yaitu 100 pertanyaan bahasa Inggris dan 100 pertanyaan bahasa Indonesia.
+  \item \textbf{Menyiapkan konteks.} Setelah 100 \emph{intent} dipilih, dibuat 100 paket konteks,
+  yaitu satu paket untuk setiap \emph{intent}. Karena eksperimen memakai satu blok sebagai konteks,
+  setiap paket berisi tepat satu bagian akhir \emph{outline} yang dipilih dan satu blok teks sumber,
+  beserta ID dokumen, halaman, dan urutan bloknya. Paket yang sama digunakan
+  oleh dua pertanyaan, satu dalam bahasa Inggris dan satu dalam bahasa Indonesia, lalu dikirim
+  dalam satu permintaan ke model.
+  \item \textbf{Membentuk \emph{dataset}.} Setelah konteks tersedia, konteks tersebut diberikan kepada
+  model GPT Luna Max 5.6. Model menyusun pertanyaan dan jawaban berdasarkan konteks yang menjadi
+  acuan untuk satu \emph{intent}. Selanjutnya, model menandai ID blok pada konteks sebagai
+  \emph{context reference}. ID ini digunakan dalam metrik evaluasi pada proses \emph{retrieval}.
+\end{enumerate}
+
+\subsubsection{Distribusi \emph{Dataset}}
+\label{subsubsec:customer-dataset-distribution}
+
+Distribusi pertanyaan dibuat seimbang antara bahasa Inggris dan bahasa Indonesia. Kedua bahasa
+menggunakan \emph{intent} yang sama, perbedaannya hanya pada penerjemahan. Lokasi konteks dipilih dari
+seluruh dokumen dan disebar berdasarkan posisi halaman relatif.
+
+Gambar~\ref{fig:customer-question-count-by-document} memperlihatkan jumlah pertanyaan
+bahasa Inggris dan Indonesia yang sama pada setiap dokumen untuk \emph{use case} \emph{customer service}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/question-count-by-document.png}
+\caption{Distribusi jumlah pertanyaan per dokumen dan bahasa}
+\label{fig:customer-question-count-by-document}
+\end{figure}
+
+Gambar~\ref{fig:customer-question-page-distribution} menunjukkan bahwa konteks tersebar
+di lima posisi halaman relatif (P1 sampai P5) pada seluruh \emph{manual}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/question-page-distribution-by-document.png}
+\caption{Sebaran pertanyaan menurut dokumen dan posisi halaman relatif}
+\label{fig:customer-question-page-distribution}
+\end{figure}
+
+\emph{Heatmap} pada Gambar~\ref{fig:customer-question-page-distribution} memperlihatkan bahwa
+pertanyaan tersebar pada hampir semua dokumen dan posisi halaman. Warna yang sedikit lebih
+pekat pada P4 dan P5 menunjukkan jumlah konteks yang lebih banyak pada bagian tersebut.
+Konsentrasi ini muncul karena beberapa \emph{manual} memiliki lebih banyak \emph{leaf outline}
+yang memenuhi syarat pada bagian akhir dan alokasi sampling memberikan slot tambahan pada
+kelompok tersebut.
+
+\subsection{Konfigurasi dan Metodologi Eksperimen}
+\label{subsec:customer-config-method}
+
+Eksperimen dijalankan sebagai evaluasi \emph{retrieval} tanpa pembentukan jawaban. Lima kondisi dibandingkan
+menggunakan 200 pertanyaan yang sama, terdiri atas 100 pertanyaan bahasa Inggris dan 100
+pertanyaan bahasa Indonesia. \emph{Cutoff} \(K=5,10,15,\ldots,60\) digunakan untuk menemukan
+\emph{titik optimal}. \emph{Reranker}, pengklasifikasi \emph{intent}, \emph{knowledge graph}, dan pembentukan jawaban
+dinonaktifkan. \emph{Parser}, \emph{dataset}, dan model \emph{embedding} dibuat sama pada semua kondisi, sehingga
+perbedaan hasil dapat dikaitkan dengan \emph{chunker} atau \emph{indexer} yang diuji.
+
+\emph{Manual} produk yang menjadi sumber konteks seluruhnya berbahasa Inggris. Karena itu, pertanyaan
+bahasa Inggris mengukur pencarian dalam bahasa yang sama, sedangkan pertanyaan bahasa Indonesia
+menguji kemampuan pencarian lintas bahasa. Keduanya diberi bobot yang sama dalam evaluasi,
+bahasa Inggris tidak dijadikan satu-satunya acuan.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Konfigurasi eksperimen \emph{customer service}}
+\label{tab:customer-config}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{5.0cm}>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+\textbf{Kondisi} & \textbf{\emph{Chunker}} & \textbf{\emph{Indexer}}\\
+\midrule
+\emph{Baseline} \emph{hybrid} & \texttt{generic-structure-aware}, \emph{target} \texttt{text\_block}, \emph{parent context}, 512 karakter & \texttt{hybrid-semantic-keyword}, \emph{dense} \texttt{BAAI/bge-m3} dan \emph{lexical}\\
+Generik \emph{recursive} & \texttt{generic-recursive}, 512 karakter, \emph{overlap} 51 karakter & \texttt{hybrid-semantic-keyword}, \emph{dense} dan \emph{lexical}\\
+Generik \emph{sliding-window} & \texttt{generic-sliding-window}, jendela 512 karakter, \emph{overlap} 51 karakter & \texttt{hybrid-semantic-keyword}, \emph{dense} dan \emph{lexical}\\
+Generik \emph{sparse} & \texttt{generic-structure-aware}, \emph{target} \texttt{text\_block}, \emph{parent context}, 512 karakter & \texttt{sparse-keyword}, \emph{lexical}\\
+Generik \emph{dense} & \texttt{generic-structure-aware}, \emph{target} \texttt{text\_block}, \emph{parent context}, 512 karakter & \texttt{dense-semantic}, \emph{dense} \texttt{BAAI/bge-m3}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Metrik utama adalah \emph{recall}@K, yaitu persentase pertanyaan dengan \emph{context reference} yang
+berhasil ditemukan dalam \(K\) hasil teratas. Metrik sekundernya adalah \emph{precision}@K
+dan \emph{nDCG@K}. \emph{Precision} menunjukkan seberapa banyak hasil yang relevan dibandingkan
+seluruh hasil yang dikembalikan, sedangkan \emph{nDCG} menunjukkan seberapa awal \emph{context reference} muncul
+dalam daftar. Kedua metrik sekunder membantu membaca tingkat \emph{noise} dan kualitas urutan hasil,
+nilainya diharapkan meningkat apabila hasil \emph{retrieval} diproses kembali oleh \emph{reranker} pada
+tahap \emph{downstream}.
+
+\subsection{Evaluasi Per Komponen}
+\label{subsec:customer-evaluation-components}
+
+\subsubsection{Strategi \emph{Chunking}}
+\label{subsubsec:customer-chunking}
+
+Perbandingan \emph{chunker} mempertahankan \emph{indexer} \emph{hybrid} dan hanya mengganti \emph{plugin} \emph{chunker}.
+Konfigurasi yang dibandingkan diringkas pada Tabel~\ref{tab:customer-chunker-config}.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Konfigurasi \emph{chunker} pada eksperimen \emph{customer service}}
+\label{tab:customer-chunker-config}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.1cm}>{\RaggedRight\arraybackslash}p{4.2cm}>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+\textbf{Strategi} & \textbf{\emph{Plugin}} & \textbf{Konfigurasi utama}\\
+\midrule
+\emph{Baseline} & \texttt{generic-structure-aware} & \emph{Target} \texttt{text\_block}, \emph{parent context}, maksimum 512 karakter\\
+\emph{Recursive} & \texttt{generic-recursive} & Maksimum 512 karakter, \emph{overlap} 51 karakter, separator bertingkat\\
+\emph{Sliding-window} & \texttt{generic-sliding-window} & Jendela 512 karakter dan \emph{overlap} 51 karakter\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\emph{Indexer} \emph{hybrid}, \emph{dataset}, dan model \emph{embedding} dibuat sama untuk ketiga kondisi. Perbedaan
+hasil karena itu menunjukkan pengaruh cara membentuk \emph{chunk} terhadap peluang \emph{context reference}
+ditemukan.
+
+Kurva pada Gambar~\ref{fig:customer-chunker-recall} menunjukkan bahwa \emph{recall} naik paling
+cepat hingga sekitar \(K=25\), kemudian cenderung mendatar. Karena tambahan kandidat setelah
+angka tersebut hanya memberi kenaikan kecil, \(K=25\) dipilih sebagai \emph{sweet spot} \emph{chunker}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/recall-chunker.png}
+\caption{Kurva \emph{context reference} \emph{recall} menurut \emph{cutoff} untuk profil \emph{chunker}}
+\label{fig:customer-chunker-recall}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/precision-chunker.png}
+\caption{Kurva \emph{chunk} \emph{precision} menurut \emph{cutoff} untuk profil \emph{chunker}}
+\label{fig:customer-chunker-precision}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/ndcg-chunker.png}
+\caption{Kurva \emph{nDCG} menurut \emph{cutoff} untuk profil \emph{chunker}}
+\label{fig:customer-chunker-ndcg}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Hasil strategi \emph{chunking} pada \emph{sweet spot} masing-masing}
+\label{tab:customer-chunking-results}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{4.2cm} r r r r@{}}
+\toprule
+\textbf{Strategi} & \textbf{\emph{Sweet spot} K} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}}\\
+\midrule
+\emph{Hybrid} \emph{baseline} & 25 & \textbf{0,740} & \textbf{0,055} & \textbf{0,328}\\
+\emph{Recursive} \emph{chunker} & 25 & 0,610 & 0,036 & 0,284\\
+\emph{Sliding-window} \emph{chunker} & 25 & 0,675 & 0,048 & 0,317\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Pada \emph{sweet spot} tersebut, \emph{baseline} memiliki \emph{recall} gabungan 0,740, lebih tinggi daripada
+\emph{sliding-window} 0,675 dan \emph{recursive} 0,610. Keunggulan \emph{baseline} berasal dari \emph{plugin}
+\emph{structure-aware} yang mempertahankan hubungan \emph{block} dengan \emph{parent context}, sehingga informasi
+yang dibutuhkan tidak mudah terpecah. Nilai \emph{precision} dan \emph{nDCG} \emph{baseline} juga paling tinggi
+(Tabel~\ref{tab:customer-chunking-results}), sehingga \emph{baseline} dipakai sebagai acuan untuk
+membandingkan \emph{indexer}. \emph{Precision} menurun ketika \(K\) diperbesar karena lebih banyak kandidat
+yang tidak memuat \emph{context reference}. \emph{nDCG} menunjukkan bahwa \emph{baseline} menempatkan \emph{context reference} lebih awal.
+
+Jika dilihat per bahasa pada \(K=25\), urutannya tetap sama. \emph{Baseline} memperoleh \emph{recall} 0,800
+untuk bahasa Inggris dan 0,680 untuk bahasa Indonesia, sedangkan \emph{sliding-window} memperoleh
+0,720 dan 0,630, dan \emph{recursive} 0,680 dan 0,540. Dengan demikian, \emph{baseline} bukan hanya unggul
+secara gabungan, tetapi juga pada masing-masing bahasa. \emph{Precision} dan \emph{nDCG} menunjukkan pola
+yang sama, dengan nilai bahasa Inggris sedikit lebih tinggi karena \emph{manual} sumber menggunakan
+bahasa Inggris.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/metrics-at-sweet-spot-chunker.png}
+\caption{\emph{Recall}, \emph{precision}, dan \emph{nDCG} profil \emph{chunker} pada \emph{sweet spot} \(K=25\)}
+\label{fig:customer-chunker-sweet-spot}
+\end{figure}
+
+\subsubsection{Strategi \emph{Indexing}}
+\label{subsubsec:customer-indexing}
+
+Perbandingan \emph{indexer} mempertahankan \emph{chunker} \emph{baseline} dan hanya mengganti \emph{plugin} \emph{indexer}.
+Konfigurasi yang dibandingkan diringkas pada Tabel~\ref{tab:customer-indexer-config}.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Konfigurasi \emph{indexer} pada eksperimen \emph{customer service}}
+\label{tab:customer-indexer-config}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.1cm}>{\RaggedRight\arraybackslash}p{4.2cm}>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+\textbf{Strategi} & \textbf{\emph{Plugin}} & \textbf{Konfigurasi utama}\\
+\midrule
+\emph{Hybrid} & \texttt{hybrid-semantic-keyword} & \emph{Dense} \texttt{BAAI/bge-m3} dan \emph{lexical} \texttt{lexical\_text} serta \texttt{content}\\
+\emph{Sparse} & \texttt{sparse-keyword} & Pencocokan \emph{lexical} pada \texttt{lexical\_text} dan \texttt{content}\\
+\emph{Dense} & \texttt{dense-semantic} & Representasi \emph{dense} dari \texttt{BAAI/bge-m3}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\emph{Dataset}, \emph{chunker} \emph{baseline}, dan parameter lain dibuat sama. \emph{Indexer} \emph{dense} diharapkan lebih
+baik ketika pertanyaan memakai istilah yang berbeda dari dokumen karena mencocokkan makna,
+sedangkan \emph{sparse} hanya mengandalkan kecocokan kata.
+
+Kurva pada Gambar~\ref{fig:customer-indexer-recall} menunjukkan bahwa \emph{dense} mencapai
+\emph{recall} tinggi lebih awal dan mulai mendatar sekitar \(K=40\). \emph{Sparse} tetap paling rendah
+karena hanya mencocokkan kata yang sama. Dengan pertimbangan kenaikan \emph{recall} yang semakin
+kecil setelah titik tersebut, \emph{sweet spot} \emph{dense} ditetapkan pada \(K=40\), sedangkan \emph{sparse}
+ditetapkan pada \(K=45\). Kurva \emph{precision} dan \emph{nDCG} memperlihatkan trade-off yang sama:
+penambahan kandidat menurunkan \emph{precision}, sementara \emph{nDCG} lebih tinggi ketika \emph{context reference}
+muncul lebih awal.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/recall-indexer.png}
+\caption{Kurva \emph{context reference} \emph{recall} menurut \emph{cutoff} untuk profil \emph{indexer}}
+\label{fig:customer-indexer-recall}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/precision-indexer.png}
+\caption{Kurva \emph{chunk} \emph{precision} menurut \emph{cutoff} untuk profil \emph{indexer}}
+\label{fig:customer-indexer-precision}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/ndcg-indexer.png}
+\caption{Kurva \emph{nDCG} menurut \emph{cutoff} untuk profil \emph{indexer}}
+\label{fig:customer-indexer-ndcg}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Hasil strategi \emph{indexing} pada \emph{sweet spot} masing-masing}
+\label{tab:customer-indexing-results}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{4.2cm} r r r r@{}}
+\toprule
+\textbf{Strategi} & \textbf{\emph{Sweet spot} K} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}}\\
+\midrule
+\emph{Hybrid} \emph{baseline} & 25 & 0,740 & \textbf{0,055} & 0,328\\
+\emph{Sparse} \emph{indexer} & 45 & 0,465 & 0,023 & 0,177\\
+\emph{Dense} \emph{indexer} & 40 & \textbf{0,830} & 0,048 & \textbf{0,374}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Pada \emph{sweet spot} masing-masing, \emph{dense} memperoleh \emph{recall} gabungan 0,830, lebih tinggi daripada
+\emph{hybrid} 0,740 dan \emph{sparse} 0,465. Nilai \emph{nDCG} \emph{dense} juga paling tinggi, yaitu 0,374, dibandingkan
+\emph{hybrid} 0,328 dan \emph{sparse} 0,177 (Tabel~\ref{tab:customer-indexing-results}). Keunggulan ini
+sesuai dengan karakteristik pertanyaan \emph{customer service}. Pelanggan biasanya menjelaskan
+gejala, tujuan, atau kendala dengan bahasa sehari-hari, sedangkan \emph{manual} menggunakan istilah
+teknis dan variasi kalimat yang berbeda. Pertanyaan tersebut karena itu tidak selalu memuat
+kata yang sama dengan \emph{context reference}. \emph{Dense} membandingkan kedekatan makna sehingga tetap dapat
+menemukan \emph{block} yang relevan meskipun terjadi parafrasa. \emph{Hybrid} masih mencampurkan peringkat
+\emph{lexical} dan dapat terdampak ketika kecocokan kata tidak kuat, sedangkan \emph{sparse} hanya mencari
+kata yang sama. Oleh sebab itu, \emph{dense} dipilih sebagai \emph{indexer} final.
+
+Perbedaan antarbahasa juga mendukung kesimpulan tersebut. Pada \emph{sweet spot} masing-masing, \emph{dense}
+mencapai \emph{recall} 0,850 untuk bahasa Inggris dan 0,810 untuk bahasa Indonesia. \emph{Hybrid} hanya
+mencapai 0,800 dan 0,680, sedangkan \emph{sparse} 0,600 dan 0,300. Selisih \emph{dense} antara kedua bahasa
+hanya 4 poin persentase, sehingga BGE-M3 tetap mengenali hubungan semantik ketika \emph{query}
+berbahasa Indonesia harus mencari bukti pada \emph{manual} berbahasa Inggris. Nilai \emph{nDCG} \emph{dense} juga
+tetap tinggi pada kedua bahasa, yaitu 0,396 untuk bahasa Inggris dan 0,353 untuk bahasa
+Indonesia.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/metrics-at-sweet-spot-indexer.png}
+\caption{\emph{Recall}, \emph{precision}, dan \emph{nDCG} profil \emph{indexer} pada \emph{cutoff} \emph{sweet spot}}
+\label{fig:customer-indexer-sweet-spot}
+\end{figure}
+
+\subsection{Evaluasi Sistem \emph{Retrieval}}
+\label{subsec:customer-system-retrieval}
+
+Evaluasi sistem membandingkan seluruh kondisi pada satu \emph{cutoff} bersama, yaitu \emph{sweet spot}
+\(K=45\). Nilai ini dipilih karena kurva \emph{recall} sudah mulai mendatar pada sebagian besar
+kondisi, tetapi masih memberikan cakupan yang memadai. Dengan \emph{cutoff} yang sama, hasil setiap
+kondisi dapat dibandingkan secara langsung tanpa memasukkan kandidat tambahan yang tidak perlu.
+Ringkasan metrik pada \(K=45\) disajikan pada Tabel~\ref{tab:customer-system-results},
+sedangkan kurva lengkap ditampilkan pada gambar berikut.
+
+Gambar~\ref{fig:customer-system-recall} menunjukkan perbandingan \emph{recall} seluruh metode.
+\emph{Dense} menjadi kurva tertinggi, sedangkan \emph{sparse} menjadi yang terendah. Pada \emph{cutoff} bersama
+\(K=45\), \emph{dense} mencapai \emph{recall} 0,835, lebih tinggi daripada \emph{baseline} 0,745 dan metode
+\emph{chunker} lainnya.
+
+Pada \emph{cutoff} yang sama, \emph{recall} \emph{dense} adalah 0,850 untuk bahasa Inggris dan 0,820 untuk bahasa
+Indonesia. \emph{Baseline} berada pada 0,810 dan 0,680, \emph{sliding-window} pada 0,730 dan 0,640,
+\emph{recursive} pada 0,700 dan 0,560, serta \emph{sparse} pada 0,600 dan 0,330. Peringkat metode yang sama
+di kedua bahasa menunjukkan bahwa \emph{dense} bukan hanya unggul pada \emph{query} berbahasa Inggris,
+melainkan juga tetap menjadi komponen terbaik pada pencarian lintas bahasa.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/recall-all-retrieval.png}
+\caption{Kurva \emph{context reference} \emph{recall} untuk seluruh metode \emph{retrieval}}
+\label{fig:customer-system-recall}
+\end{figure}
+
+Gambar~\ref{fig:customer-system-precision} memperlihatkan bahwa \emph{precision} turun pada
+semua metode ketika \emph{cutoff} bertambah karena jumlah kandidat bertambah lebih cepat daripada
+jumlah kandidat yang memuat \emph{context reference}. \emph{Dense} tetap memiliki \emph{precision} tertinggi, sedangkan
+\emph{sparse} paling rendah.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/precision-all-retrieval.png}
+\caption{Kurva \emph{chunk} \emph{precision} untuk seluruh metode \emph{retrieval}}
+\label{fig:customer-system-precision}
+\end{figure}
+
+Gambar~\ref{fig:customer-system-ndcg} memperlihatkan pola \emph{ranking} yang sejalan dengan
+\emph{recall}. \emph{Dense} memberikan \emph{nDCG} tertinggi pada kedua bahasa, \emph{baseline} dan \emph{sliding-window}
+berada di tengah, sedangkan \emph{sparse} tertinggal. Artinya, \emph{dense} tidak hanya menemukan lebih
+banyak \emph{context reference}, tetapi juga menempatkannya lebih dekat ke awal daftar.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/ndcg-all-retrieval.png}
+\caption{Kurva \emph{nDCG} untuk seluruh metode \emph{retrieval}}
+\label{fig:customer-system-ndcg}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Hasil evaluasi sistem \emph{retrieval} \emph{customer service} pada \emph{sweet spot} bersama}
+\label{tab:customer-system-results}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{4.2cm} r r r r@{}}
+\toprule
+\textbf{Kondisi} & \textbf{K} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}}\\
+\midrule
+\emph{Hybrid} \emph{baseline} & 45 & 0,745 & 0,033 & 0,339\\
+\emph{Recursive} \emph{chunker} & 45 & 0,630 & 0,022 & 0,294\\
+\emph{Sliding-window} \emph{chunker} & 45 & 0,685 & 0,028 & 0,325\\
+\emph{Sparse} \emph{indexer} & 45 & 0,465 & 0,023 & 0,177\\
+\emph{Dense} \emph{indexer} & 45 & \textbf{0,835} & \textbf{0,045} & \textbf{0,380}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Ringkasan pada Gambar~\ref{fig:customer-system-sweet-spot} menggunakan \emph{cutoff} bersama
+\(K=45\). Diagram ini menempatkan tiga profil \emph{chunker} dan dua profil \emph{indexer} dalam satu
+perbandingan, sehingga pengaruh perubahan komponen dapat dibaca pada skala yang sama.
+\emph{Dense} menjadi kondisi terbaik untuk \emph{recall}, \emph{precision}, dan \emph{nDCG}, sementara \emph{sparse} menjadi
+kondisi terlemah. Garis putus-putus pada kurva sebelumnya menandai \emph{cutoff} yang sama.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/customer_service_revision/final_eda/metrics-at-sweet-spot.png}
+\caption{Ringkasan \emph{recall}, \emph{precision}, dan \emph{nDCG} seluruh profil pada \emph{cutoff} \(K=45\)}
+\label{fig:customer-system-sweet-spot}
+\end{figure}
+
+\subsection{Analisis dan Keterbatasan Eksperimen}
+\label{subsec:customer-analysis-limitations}
+
+Perbedaan bahasa tetap perlu diperhatikan karena pencocokan leksikal lebih sensitif terhadap
+perubahan istilah antara bahasa Inggris dan bahasa Indonesia. Nilai pada tabel merupakan
+nilai gabungan dua bahasa, sehingga hasil per bahasa dapat sedikit berbeda.
+
+Eksperimen ini hanya menilai \emph{retrieval}. Kualitas jawaban LLM, \emph{reranking}, \emph{intent} classification,
+dan \emph{knowledge graph} tidak diuji. \emph{Dataset} juga terbatas pada 9 dokumen produk, sehingga hasilnya
+belum dapat digeneralisasi ke \emph{corpus} lain atau dianggap sebagai ukuran kualitas jawaban akhir.
+
+\section{Eksperimen pada \emph{Use Case} Hukum}
+\label{sec:eksperimen-legal}
+
+Eksperimen pada kasus hukum menguji kemampuan sistem menemukan bagian
+peraturan yang menjadi acuan pertanyaan. Pembahasan ini menggunakan korpus dokumen
+hukum, \emph{dataset} pertanyaan, dan hasil pengukuran \emph{retrieval} selama eksperimen.
+
+\subsection{\emph{Dataset} Eksperimen}
+\label{subsec:legal-dataset-eksperimen}
+
+\subsubsection{Pembentukan Korpus Dokumen}
+\label{subsubsec:legal-pembentukan-korpus}
+
+Pembentukan korpus dilakukan dalam beberapa langkah berikut.
+
+\begin{enumerate}
+  \item \textbf{Menetapkan populasi dan kerangka pemilihan.} Populasi awal berisi 8.745
+  dokumen peraturan. Sebanyak 4.459 dokumen memiliki keluaran \emph{parser} yang siap
+  diproses secara vektor. Setelah pasangan sumber dan \emph{hash} diperiksa, 4.453
+  dokumen dinyatakan valid dan menjadi kerangka pemilihan.
+  \item \textbf{Membentuk sampling unit.} Relasi \code{AMENDS} dan \code{REVOKES}
+  dinormalisasi, lalu dokumen yang saling terhubung dikelompokkan menjadi
+  \emph{primary sampling unit} (PSU). Dokumen dalam satu PSU diperlakukan sebagai satu
+  unit karena perubahan atau pencabutan pada satu peraturan dapat menjelaskan peraturan
+  lain dalam kelompok yang sama.
+  \item \textbf{Membuat strata.} Setiap PSU diberi strata utama berdasarkan jenis relasi
+  dan komposisi status hukum. Bentuk peraturan, kelompok tahun, dan panjang dokumen
+  digunakan sebagai informasi tambahan untuk menjaga keragaman, bukan sebagai syarat
+  pemisahan dokumen.
+  \item \textbf{Memilih PSU.} Target perencanaan adalah 256 dokumen. PSU dipilih dengan
+  \emph{probability proportional to size} (PPS), sehingga PSU yang berisi lebih banyak
+  dokumen memiliki peluang lebih besar untuk terpilih. Pemilihan dilakukan di dalam
+  strata dan selalu mengambil PSU secara lengkap. Tidak ada PSU yang dipotong.
+  \item \textbf{Mengekspansi dan membekukan korpus.} Seluruh dokumen dari PSU terpilih
+  digabungkan menjadi korpus eksperimen. Hasilnya adalah 255 dokumen dari 217 PSU.
+  Jumlahnya satu dokumen di bawah target karena ukuran PSU tidak dapat dibagi. Korpus
+  yang telah dibekukan ini digunakan sebagai ruang pencarian pada semua kondisi \emph{retrieval}.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Cakupan korpus eksperimen hukum}
+\label{tab:legal-corpus-scope}
+\begin{tabularx}{0.92\textwidth}{@{}>{\RaggedRight\arraybackslash}X r@{}}
+\toprule
+\textbf{Tahap} & \textbf{Jumlah dokumen} \\
+\midrule
+Populasi dokumen sumber & 8.745 \\
+Dokumen \emph{vector-ready} mentah & 4.459 \\
+Dokumen \emph{vector-ready} yang lolos pemeriksaan & 4.453 \\
+Korpus terpilih dari PSU lengkap & 255 \\
+PSU yang dipilih & 217 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Pembentukan \emph{Dataset} Pertanyaan}
+\label{subsubsec:legal-pembentukan-dataset}
+
+Pembentukan \emph{dataset} pertanyaan dilakukan setelah korpus dibekukan, dengan langkah berikut.
+
+\begin{enumerate}
+  \item \textbf{Menentukan PSU pertanyaan.} Sebanyak 25 PSU dipilih dari korpus terpilih.
+  Setiap PSU menyediakan empat slot sehingga jumlah akhir yang direncanakan adalah
+  100 pertanyaan.
+  \item \textbf{Menyiapkan konteks.} Untuk setiap slot, sistem menyiapkan struktur
+  Pasal dan Ayat, isi unit hukum, \emph{metadata} dokumen, serta relasi antarperaturan yang
+  relevan. Konteks ini menjadi bahan penulisan dan bukan hasil dari proses \emph{retrieval}.
+  \item \textbf{Menyusun pertanyaan dan jawaban acuan.} Model AI menulis satu pertanyaan
+  untuk satu kebutuhan informasi dan membuat jawaban acuan berdasarkan konteks
+  yang disediakan. Rumusan dibuat untuk dua persona, yaitu awam dan analis hukum.
+  \item \textbf{Menetapkan \emph{context reference}.} Setiap pertanyaan diberi satu atau beberapa
+  ID Ayat kanonis yang benar-benar diperlukan untuk mendukung jawabannya. Tiga puluh
+  pertanyaan yang membahas perubahan, pencabutan, atau garis keturunan juga diberi
+  referensi relasi untuk evaluasi hubungan.
+  \item \textbf{Membekukan \emph{dataset}.} Setelah seluruh pertanyaan, jawaban acuan, konteks,
+  dan \emph{context reference} selesai diperiksa, 100 pertanyaan dibekukan. Set pertanyaan yang
+  sama digunakan pada semua kondisi agar perbedaan hasil hanya berasal dari konfigurasi
+  \emph{retrieval}.
+\end{enumerate}
+
+\subsubsection{Distribusi \emph{Dataset}}
+\label{subsubsec:legal-distribusi-dataset}
+
+Distribusi korpus diperiksa berdasarkan status hukum, struktur relasi, bentuk peraturan,
+tahun penerbitan, dan panjang dokumen. Agar keterwakilan sampel mudah dibaca, setiap
+panel berikut disajikan sebagai proporsi dari 255 dokumen terpilih. Proporsi ini juga
+menunjukkan bahwa pemilihan dilakukan dengan mempertimbangkan strata, bukan hanya
+mengambil dokumen secara acak dari satu kelompok.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/08_classification_dashboard_part1.png}
+\caption{Status hukum dan struktur relasi korpus}
+\label{fig:legal-classification-dashboard-part1}
+\end{figure}
+
+Panel pertama menunjukkan bahwa 83,9\% korpus berstatus berlaku dan 16,1\% berstatus
+tidak berlaku. Jika dilihat dari relasi antarperaturan, 79,6\% tidak memiliki relasi
+perubahan, 5,5\% berada pada relasi pencabutan, 8,6\% pada relasi perubahan, dan 6,3\%
+berada pada klaster dengan lebih dari satu jenis relasi. Komposisi ini memperlihatkan
+strata status dan relasi yang digunakan dalam pemilihan tetap terwakili, sehingga
+evaluasi mencakup pencarian peraturan yang berlaku sekaligus pertanyaan tentang
+perubahan dan pencabutan.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/08_classification_dashboard_part2.png}
+\caption{Keluarga bentuk dan kelompok tahun korpus}
+\label{fig:legal-classification-dashboard-part2}
+\end{figure}
+
+Panel kedua menunjukkan variasi bentuk dan tahun peraturan. Kelompok terbesar adalah
+peraturan kabupaten atau kota dengan proporsi 55,3\%, sedangkan peraturan daerah
+provinsi mencapai 18,4\%. Kelompok bentuk lainnya masing-masing berada pada kisaran
+6,3--9,0\%, sehingga sampel tidak hanya berisi satu bentuk peraturan. Berdasarkan
+tahun penerbitan, 10,2\% dokumen terbit sebelum 2010, 53,7\% berada pada rentang
+2010--2019, dan 36,1\% terbit mulai 2020. Proporsi tersebut menjaga variasi bentuk
+dan periode ketika kinerja \emph{retrieval} dibandingkan.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/08_classification_dashboard_part3.png}
+\caption{Panjang dokumen korpus}
+\label{fig:legal-classification-dashboard-part3}
+\end{figure}
+
+Panel ketiga membagi dokumen menurut panjangnya: 43,1\% termasuk dokumen pendek
+dengan 1--9 halaman, 27,1\% termasuk dokumen sedang dengan 10--17 halaman, dan
+29,8\% termasuk dokumen panjang dengan sedikitnya 18 halaman. Proporsi yang tersebar
+di tiga kelompok ini penting karena panjang dokumen memengaruhi jumlah \emph{chunk}
+yang dihasilkan oleh \emph{chunker}. Dengan demikian, pengujian tidak hanya mewakili
+dokumen dengan ukuran tertentu.
+
+\subsection{Konfigurasi dan Metodologi Eksperimen}
+\label{subsec:legal-konfigurasi-metodologi}
+
+Eksperimen menggunakan 100 pertanyaan, korpus 255 dokumen, dan pengaturan API serta
+\emph{worker} yang sama untuk seluruh kondisi. Tidak ada pembentukan jawaban,
+\emph{reranker}, atau pengisian konteks induk pada saat pengukuran. Perubahan hanya
+dilakukan pada komponen yang sedang diuji.
+
+\begin{table}[htbp]
+\centering\scriptsize
+\caption{Konfigurasi kondisi eksperimen hukum}
+\label{tab:legal-configuration}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{2.3cm}>{\RaggedRight\arraybackslash}p{2.6cm}>{\RaggedRight\arraybackslash}p{2.8cm}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+\textbf{Kondisi} & \textbf{\emph{Embedding}} & \textbf{\emph{Chunker}} & \textbf{\emph{Indexer}} & \textbf{Perubahan} \\
+\midrule
+\emph{Baseline BGE-M3} & BAAI/BGE-M3 & \emph{Legal structure-aware} & Dense & Referensi \\
+\emph{OAT Indo-LegalBERT} & Indo-LegalBERT & \emph{Legal structure-aware} & Dense & \emph{Embedding} \\
+\emph{OFAT Recursive} & BAAI/BGE-M3 & Recursive & Dense & \emph{Chunker} \\
+\emph{OFAT Sliding window} & BAAI/BGE-M3 & Sliding window & Dense & \emph{Chunker} \\
+\emph{OFAT Sparse} & BAAI/BGE-M3 & \emph{Legal structure-aware} & Sparse & \emph{Indexer} \\
+\emph{OFAT Hybrid} & BAAI/BGE-M3 & \emph{Legal structure-aware} & Hybrid & \emph{Indexer} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\emph{Retrieval} dijalankan pada \(K=5,10,15,\ldots,60\). \emph{Sweet spot} tidak ditentukan
+dengan mengambil nilai \(K\) terkecil yang mendekati nilai maksimum. \emph{Sweet spot}
+ditetapkan pada bagian \emph{plateau}, yaitu ketika penambahan lima kandidat
+(perubahan dari \(K\) ke \(K+5\)) memberi kenaikan \emph{recall} paling besar 0,02
+dan kondisi tersebut berlanjut pada seluruh \emph{cutoff} berikutnya. Dengan cara ini,
+plateau sementara tidak dianggap sebagai titik berhenti. \emph{nDCG} juga dianggap
+stabil jika perubahan antar-\emph{cutoff} paling besar 0,01. \emph{Precision} digunakan untuk
+menunjukkan biaya \emph{noise} ketika lebih banyak kandidat dikembalikan, bukan sebagai
+syarat utama penentuan plateau. Berdasarkan kurva tersebut, \emph{sweet spot} untuk pemilihan
+\emph{embedding} adalah \(K=45\), sedangkan perbandingan \emph{chunker}, \emph{indexer},
+dan sistem \emph{retrieval} secara keseluruhan menggunakan \(K=25\).
+
+Metrik utama adalah \emph{recall}@K. Metrik ini menghitung proporsi \emph{context reference}
+yang ditetapkan untuk pertanyaan dan berhasil ditemukan pada \(K\) hasil pertama.
+Metrik sekundernya adalah \emph{precision}@K, yang mengukur proporsi hasil yang
+merupakan \emph{hit}, serta \emph{nDCG}@K, yang memperhatikan posisi \emph{hit}
+di dalam daftar.
+
+\subsection{Evaluasi Per Komponen}
+\label{subsec:legal-evaluasi-per-komponen}
+
+\subsubsection{Pemilihan Model \emph{Embedding}}
+\label{subsubsec:legal-evaluasi-embedding}
+
+Dua model dibandingkan dengan \emph{chunker legal structure-aware} dan \emph{dense
+indexer} yang sama. BAAI/BGE-M3 menjadi referensi, sedangkan Indo-LegalBERT mengubah
+hanya model \emph{embedding}.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Hasil pemilihan model \emph{embedding} pada \emph{sweet spot} \(K=45\)}
+\label{tab:legal-embedding-results}
+\begin{tabularx}{0.92\textwidth}{@{}>{\RaggedRight\arraybackslash}X r r r@{}}
+\toprule
+\textbf{Model} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}} \\
+\midrule
+BAAI/BGE-M3 & \textbf{0,65} & \textbf{0,031} & \textbf{0,460} \\
+Indo-LegalBERT & 0,45 & 0,017 & 0,215 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-oat.png}
+\caption{Kurva \emph{recall} untuk pemilihan model \emph{embedding}}
+\label{fig:legal-recall-oat}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/precision-oat.png}
+\caption{Kurva \emph{precision} untuk pemilihan model \emph{embedding}}
+\label{fig:legal-precision-oat}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/ndcg-oat.png}
+\caption{Kurva \emph{nDCG} untuk pemilihan model \emph{embedding}}
+\label{fig:legal-ndcg-oat}
+\end{figure}
+
+Ketiga kurva menunjukkan BAAI/BGE-M3 konsisten berada di atas Indo-LegalBERT pada
+sebagian besar \(K\). Setelah \(K=45\), kenaikan \emph{recall} BGE-M3 menjadi kecil, sehingga
+nilai tersebut dipakai sebagai \emph{sweet spot}. Pada titik ini BGE-M3 memperoleh \emph{recall}
+yang lebih tinggi daripada Indo-LegalBERT. Perbedaan ini menunjukkan bahwa
+kemampuan model menangkap hubungan semantik dan istilah lintas bentuk kalimat lebih
+menentukan daripada klaim bahwa model khusus bahasa Indonesia pasti lebih baik.
+Perbandingan kedua model pada bagian ini difokuskan pada \emph{recall}, \emph{precision}, dan \emph{nDCG}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/metrics-at-sweet-spot-oat.png}
+\caption{Ringkasan metrik pemilihan model \emph{embedding} pada \emph{sweet spot}}
+\label{fig:legal-metrics-oat}
+\end{figure}
+
+\subsubsection{Strategi \emph{Chunking}}
+\label{subsubsec:legal-evaluasi-chunking}
+
+Strategi \emph{legal structure-aware} membentuk \emph{chunk} berdasarkan struktur
+Pasal dan Ayat sehingga ID Ayat tetap tersedia untuk penilaian. \emph{Recursive} dan
+\emph{sliding window} membentuk potongan berdasarkan panjang teks. Pada perbandingan
+ini BAAI/BGE-M3 dan \emph{dense indexer} dipertahankan.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Hasil strategi \emph{chunking} pada \emph{sweet spot} \(K=25\)}
+\label{tab:legal-chunker-results}
+\begin{tabularx}{0.92\textwidth}{@{}>{\RaggedRight\arraybackslash}X r r r@{}}
+\toprule
+\textbf{Strategi} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}} \\
+\midrule
+\emph{Legal structure-aware} & \textbf{0,64} & 0,047 & \textbf{0,445} \\
+Recursive & 0,60 & 0,038 & 0,381 \\
+Sliding window & 0,61 & 0,040 & 0,407 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-chunker.png}
+\caption{Kurva \emph{recall} untuk perbandingan strategi \emph{chunking}}
+\label{fig:legal-recall-chunker}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/precision-chunker.png}
+\caption{Kurva \emph{precision} untuk perbandingan strategi \emph{chunking}}
+\label{fig:legal-precision-chunker}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/ndcg-chunker.png}
+\caption{Kurva \emph{nDCG} untuk perbandingan strategi \emph{chunking}}
+\label{fig:legal-ndcg-chunker}
+\end{figure}
+
+Pada \(K=25\), \emph{legal structure-aware} menghasilkan \emph{recall} 0,64 dan \emph{nDCG} 0,445,
+lebih tinggi daripada \emph{recursive} dan \emph{sliding window}. Keunggulan ini berasal
+dari cara \emph{chunker} mempertahankan batas struktur, identitas sumber, dan konteks
+pada setiap \emph{chunk}. Informasi penting tidak mudah terpotong atau tersebar ke
+beberapa \emph{chunk}. Sebaliknya, \emph{recursive} dan \emph{sliding window} membagi
+teks terutama berdasarkan panjang karakter, sehingga bagian informasi yang saling
+berkaitan dapat terpisah dan lebih sulit ditemukan kembali. Akibatnya, \emph{chunk}
+yang relevan lebih sulit dicocokkan dan \emph{recall} menjadi lebih rendah.
+Perbedaannya terlihat pula pada kurva: setelah \(K=25\), \emph{recall} masih naik perlahan,
+sedangkan \emph{precision} terus turun. Karena itu \(K=25\) digunakan sebagai titik perbandingan
+yang cukup luas tanpa menambahkan terlalu banyak hasil kurang relevan.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/metrics-at-sweet-spot-chunker.png}
+\caption{Ringkasan metrik strategi \emph{chunking} pada \emph{sweet spot}}
+\label{fig:legal-metrics-chunker}
+\end{figure}
+
+\subsubsection{Strategi \emph{Indexing}}
+\label{subsubsec:legal-evaluasi-indexing}
+
+Pada evaluasi \emph{indexer}, \emph{legal structure-aware chunker} dan BAAI/BGE-M3
+dipertahankan. \emph{Sparse} mengandalkan kecocokan kata dan \emph{identifier}, sedangkan
+\emph{hybrid} menggabungkan kecocokan kata dengan kemiripan semantik.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Hasil strategi \emph{indexing} pada \emph{sweet spot} \(K=25\)}
+\label{tab:legal-indexer-results}
+\begin{tabularx}{0.92\textwidth}{@{}>{\RaggedRight\arraybackslash}X r r r@{}}
+\toprule
+\textbf{Strategi} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}} \\
+\midrule
+\emph{Dense baseline} & 0,64 & 0,047 & \textbf{0,445} \\
+\emph{Sparse} & 0,64 & \textbf{0,071} & 0,358 \\
+\emph{Hybrid} & \textbf{0,67} & 0,068 & 0,437 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-indexer.png}
+\caption{Kurva \emph{recall} untuk perbandingan strategi \emph{indexing}}
+\label{fig:legal-recall-indexer}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/precision-indexer.png}
+\caption{Kurva \emph{precision} untuk perbandingan strategi \emph{indexing}}
+\label{fig:legal-precision-indexer}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/ndcg-indexer.png}
+\caption{Kurva \emph{nDCG} untuk perbandingan strategi \emph{indexing}}
+\label{fig:legal-ndcg-indexer}
+\end{figure}
+
+Pada \(K=25\), \emph{hybrid} memperoleh \emph{recall} tertinggi, yaitu 0,67. \emph{Sparse}
+memiliki \emph{precision} tertinggi, yaitu 0,071, karena lebih selektif terhadap istilah dan
+\emph{identifier} hukum. \emph{Dense} menghasilkan \emph{nDCG} tertinggi, yaitu 0,445, sehingga posisinya
+lebih baik untuk menempatkan hasil relevan di awal daftar. Hasil ini menunjukkan bahwa
+tidak ada satu \emph{indexer} yang unggul pada seluruh metrik: \emph{hybrid} dipilih
+ketika cakupan Ayat menjadi prioritas, sedangkan \emph{sparse} berguna untuk pertanyaan
+yang menyebut istilah atau identitas peraturan secara eksplisit.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/metrics-at-sweet-spot-indexer.png}
+\caption{Ringkasan metrik strategi \emph{indexing} pada \emph{sweet spot}}
+\label{fig:legal-metrics-indexer}
+\end{figure}
+
+\subsection{Evaluasi Sistem \emph{Retrieval}}
+\label{subsec:legal-evaluasi-retrieval}
+
+Evaluasi keseluruhan membandingkan enam profil yang sama pada \(K=25\). Metrik utama
+tetap \emph{recall}. \emph{Precision} dan \emph{nDCG} dipakai untuk melihat banyaknya hasil
+tambahan serta posisi \emph{context reference}.
+
+\begin{table}[htbp]
+\centering\scriptsize
+\caption{Hasil keseluruhan sistem \emph{retrieval} hukum pada titik optimal \(K=25\)}
+\label{tab:legal-retrieval-results}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{3.0cm} r r r@{}}
+\toprule
+\textbf{Konfigurasi} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}} \\
+\midrule
+\emph{Baseline BGE-M3} & 0,64 & 0,047 & 0,445 \\
+\emph{Indo-LegalBERT} & 0,43 & 0,025 & 0,203 \\
+\emph{Recursive} & 0,60 & 0,038 & 0,381 \\
+\emph{Sliding window} & 0,61 & 0,040 & 0,407 \\
+\emph{Sparse} & 0,64 & \textbf{0,071} & 0,358 \\
+\emph{Hybrid} & \textbf{0,67} & 0,068 & 0,437 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-all-retrieval.png}
+\caption{Kurva \emph{recall} seluruh konfigurasi \emph{retrieval} hukum}
+\label{fig:legal-recall-all}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/precision-all-retrieval.png}
+\caption{Kurva \emph{precision} seluruh konfigurasi \emph{retrieval} hukum}
+\label{fig:legal-precision-all}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/ndcg-all-retrieval.png}
+\caption{Kurva \emph{nDCG} seluruh konfigurasi \emph{retrieval} hukum}
+\label{fig:legal-ndcg-all}
+\end{figure}
+
+Kurva keseluruhan memperlihatkan pola yang sama: \emph{recall} bertambah ketika \(K\)
+diperbesar, sedangkan \emph{precision} berkurang karena lebih banyak \emph{chunk} yang tidak
+menjadi acuan ikut dikembalikan. Pada \(K=25\), \emph{hybrid} memiliki \emph{recall} tertinggi
+0,67. \emph{Baseline} dan \emph{sparse} sama-sama mencapai \emph{recall} 0,64, tetapi
+\emph{baseline} memiliki \emph{nDCG} lebih tinggi. Ini berarti \emph{baseline} menempatkan
+hasil relevan lebih baik di awal daftar, sedangkan \emph{sparse} menghasilkan daftar
+yang lebih selektif.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/metrics-at-sweet-spot.png}
+\caption{Ringkasan metrik seluruh konfigurasi \emph{retrieval} hukum pada titik optimal}
+\label{fig:legal-metrics-all}
+\end{figure}
+
+\subsubsection{Evaluasi Relasi pada \emph{Knowledge Graph}}
+\label{subsubsec:legal-evaluasi-kg}
+
+Evaluasi berikut dikhususkan untuk pertanyaan yang memerlukan penelusuran relasi
+antarperaturan. Metrik utama yang digunakan adalah \emph{recall}@K untuk mengukur
+kemampuan sistem menemukan bukti yang memuat hubungan tersebut.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/kg-recall-all-retrieval.png}
+\caption{Kurva \emph{KG recall}}
+\label{fig:legal-recall-kg}
+\end{figure}
+
+Pada kurva \emph{KG recall} pada Gambar~\ref{fig:legal-recall-kg}, pada \(K=25\) konfigurasi \emph{sparse} mencapai
+nilai tertinggi, yaitu 0,517. Konfigurasi \emph{hybrid} mencapai 0,417, \emph{sliding window}
+0,350, \emph{baseline} dan \emph{recursive} masing-masing 0,300, sedangkan OAT dengan
+Indo-LegalBERT mencapai 0,150. Hasil ini menunjukkan perbedaan kemampuan tiap konfigurasi
+dalam menemukan bukti yang memuat hubungan antarperaturan. Hasil tersebut masuk akal karena
+\emph{subset} evaluasi ini hanya terdiri atas 30 pertanyaan yang memang memerlukan penelusuran relasi.
+Pertanyaan-pertanyaan tersebut menyebut entitas, istilah, atau penanda peraturan secara
+eksplisit, sehingga kecocokan leksikal memberi \emph{sparse retrieval} peluang lebih besar
+untuk menemukan \emph{chunk} yang memuat \emph{entity} dan relasi target. Dengan demikian,
+\emph{recall} \emph{sparse} yang lebih tinggi mencerminkan karakteristik subset pertanyaan
+relasi dan tidak berarti bahwa strategi tersebut selalu unggul pada pertanyaan lain. \emph{recall} digunakan sebagai ukuran utama
+dan dilengkapi pemeriksaan validitas skema, duplikasi entitas, resolusi identitas, serta
+keterlacakan setiap relasi ke potongan sumber.
+
+\subsection{Analisis dan Keterbatasan Eksperimen}
+\label{subsec:legal-analisis-keterbatasan}
+
+Hasil pada korpus hukum menunjukkan bahwa struktur data dan cara pencocokan sama-sama
+menentukan keberhasilan \emph{retrieval}. \emph{Legal structure-aware chunker} menjaga
+pemetaan hasil ke \emph{context reference}, sehingga keunggulannya terlihat pada \emph{nDCG} dan
+\emph{recall}.
+\emph{Hybrid indexer} memberi cakupan \emph{context reference} terbaik pada \emph{sweet spot} karena
+dapat menggabungkan istilah eksplisit dengan kemiripan makna. \emph{Sparse}
+lebih presisi ketika pertanyaan memuat nama, nomor, atau istilah peraturan secara
+langsung. BAAI/BGE-M3 menjadi model referensi karena \emph{recall} dan \emph{nDCG}-nya lebih tinggi
+daripada Indo-LegalBERT pada konfigurasi yang sama.
+
+Keterbatasan eksperimen adalah sebagai berikut.
+\begin{enumerate}
+  \item Korpus terpilih berisi 255 dokumen dari 217 PSU, sehingga hasil berlaku pada
+  kondisi \emph{vector-ready} tersebut dan belum mewakili seluruh populasi peraturan.
+  \item Seratus pertanyaan berasal dari 25 PSU pertanyaan. Observasi tidak sepenuhnya
+  independen karena pertanyaan dari PSU yang sama berbagi konteks hukum.
+  \item Evaluasi hanya mengukur \emph{retrieval} dan diagnostik relasi. Kualitas jawaban,
+  \emph{reranking}, dan pembentukan jawaban belum dinilai.
+  \item Perbandingan bersifat OFAT, sehingga interaksi beberapa komponen sekaligus belum
+  diuji.
+\end{enumerate}
+
+\subsection{Kesimpulan Bab}
+\label{subsec:kesimpulan-bab}
+
+Pada \emph{use case} \emph{customer service}, konfigurasi terbaik menggunakan
+\emph{generic structure-aware chunker} sebagai \emph{chunker} dan \emph{dense indexer}
+dengan model BAAI/BGE-M3. Pada \emph{sweet spot} bersama \(K=45\), konfigurasi ini
+mencapai \emph{recall} 0,835. Hasil tersebut menunjukkan bahwa struktur dokumen tetap
+terjaga dan pencarian berbasis makna membantu menemukan \emph{context reference} meskipun
+pertanyaan menggunakan variasi bahasa.
+
+Pada \emph{use case} hukum, konfigurasi terbaik menggunakan \emph{legal structure-aware
+chunker} dan \emph{hybrid indexer} dengan model BAAI/BGE-M3. Pada \(K=25\), konfigurasi
+ini memperoleh \emph{recall} 0,67. \emph{Legal structure-aware chunker} menjaga batas
+Pasal dan Ayat, sedangkan \emph{hybrid indexer} menggabungkan kecocokan istilah dan
+kemiripan makna. Dengan demikian, kedua eksperimen menunjukkan bahwa konfigurasi akhir
+dipilih berdasarkan kemampuan \emph{recall} dalam menemukan \emph{context reference}.

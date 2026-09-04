@@ -1,0 +1,1062 @@
+\chapter{Eksperimen dan Evaluasi}
+\label{chapter:eksperimen-evaluasi}
+
+Bab ini mengevaluasi komponen akuisisi dan ekstraksi dokumen yang dirancang pada \autoref{chapter:analisis-rancangan}.
+Evaluasi akuisisi mencakup \textit{throughput}, kegagalan, deduplikasi, dan fleksibilitas terhadap sumber baru, sedangkan evaluasi ekstraksi mencakup penentuan jalur ekstraksi per halaman dan pemulihan struktur hierarkis dokumen.
+Urutan eksperimen ekstraksi mengikuti dependensi implementasinya.
+Aturan \textit{routing} halaman ditetapkan terlebih dahulu, lalu digunakan untuk membentuk korpus evaluasi jalur \textit{native} dan jalur OCR pada \textit{legal parser}.
+
+\section{Evaluasi \textit{Datasource} dan \textit{Scraper} Peraturan BPK}
+\label{sec:evaluasi-datasource-scraper-bpk}
+
+\subsection{Eksperimen \textit{Scraper} Portal Peraturan BPK}
+\label{sec:eksperimen-scraper-bpk}
+
+\subsubsection{Tujuan dan Pertanyaan Evaluasi}
+\label{sec:tujuan-evaluasi-scraper-bpk}
+
+Eksperimen ini mengevaluasi mekanisme akuisisi dokumen pada portal peraturan BPK.
+Evaluasi difokuskan pada tiga ukuran keberhasilan Tujuan 1, yaitu \textit{throughput} ingesti, tingkat kegagalan, dan ketiadaan duplikasi penyimpanan.
+
+Pertanyaan evaluasi yang dijawab oleh eksperimen ini adalah sebagai berikut.
+
+\begin{enumerate}
+  \item Bagaimana perubahan nilai \textit{concurrency} dan jeda permintaan memengaruhi durasi serta \textit{throughput} ingesti?
+  \item Apakah konfigurasi dengan \textit{throughput} lebih tinggi menghasilkan lebih banyak \textit{failure} atau mengganggu kelengkapan enumerasi?
+  \item Apa penyebab \textit{failure} yang terjadi, dan apakah penyebab tersebut berkaitan dengan konfigurasi atau dengan kondisi sumber?
+  \item Apakah \textit{failure} pada satu entri dapat menghentikan pemrosesan entri lain atau keseluruhan \textit{run}?
+  \item Apakah dokumen dengan isi identik hanya menghasilkan satu salinan \textit{payload} di \textit{storage} meskipun memiliki \textit{source identifier} yang berbeda?
+\end{enumerate}
+
+\subsubsection{Rancangan Eksperimen}
+\label{sec:rancangan-eksperimen-scraper-bpk}
+
+Portal peraturan BPK dipilih sebagai sumber eksperimen utama karena menyediakan dokumen peraturan perundang-undangan yang menjadi korpus domain hukum pada tugas akhir ini.
+Google Drive tidak digunakan sebagai sumber eksperimen karena hanya disiapkan untuk evaluasi integrasi terhadap sumber kedua.
+Portal BPK juga tidak mencantumkan batas laju permintaan publik yang terdokumentasi.
+Keadaan tersebut membuat pengaruh \textit{concurrency} dan jeda permintaan perlu ditentukan melalui eksperimen, bukan melalui satu nilai batas yang telah ditetapkan oleh sumber.
+
+Korpus eksperimen diperoleh dari hasil pencarian portal dengan \textit{tag} Pendidikan dan pendidikan dan pelatihan.
+Korpus tersebut digunakan untuk keenam konfigurasi sehingga perbandingan antarkonfigurasi dilakukan pada himpunan entri yang sama.
+\textit{Datasource} hanya menerima berkas PDF.
+Enumerasi dilakukan sampai portal mengembalikan halaman kosong dengan kebijakan penghentian \mbox{\texttt{stop\_mode=none}}.
+
+Setiap konfigurasi dijalankan satu kali pada \textit{datasource} baru.
+Seluruh \textit{run} dijalankan secara berurutan pada lingkungan yang sama, yaitu Docker Compose dengan satu \textit{scraper worker}, RabbitMQ dengan \textit{prefetch} satu, PostgreSQL, dan MinIO.
+Tidak terdapat \textit{profile} aktif maupun proses \textit{pipeline} hilir selama eksperimen.
+Versi kode, citra Docker, kredensial, jaringan, dan mesin dipertahankan sama untuk seluruh konfigurasi.
+Dengan demikian, perubahan hasil dapat dikaitkan dengan parameter konfigurasi yang diuji, sementara faktor lingkungan dijaga tetap.
+
+Variabel konfigurasi terdiri atas \path{download_concurrency}, dua parameter jeda enumerasi, dan dua parameter jeda pengunduhan.
+Parameter jeda enumerasi adalah \path{enumerate_delay_min_seconds} dan \path{enumerate_delay_max_seconds}.
+Parameter jeda pengunduhan adalah \path{download_delay_min_seconds} dan \path{download_delay_max_seconds}.
+Metrik yang dicatat meliputi durasi \textit{run}, jumlah entri, jumlah dokumen baru, jumlah \textit{skip}, jumlah \textit{failure}, \textit{throughput}, kategori \textit{failure}, jalur perubahan status, dan hasil deduplikasi.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Hasil enam konfigurasi eksperimen \textit{scraper} BPK}
+  \label{tab:hasil-scraper-bpk}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{2.0cm} c r r r@{}}
+    \toprule
+    \textbf{Konfigurasi} & \shortstack{\textbf{Jeda enumerasi}\\\textbf{dan unduh}} & \shortstack{\textbf{\texttt{download\_}}\\\textbf{\texttt{concurrency}}} & \textbf{Durasi (jam)} & \textbf{Dokumen/jam} & \textbf{\textit{Failure}} \\
+    \midrule
+    \path{bpk-00-baseline} & 1--3 detik & 1 & 14,14 & 618,5 & 16 \\
+    \path{bpk-01-concurrency-5} & 1--3 detik & 5 & 3,58 & 2\,444,2 & 15 \\
+    \path{bpk-02-concurrency-10} & 1--3 detik & 10 & 4,63 & 1\,887,0 & 15 \\
+    \path{bpk-03-both-fast} & 0,5--1,5 detik & 1 & 7,39 & 1\,184,0 & 15 \\
+    \path{bpk-04-moderate-stress} & 0,5--1,5 detik & 5 & 2,18 & 4\,007,4 & 15 \\
+    \path{bpk-05-high-stress} & 0,5--1,5 detik & 10 & 1,75 & 4\,990,5 & 15 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{Perbandingan \textit{Throughput} dan Durasi}
+\label{sec:hasil-throughput-scraper-bpk}
+
+Keenam \textit{run} memproses 8.822 entri yang sama dan masing-masing menghasilkan 8.745 dokumen baru.
+Perbedaan antarkonfigurasi terutama terlihat pada waktu yang diperlukan untuk mencapai hasil tersebut.
+Konfigurasi \path{bpk-00-baseline} membutuhkan waktu 14,14 jam dengan \textit{throughput} 618,5 dokumen baru per jam.
+Sebaliknya, konfigurasi \path{bpk-05-high-stress} selesai dalam 1,75 jam dengan \textit{throughput} 4.990,5 dokumen baru per jam.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{experiments/scraper-bpk-factor-comparison.png}
+  \caption{Perbandingan durasi dan \textit{throughput} pada konfigurasi \textit{scraper} BPK}
+  \label{fig:scraper-bpk-factor-comparison}
+\end{figure}
+
+Perbandingan tersebut menunjukkan bahwa pengaruh \textit{concurrency} bergantung pada rentang jeda yang digunakan.
+Pada jeda 1--3 detik, \textit{concurrency} lima menghasilkan durasi 3,58 jam dan \textit{throughput} 2.444,2 dokumen baru per jam, sedangkan \textit{concurrency} sepuluh menghasilkan durasi 4,63 jam dan \textit{throughput} 1.887,0 dokumen baru per jam.
+Pada jeda 0,5--1,5 detik, \textit{concurrency} sepuluh justru lebih cepat daripada \textit{concurrency} lima, yaitu 1,75 jam dibandingkan 2,18 jam.
+Oleh karena itu, \textit{concurrency} yang lebih tinggi tidak dapat dianggap selalu menghasilkan \textit{throughput} yang lebih tinggi.
+
+\subsubsection{Bentuk Penyelesaian \textit{Run}}
+\label{sec:progress-scraper-bpk}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{experiments/scraper-bpk-completion-progress.png}
+  \caption{\textit{Progress} penyelesaian entri dan akumulasi \textit{byte} tersimpan pada keenam \textit{run} BPK}
+  \label{fig:scraper-bpk-completion-progress}
+\end{figure}
+
+\autoref{fig:scraper-bpk-completion-progress} memperlihatkan perkembangan pekerjaan berdasarkan waktu yang telah berlalu sejak setiap \textit{run} dimulai.
+Panel kiri menghitung persentase entri yang telah mencapai status terminal, termasuk entri berhasil, \textit{skip}, maupun \textit{failure}.
+Panel kanan menghitung akumulasi ukuran dalam \textit{byte} dari dokumen baru yang berhasil disimpan.
+Karena panel kanan hanya memasukkan dokumen yang tersimpan, entri yang berakhir sebagai \textit{skip} atau \textit{failure} tidak menambah nilainya.
+Selain itu, satu entri dapat memiliki berkas yang jauh lebih besar daripada entri lain.
+Akibatnya, penyelesaian sejumlah entri tidak selalu menghasilkan kenaikan jumlah \textit{byte} yang sebanding.
+
+\subsubsection{Hasil \textit{Run} Representatif dan Kategori \textit{Failure}}
+\label{sec:hasil-failure-skip-scraper-bpk}
+
+Seluruh \textit{run} berstatus \texttt{completed} dan menyelesaikan enumerasi pada himpunan 8.822 entri yang sama.
+Status \texttt{completed} pada tingkat \textit{run} berarti enumerasi telah selesai, bukan berarti setiap entri berhasil disimpan sebagai dokumen baru.
+Karena hasil \textit{skip}, jalur status, dan kategori \textit{failure} pada konfigurasi \textit{non-baseline} berulang, satu \textit{run} digunakan untuk menjelaskan pola umum.
+\textit{Run} representatif tersebut adalah \mbox{\texttt{bpk-01-concurrency-5}}, yaitu konfigurasi yang kemudian direkomendasikan sebagai titik operasi.
+
+Pada \textit{run} representatif, 19 entri dilewati karena isi berkas identik dan 43 entri dilewati karena tipe berkas tidak didukung.
+Ke-43 entri tersebut terdiri atas 24 berkas \texttt{.doc}, 16 berkas \texttt{.docx}, dua berkas \texttt{.rar}, dan satu berkas \texttt{.rtf}.
+Setiap entri dengan tipe yang tidak didukung mengikuti jalur \path{pending -> downloading -> downloaded -> skipped}.
+Hal ini menunjukkan bahwa kebijakan tipe berkas diterapkan setelah berkas diterima dan ekstensi aktualnya diketahui.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{experiments/scraper-bpk-skip-outcomes.png}
+  \caption{Hasil \textit{skip} pada \textit{run} representatif \textit{scraper} BPK}
+  \label{fig:scraper-bpk-skip-outcomes}
+\end{figure}
+
+Pada \textit{run} representatif terdapat 15 \textit{failure}.
+Enam \textit{failure} berupa HTTP 404 pada tautan unduh, sedangkan sembilan lainnya berupa tautan unduh yang tidak tersedia.
+Kelima \textit{run} lain menunjukkan sumber dan kategori \textit{failure} yang sama.
+Dengan demikian, kedua kategori tersebut lebih tepat dipahami sebagai kondisi sumber daripada akibat perbedaan \textit{concurrency} atau jeda.
+
+Konfigurasi \textit{baseline} memiliki satu perbedaan, yaitu 42 \textit{unsupported-file skip} dan 16 \textit{failure}, sedangkan konfigurasi lain memiliki 43 \textit{unsupported-file skip} dan 15 \textit{failure}.
+Perbedaan tersebut berasal dari sumber dengan \textit{source identifier} \href{https://peraturan.bpk.go.id/Details/120830/perbup-kab-purbalingga-no-9-tahun-2019}{\path{/Details/120830/perbup-kab-purbalingga-no-9-tahun-2019}}.
+Pada konfigurasi \textit{baseline}, proses menghabiskan percobaan ulang sebelum menerima berkas \texttt{.rtf}.
+Pada lima konfigurasi lain, berkas yang sama berhasil diterima lalu dilewati karena tipe berkasnya tidak didukung.
+Tidak ditemukan HTTP 429 maupun HTTP 500 pada keenam \textit{run}.
+Anomali tersebut karena itu kemungkinan besar berkaitan dengan gangguan jaringan pada sisi klien yang menyebabkan \textit{timeout} atau \textit{retry exhaustion}, bukan akibat \textit{rate limiting} dari \textit{server}.
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Kategori \textit{failure}]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-error-categories.png}}
+  \hfill
+  \subfloat[Pengulangan sumber \textit{failure}]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-error-stability.png}}
+
+  \vspace{0.7\baselineskip}
+  \subfloat[Tipe berkas yang tidak didukung]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-unsupported-file-types.png}}
+  \caption{Kategori \textit{failure}, kestabilan sumber, dan tipe berkas yang tidak didukung pada \textit{scraper} BPK}
+  \label{fig:scraper-bpk-error-analysis}
+\end{figure}
+
+Tidak ditemukannya HTTP 429 pada seluruh \textit{run} menunjukkan bahwa portal peraturan BPK tidak memperlihatkan mekanisme \textit{rate limiting} terhadap pola permintaan yang digunakan selama eksperimen.
+Kesimpulan ini bersifat terbatas pada kondisi eksperimen dan tidak menyatakan bahwa portal tersebut tidak memiliki pembatasan laju pada kondisi lain.
+Kegagalan pada tingkat dokumen juga tidak menghentikan pemrosesan entri lain karena setiap entri diproses secara terisolasi.
+Hal ini berbeda dari kegagalan enumerasi terminal, yang tetap dapat menghentikan keseluruhan \textit{run} sesuai rancangan pada \autoref{sec:solusi-pemisahan-akuisisi} dan \autoref{sec:solusi-pengendalian-run}.
+
+\subsubsection{Deduplikasi dan Identitas Sumber}
+\label{sec:analisis-deduplikasi-scraper-bpk}
+
+Pada tahap awal akuisisi, \textit{source identifier} digunakan untuk melacak entri yang diberikan portal BPK.
+Identitas tersebut digunakan untuk mengambil halaman rincian, menghubungkan metadata, dan merekam riwayat pemrosesan entri.
+Setelah berkas PDF berhasil diterima, sistem menghitung \textit{hash} atas seluruh isi berkas.
+Nilai \textit{hash} kemudian digunakan untuk menentukan apakah \textit{payload} identik sudah pernah disimpan.
+
+Pada \textit{run} representatif ditemukan 19 pasang \textit{source identifier}.
+Setiap pasangan memiliki nilai \mbox{\texttt{content\_sha256}} yang sama.
+Keanggotaan seluruh klaster tersebut stabil pada keenam \textit{run}, sehingga jumlah klaster dan hasil deteksi duplikasi dapat dijelaskan melalui satu \textit{run} representatif.
+Deduplikasi berdasarkan \textit{hash} memastikan bahwa isi PDF yang identik tidak disimpan sebagai dua salinan \textit{payload}.
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Klaster sumber dengan isi identik]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-duplicate-clusters.png}}
+  \hfill
+  \subfloat[Perubahan \textit{winner} penyimpanan]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-duplicate-winners.png}}
+  \caption{Deduplikasi berdasarkan kesamaan isi pada eksperimen \textit{scraper} BPK}
+  \label{fig:scraper-bpk-deduplication}
+\end{figure}
+
+Aspek yang berubah antarkonfigurasi bukan keanggotaan klaster, melainkan \textit{winner}, yaitu \textit{source identifier} yang lebih dahulu mencapai tahap penyimpanan.
+Sebelas dari 19 klaster mengalami perubahan \textit{winner} pada setidaknya satu konfigurasi.
+Perubahan tersebut dapat terjadi karena urutan hasil enumerasi portal tidak dijamin stabil dan \textit{concurrency} mengubah urutan penyelesaian pengunduhan.
+Dengan demikian, variasi \textit{winner} tidak menunjukkan bahwa deduplikasi gagal.
+Variasi tersebut menunjukkan bahwa sistem perlu memisahkan identitas sumber dari identitas isi berkas.
+
+\subsubsection{Kesimpulan Eksperimen}
+\label{sec:kesimpulan-evaluasi-bpk}
+
+Kesimpulan eksperimen ini disusun untuk menjawab lima pertanyaan evaluasi pada bagian sebelumnya.
+
+\begin{enumerate}
+  \item Perubahan \textit{concurrency} dan jeda permintaan memengaruhi durasi serta \textit{throughput} secara bersamaan.
+  Konfigurasi \mbox{\texttt{bpk-05-high-stress}} menghasilkan \textit{throughput} tertinggi, yaitu 4.990,5 dokumen baru per jam, tetapi hasil perbandingan menunjukkan bahwa \textit{concurrency} lebih tinggi tidak selalu lebih cepat.
+  Konfigurasi operasional yang dipilih adalah \path{download_concurrency}=5 dengan jeda 1--3 detik karena memberikan \textit{trade-off} yang lebih konservatif, dengan durasi 3,58 jam dan \textit{throughput} 2.444,2 dokumen baru per jam.
+
+  \item \textit{Throughput} yang lebih tinggi tidak mengurangi kelengkapan enumerasi atau meningkatkan \textit{failure} pada keenam \textit{run} yang diamati.
+  Seluruh konfigurasi memproses 8.822 entri, menghasilkan 8.745 dokumen baru, dan berstatus \texttt{completed}.
+  Jumlah \textit{failure} juga serupa pada konfigurasi non-\textit{baseline}; perbedaan pada \textit{baseline} disebabkan oleh satu anomali sumber.
+
+  \item \textit{Failure} yang berulang terutama berasal dari kondisi sumber, yaitu HTTP 404 dan tautan unduh yang tidak tersedia.
+  Satu \textit{retry exhaustion} pada \textit{baseline} kemungkinan berkaitan dengan gangguan jaringan pada sisi klien karena tidak ditemukan HTTP 429 maupun HTTP 500.
+  Tipe berkas yang tidak didukung tidak dihitung sebagai \textit{failure}, melainkan sebagai \textit{skip} sesuai kebijakan \textit{datasource}.
+
+  \item \textit{Failure} pada satu entri tidak menghentikan pemrosesan entri lain.
+  Setiap entri diproses secara terisolasi, sehingga seluruh \textit{run} tetap dapat menyelesaikan enumerasi meskipun sebagian entri berakhir sebagai \textit{failure} atau \textit{skip}.
+
+  \item Deduplikasi mencegah penyimpanan ulang terhadap isi yang identik.
+  Setelah pemeriksaan awal berdasarkan \textit{source identifier}, \textit{content\_sha256} menjadi sumber kebenaran akhir untuk identitas isi.
+  Eksperimen menemukan 19 klaster duplikasi; pada setiap klaster hanya satu dokumen disimpan, sedangkan entri lain dengan hash yang sama dianggap sebagai duplikat dan berakhir sebagai \textit{skipped}.
+\end{enumerate}
+
+\subsection{Analisis Data Korpus BPK}
+\label{sec:data-mining-korpus-bpk}
+
+\subsubsection{Ruang Lingkup dan Korpus Analisis Data}
+\label{sec:ruang-lingkup-data-mining-bpk}
+
+Analisis data dilakukan pada \textit{metadata} dokumen di PostgreSQL untuk \textit{datasource} \texttt{bpk-peraturan-pendidikan}.
+Korpus terdiri atas 8.745 dokumen dengan total ukuran penyimpanan sekitar 20,07 GB.
+Median ukuran berkas adalah 463,74 KB, dan tahun peraturan yang tercatat berada pada rentang 1947--2026.
+
+\begin{table}[htb]
+  \centering
+  \footnotesize
+    \caption{Ringkasan korpus pada analisis \textit{metadata} BPK}
+  \label{tab:ringkasan-korpus-bpk}
+  \begin{tabularx}{0.88\textwidth}{@{}>{\raggedright\arraybackslash}X r@{}}
+    \toprule
+    \textbf{Karakteristik} & \textbf{Nilai} \\
+    \midrule
+    Jumlah dokumen & 8.745 \\
+    Total \textit{storage} & 20,07 GB \\
+    Median ukuran berkas & 463,74 KB \\
+    Rentang tahun peraturan & 1947--2026 \\
+    Dokumen dengan relasi & 2.839 \\
+    Jumlah relasi & 4.364 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{Komposisi Korpus Peraturan}
+\label{sec:komposisi-korpus-bpk}
+
+Empat panel pada \autoref{fig:scraper-bpk-corpus-composition} memperlihatkan komposisi korpus berdasarkan tahun peraturan, bentuk hukum, status keberlakuan, dan subjek.
+Keempat distribusi tersebut digunakan untuk membaca periode dokumen, jenis peraturan, keadaan keberlakuan, serta fokus topik korpus yang berhasil disimpan.
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Distribusi tahun]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-corpus-year.png}}
+  \hfill
+  \subfloat[Bentuk hukum]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-corpus-legal-form.png}}
+
+  \vspace{0.7\baselineskip}
+  \subfloat[Status keberlakuan]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-corpus-status.png}}
+  \hfill
+  \subfloat[Subjek peraturan]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-corpus-subject.png}}
+  \caption{Komposisi korpus peraturan BPK berdasarkan \textit{metadata}}
+  \label{fig:scraper-bpk-corpus-composition}
+\end{figure}
+
+Panel distribusi tahun menunjukkan bahwa dokumen dalam korpus berasal dari rentang 1947--2026.
+Jumlah tertinggi berada pada tahun 2019 dan 2020, masing-masing sebanyak 817 dokumen.
+Dengan demikian, korpus mencakup dokumen historis, tetapi konsentrasinya lebih besar pada peraturan yang relatif baru.
+
+Panel bentuk hukum menunjukkan dominasi empat bentuk peraturan, yaitu \texttt{PERBUP}, \texttt{PERWALI}, \texttt{PERDA}, dan \texttt{PERGUB}.
+Keempat bentuk tersebut mencakup 80,4\% dari seluruh dokumen.
+Komposisi ini menunjukkan bahwa korpus terutama berisi peraturan yang berkaitan dengan pemerintahan daerah dan administrasi regional.
+
+Status \texttt{BERLAKU} mencakup 87,6\% dokumen.
+Status \texttt{TIDAK\_BERLAKU} mencakup 12,4\% lainnya.
+Dokumen yang tidak berlaku tetap menjadi bagian yang terukur dalam korpus, sehingga distribusi tersebut memperlihatkan bahwa korpus tidak hanya berisi peraturan yang masih berlaku.
+
+Panel subjek menunjukkan bahwa \texttt{PENDIDIKAN} tercatat pada 95,1\% dokumen.
+Dominasi tersebut sesuai dengan \textit{tag} pencarian yang digunakan saat akuisisi, tetapi keberadaan subjek lain menunjukkan bahwa korpus tetap mencakup topik administrasi regional yang lebih luas.
+
+\subsubsection{Kelengkapan \textit{Metadata}}
+\label{sec:kelengkapan-metadata-bpk}
+
+\autoref{fig:scraper-bpk-metadata} memperlihatkan dua aspek metadata, yaitu kelengkapan pengisian \textit{field} serta distribusi nilai lokasi dan T.E.U.
+Panel pertama menunjukkan seberapa banyak dokumen memiliki nilai pada setiap \textit{field}, sedangkan panel kedua menunjukkan nilai administratif yang paling sering muncul.
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Kelengkapan \textit{metadata}]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-metadata-completeness.png}}
+  \hfill
+  \subfloat[Lokasi dan T.E.U.]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-location-teu.png}}
+  \caption{Kelengkapan dan variasi \textit{metadata} korpus BPK}
+  \label{fig:scraper-bpk-metadata}
+\end{figure}
+
+Pada panel kelengkapan, \texttt{subjek} tersedia pada 100\% dokumen, sedangkan \texttt{bidang} hanya tersedia pada 25\% dokumen.
+Perbedaan ini menunjukkan bahwa kelengkapan metadata tidak seragam antar-\textit{field}.
+Untuk pengelompokan berdasarkan topik, \texttt{subjek} menyediakan cakupan yang lebih konsisten daripada \texttt{bidang}.
+
+Panel lokasi dan T.E.U. menunjukkan 552 nilai berbeda pada kedua metadata administratif tersebut.
+Nilai yang beragam menunjukkan bahwa korpus mencakup banyak lokasi atau instansi penerbit dan tidak terpusat pada satu nilai administratif.
+Pada saat yang sama, distribusi frekuensi yang tidak seragam menunjukkan bahwa sebagian nilai muncul jauh lebih sering daripada nilai lainnya.
+
+\subsubsection{Distribusi Ukuran Berkas dan \textit{Storage}}
+\label{sec:ukuran-berkas-storage-bpk}
+
+\autoref{fig:scraper-bpk-file-size} membandingkan jumlah dokumen dan kontribusi \textit{storage} pada setiap kelompok ukuran berkas.
+Panel pertama menunjukkan komposisi jumlah dokumen, sedangkan panel kedua menunjukkan jumlah ruang yang digunakan oleh kelompok ukuran yang sama.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.92\textwidth]{experiments/scraper-bpk-file-size.png}
+  \caption{Distribusi ukuran berkas pada korpus BPK}
+  \label{fig:scraper-bpk-file-size}
+\end{figure}
+
+Sebanyak 13,9\% dokumen memiliki ukuran lebih dari 5 MB, tetapi kelompok tersebut menyumbang 65,9\% dari total \textit{storage}.
+Perbedaan antara proporsi dokumen dan proporsi penyimpanan menunjukkan bahwa beban \textit{storage} tidak berbanding lurus dengan jumlah dokumen.
+Karena itu, distribusi ukuran berkas perlu diperhitungkan ketika memperkirakan kapasitas penyimpanan korpus.
+
+\subsubsection{Relasi Antarperaturan}
+\label{sec:relasi-antarperaturan-bpk}
+
+\autoref{fig:scraper-bpk-relations} memperlihatkan struktur relasi antarperaturan melalui jenis relasi, cakupan target, jumlah relasi keluar per dokumen, dan dokumen dengan jumlah relasi masuk tertinggi.
+Grafik tersebut digunakan untuk membedakan relasi yang tercatat pada metadata dari relasi yang target dokumennya dapat ditemukan di dalam korpus.
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Ringkasan jenis relasi]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-relation-overview.png}}
+  \hfill
+  \subfloat[Target dengan jumlah relasi masuk tinggi]{\includegraphics[width=0.47\textwidth]{experiments/scraper-bpk-relation-targets.png}}
+  \caption{Relasi antarperaturan pada \textit{metadata} korpus BPK}
+  \label{fig:scraper-bpk-relations}
+\end{figure}
+
+Korpus memuat 4.364 relasi yang berasal dari 2.839 dokumen.
+Jenis relasi yang paling banyak muncul adalah pencabutan, dicabut oleh, perubahan, dan diubah oleh.
+Keempat jenis tersebut menunjukkan bahwa metadata korpus tidak hanya menyimpan dokumen secara terpisah, tetapi juga mencatat hubungan perubahan dan keberlakuan antarperaturan.
+
+Pada panel cakupan target, 1.000 sitasi tidak memiliki target BPK, sedangkan 888 target relasi berada di luar korpus yang dianalisis.
+Relasi dengan target yang tersedia di dalam korpus merupakan bagian yang dapat dihubungkan langsung, sementara dua kategori lainnya tetap tercatat sebagai relasi tanpa dokumen target lokal.
+
+Distribusi jumlah relasi per dokumen menunjukkan bahwa sebagian besar dokumen memiliki sedikit atau tidak memiliki relasi, sedangkan hanya sebagian kecil dokumen memiliki banyak relasi.
+Panel dengan skala logaritmik menegaskan ekor panjang tersebut dengan memperlihatkan dokumen yang memiliki jumlah relasi jauh lebih tinggi daripada mayoritas dokumen.
+
+Panel target relasi menampilkan peraturan yang paling sering menjadi tujuan relasi masuk.
+Konsentrasi relasi pada sejumlah target menunjukkan bahwa beberapa peraturan menjadi rujukan atau objek perubahan bagi banyak dokumen lain.
+Target yang tidak terdapat di dalam korpus tetap dihitung berdasarkan identitas targetnya, sehingga hasil analisis tidak menyamakan ketiadaan dokumen lokal dengan ketiadaan relasi pada sumber.
+
+\section{Evaluasi \textit{Datasource} dan \textit{Scraper} Google Drive}
+\label{sec:evaluasi-datasource-scraper-google-drive}
+
+\subsection{Tujuan dan Pertanyaan Evaluasi}
+\label{sec:tujuan-evaluasi-google-drive}
+
+Evaluasi ini menilai fleksibilitas mekanisme akuisisi terhadap sumber baru menggunakan \texttt{google-drive-sanity}.
+Berbeda dari eksperimen BPK, evaluasi ini tidak digunakan untuk memilih konfigurasi atau membandingkan \textit{throughput}.
+Fokusnya adalah memeriksa apakah sumber Google Drive dapat masuk ke alur akuisisi yang sama melalui \textit{plugin} dan konfigurasi khusus sumber.
+
+Pertanyaan evaluasi yang dijawab adalah sebagai berikut.
+
+\begin{enumerate}
+  \item Apakah Google Drive dapat menggunakan kontrak \textit{datasource} dan \textit{scraper} yang sama dengan sumber BPK?
+  \item Apakah hasil enumerasi dan pengunduhan dari \textit{plugin} Google Drive dapat diteruskan ke validasi tipe berkas, penyimpanan, deduplikasi, dan pencatatan \textit{lifecycle} pada komponen inti?
+  \item Apakah penambahan sumber Google Drive dapat dilakukan tanpa mengubah orkestrasi inti?
+\end{enumerate}
+
+\subsection{Rancangan Evaluasi}
+\label{sec:rancangan-evaluasi-google-drive}
+
+Evaluasi menggunakan satu folder Google Drive yang berisi sebelas entri, yaitu sepuluh PDF dan satu berkas ZIP.
+\textit{Plugin} Google Drive mengakses folder melalui Google Drive API menggunakan \textit{service account}, melakukan enumerasi dengan \textit{pagination} standar, dan tidak menggunakan batas penghentian tambahan.
+ID berkas Google Drive digunakan sebagai \textit{source identifier}, sedangkan nama berkas, tipe MIME, waktu perubahan, ukuran, dan tautan tampilan diteruskan sebagai metadata entri.
+
+\textit{Datasource} dikonfigurasi hanya untuk menerima berkas PDF.
+Kebijakan tipe berkas diterapkan oleh komponen inti, sehingga \textit{plugin} tidak membuat aturan ekstensi kedua yang dapat berbeda dari konfigurasi \textit{datasource}.
+Evaluasi menggunakan jeda enumerasi dan pengunduhan 1--3 detik dengan \textit{concurrency} lima.
+Konfigurasi tersebut dijalankan satu kali pada \textit{datasource} baru.
+
+Evaluasi ini tidak dirancang sebagai eksperimen pembandingan.
+Jumlah entri, ukuran berkas, API, mekanisme \textit{pagination}, dan model \textit{retry} Google Drive berbeda dari portal BPK, sehingga hasil waktunya tidak dibandingkan dengan \textit{throughput} BPK.
+
+\subsection{Hasil Pemrosesan}
+\label{sec:hasil-evaluasi-google-drive}
+
+\textit{Plugin} Google Drive memproses seluruh sebelas entri dalam 33,0 detik.
+Sembilan berkas PDF berhasil dibuat sebagai dokumen baru.
+Satu berkas PDF dilewati karena isinya sudah direpresentasikan oleh dokumen yang tersimpan, satu berkas \path{netgear.zip} dilewati karena tipe berkasnya tidak diterima, dan tidak terdapat \textit{failure}.
+Sembilan entri PDF yang menjadi dokumen baru mengikuti jalur \path{pending -> downloading -> downloaded -> completed}.
+Entri PDF duplikat mengikuti jalur \path{pending -> downloading -> downloaded -> skipped}, sedangkan berkas ZIP mengikuti jalur \path{pending -> skipped} sebelum pengunduhan.
+
+\begin{table}[htb]
+  \centering
+  \footnotesize
+  \caption{Hasil evaluasi integrasi \textit{scraper} Google Drive}
+  \label{tab:hasil-evaluasi-google-drive}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    \textbf{Metrik} & \textbf{Nilai} \\
+    \midrule
+    Total entri & 11 \\
+    Dokumen baru & 9 \\
+    \textit{Skip} duplikat & 1 \\
+    \textit{Skip} tipe berkas & 1 \\
+    \textit{Failure} & 0 \\
+    Durasi & 33,0 detik \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.78\textwidth]{experiments/scraper-google-drive-latest-run.png}
+  \caption{Hasil evaluasi integrasi \textit{scraper} Google Drive}
+  \label{fig:scraper-google-drive-evaluasi}
+\end{figure}
+
+\subsection{Analisis Fleksibilitas Sumber}
+\label{sec:analisis-fleksibilitas-google-drive}
+
+Hasil pemrosesan menunjukkan bahwa mekanisme enumerasi Google Drive yang menggunakan API dapat dipetakan ke kontrak \textit{scraper} yang sama dengan portal BPK.
+Perbedaan cara memperoleh daftar berkas dan mengunduh isi dokumen ditangani oleh \textit{plugin} Google Drive, sedangkan komponen inti tetap menangani validasi tipe, penghitungan \textit{hash}, deduplikasi, penyimpanan, dan pencatatan status.
+
+Jalur sembilan PDF yang berakhir sebagai dokumen baru menunjukkan bahwa keluaran \textit{plugin} dapat diteruskan sampai tahap penyimpanan tanpa perubahan pada orkestrasi.
+Entri \path{netgear-xr500.pdf} memiliki \textit{source identifier} yang berbeda dari \path{netgear-xr500 (1).pdf}, tetapi nilai \path{content_sha256}-nya sama.
+Karena itu, entri tersebut dianggap sebagai duplikat setelah pengunduhan dan berakhir sebagai \textit{skipped}.
+
+Jalur \path{pending -> skipped} pada \path{netgear.zip} menunjukkan bahwa kebijakan penerimaan berkas tetap berlaku untuk sumber kedua melalui konfigurasi \textit{datasource}, bukan melalui logika khusus di dalam \textit{plugin}.
+Dengan demikian, evaluasi ini memberikan bukti implementasi bahwa penambahan Google Drive dilakukan melalui \textit{plugin} dan konfigurasi sumber, sementara alur inti, penyimpanan, dan deduplikasi tetap digunakan.
+
+\section{Evaluasi \textit{Legal Parser}}
+\label{sec:evaluasi-legal-parser}
+
+Evaluasi \textit{legal parser} dibagi menjadi tiga eksperimen yang saling berurutan.
+Eksperimen pertama menilai \textit{classifier} yang menentukan apakah setiap halaman diproses melalui ekstraksi teks \textit{native} atau OCR.
+Eksperimen kedua menguji toleransi penggabungan fragmen teks pada korpus yang seluruh halamannya diperkirakan bertipe \texttt{VECTOR}.
+Eksperimen ketiga membandingkan model OCR dan penggunaan deteksi \textit{layout} pada korpus yang seluruh halamannya diperkirakan bertipe \texttt{SCAN}.
+
+\subsection{Eksperimen Klasifikasi Halaman \textit{Vector} dan \textit{Scan}}
+\label{sec:eksperimen-klasifikasi-halaman}
+
+\subsubsection{Tujuan dan Pertanyaan Evaluasi}
+\label{sec:tujuan-evaluasi-klasifikasi-halaman}
+
+Eksperimen ini menetapkan aturan untuk mengarahkan setiap halaman PDF ke jalur ekstraksi yang sesuai.
+Halaman yang memiliki teks \textit{native} yang memadai seharusnya tidak dikirim ke OCR karena OCR menambah biaya komputasi dan dapat memperkenalkan kesalahan pengenalan.
+Sebaliknya, halaman hasil pindai yang dilewatkan ke ekstraksi \textit{native} dapat menghasilkan teks kosong atau teks yang tidak dapat digunakan untuk memulihkan struktur hukum.
+
+Unit keputusan dibuat pada tingkat halaman karena satu dokumen dapat mencampurkan halaman \textit{native}, halaman pindai dengan \textit{text layer}, dan halaman pindai tanpa \textit{text layer}, sebagaimana dianalisis pada \autoref{sec:analisis-dokumen-peraturan}.
+Pertanyaan evaluasi yang dijawab adalah sebagai berikut.
+
+\begin{enumerate}
+  \item Apakah ciri cakupan citra dan jumlah teks \textit{native} dapat membedakan halaman \texttt{VECTOR} dan \texttt{SCAN} dengan tingkat kesalahan yang rendah?
+  \item Berapa nilai ambang cakupan citra dan jumlah teks minimum yang memberikan \textit{recall} tinggi pada kelas \texttt{SCAN}?
+  \item Bagaimana penerapan ambang terpilih membentuk komposisi halaman dan dokumen pada seluruh korpus?
+\end{enumerate}
+
+\subsubsection{Rancangan Eksperimen}
+\label{sec:rancangan-klasifikasi-halaman}
+
+Korpus eksperimen adalah \textit{datasource} \path{bpk-peraturan-pendidikan} yang terdiri atas 8.745 dokumen aktif dengan 165.395 halaman.
+Sampel dipilih secara acak seragam tanpa pengembalian pada tingkat halaman menggunakan seed \texttt{20260816}.
+Sebanyak 500 halaman diberi label secara manual tanpa memperlihatkan prediksi atau ciri \textit{classifier} kepada pelabel.
+
+Label \texttt{VECTOR} berarti teks \textit{native} pada halaman sudah cukup untuk digunakan, sedangkan label \texttt{SCAN} berarti halaman membutuhkan OCR untuk memperoleh isi yang dapat diandalkan.
+Sebanyak 50 halaman ditampilkan kembali sehingga terdapat 550 presentasi untuk mengukur konsistensi pelabelan.
+Pengulangan ini mengukur konsistensi terhadap halaman yang sama dan bukan kesepakatan antarpenilai.
+
+\textit{Classifier} menggunakan dua parameter.
+Parameter pertama adalah \path{scan_image_coverage_threshold}, yaitu rasio luas citra terbesar terhadap luas halaman.
+Parameter kedua adalah \path{scan_min_text_threshold}, yaitu jumlah karakter teks \textit{native} setelah spasi di luar isi dibuang.
+Seluruh 2.121 kombinasi pada grid dievaluasi, dengan cakupan citra 0--1 pada interval 0,01 dan teks minimum 0--200 karakter pada interval 10 karakter.
+
+Metrik yang dihitung adalah akurasi, \textit{recall} dan \textit{precision} kelas \texttt{SCAN}, \textit{macro F1}, serta rasio halaman yang diarahkan ke OCR.
+Kandidat diprioritaskan berdasarkan \textit{recall} \texttt{SCAN}, kemudian \textit{macro F1}, \textit{precision} \texttt{SCAN}, dan jumlah halaman yang diarahkan ke OCR.
+
+\subsubsection{Hasil Evaluasi pada Sampel Berlabel}
+\label{sec:hasil-klasifikasi-halaman}
+
+Kandidat yang dipilih menggunakan ambang cakupan citra 0,50 dan ambang teks minimum 100 karakter.
+Hasil evaluasinya dirangkum pada \autoref{tab:hasil-klasifikasi-halaman}.
+
+\begin{table}[htb]
+  \centering
+  \footnotesize
+  \caption{Hasil evaluasi \textit{classifier} halaman}
+  \label{tab:hasil-klasifikasi-halaman}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    \textbf{Metrik} & \textbf{Nilai} \\
+    \midrule
+    Ambang cakupan citra & 0,50 \\
+    Ambang teks minimum & 100 karakter \\
+    Akurasi & 98,8\% \\
+    \textit{SCAN recall} & 100,0\% \\
+    \textit{SCAN precision} & 97,1\% \\
+    \textit{Macro F1} & 98,8\% \\
+    Rasio \textit{routing} OCR pada sampel & 42,0\% \\
+    Konsistensi presentasi ulang & 98,0\% \\
+    Mismatch terhadap implementasi & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Tidak ada halaman berlabel \texttt{SCAN} yang diprediksi sebagai \texttt{VECTOR}.
+Sebanyak 204 halaman berlabel \texttt{SCAN} diprediksi sebagai \texttt{SCAN}, sedangkan enam halaman berlabel \texttt{VECTOR} ikut diarahkan ke OCR.
+Hasil tersebut menunjukkan bahwa ambang yang dipilih lebih mengutamakan pencegahan halaman pindai lolos ke jalur \textit{native} daripada meminimalkan seluruh pemanggilan OCR.
+
+\begin{table}[htb]
+  \centering
+  \footnotesize
+  \caption{Matriks kebingungan \textit{classifier} pada sampel berlabel}
+  \label{tab:confusion-klasifikasi-halaman}
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    & \textbf{Prediksi \texttt{SCAN}} & \textbf{Prediksi \texttt{VECTOR}} \\
+    \midrule
+    Label \texttt{SCAN} & 204 & 0 \\
+    Label \texttt{VECTOR} & 6 & 290 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.90\textwidth]{experiments/parser-classifier-threshold-grid.png}
+  \caption{Evaluasi grid ambang \textit{classifier}; bintang menandai kandidat terpilih}
+  \label{fig:classifier-threshold-grid}
+\end{figure}
+
+\subsubsection{Penerapan Ambang pada Seluruh Korpus}
+\label{sec:komposisi-korpus-klasifikasi}
+
+Ambang terpilih kemudian diterapkan pada seluruh halaman dalam \textit{datasource}.
+Tahap ini merupakan analisis komposisi korpus berdasarkan prediksi \textit{classifier}, bukan evaluasi kedua dengan label manual.
+Hasil \textit{routing} pada tingkat halaman terdiri atas 71.271 halaman \texttt{SCAN} atau 43,09\% dan 94.124 halaman \texttt{VECTOR} atau 56,91\%.
+
+Pada tingkat dokumen, 3.858 dokumen hanya terdiri atas halaman \texttt{SCAN}, 4.459 dokumen hanya terdiri atas halaman \texttt{VECTOR}, dan 428 dokumen memiliki campuran kedua jenis halaman.
+Kohort tersebut masing-masing mencakup 64.586, 79.017, dan 21.792 halaman.
+Keberadaan 428 dokumen campuran menjadi alasan penting untuk mempertahankan keputusan \textit{routing} pada tingkat halaman, bukan pada tingkat dokumen.
+
+\begin{table}[htb]
+  \centering
+  \footnotesize
+  \caption{Komposisi korpus berdasarkan hasil \textit{routing} halaman}
+  \label{tab:komposisi-korpus-parser}
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    \textbf{Komposisi dokumen} & \textbf{Dokumen} & \textbf{Halaman} & \textbf{Proporsi halaman} \\
+    \midrule
+    \texttt{ALL\_SCAN} & 3.858 & 64.586 & 39,05\% \\
+    \texttt{ALL\_VECTOR} & 4.459 & 79.017 & 47,77\% \\
+    \texttt{MIXED} & 428 & 21.792 & 13,18\% \\
+    \midrule
+    \textbf{Total} & \textbf{8.745} & \textbf{165.395} & \textbf{100,00\%} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Distribusi jenis halaman]{\includegraphics[width=0.47\textwidth]{experiments/parser-classifier-page-kind.png}}
+  \hfill
+  \subfloat[Komposisi dokumen]{\includegraphics[width=0.47\textwidth]{experiments/parser-classifier-document-composition.png}}
+  \caption{Komposisi hasil \textit{routing} pada seluruh korpus peraturan}
+  \label{fig:classifier-corpus-composition}
+\end{figure}
+
+\subsubsection{Kesimpulan Eksperimen}
+\label{sec:kesimpulan-klasifikasi-halaman}
+
+Eksperimen menunjukkan bahwa dua ciri struktural PDF dapat digunakan untuk membuat keputusan \textit{routing} pada tingkat halaman.
+Ambang cakupan citra 0,50 dan teks minimum 100 karakter dipilih karena mempertahankan \textit{recall} kelas \texttt{SCAN} sebesar 100,0\% pada sampel berlabel dengan \textit{macro F1} sebesar 98,8\%.
+Ambang tersebut digunakan sebagai kontrol tetap pada eksperimen \textit{legal parser} berikutnya.
+Penerapan pada seluruh korpus memperkirakan bahwa 43,09\% halaman akan menggunakan jalur OCR dan 13,18\% halaman berada dalam dokumen campuran.
+
+\subsection{Eksperimen \textit{Legal Parser} pada Korpus \texttt{ALL\_VECTOR}}
+\label{sec:eksperimen-legal-parser-vector}
+
+\subsubsection{Tujuan dan Pertanyaan Evaluasi}
+\label{sec:tujuan-evaluasi-legal-parser-vector}
+
+Eksperimen ini mengevaluasi jalur ekstraksi teks \textit{native} pada dokumen yang seluruh halamannya diprediksi sebagai \texttt{VECTOR}.
+Jalur tersebut membaca fragmen teks beserta posisi geometrinya, menggabungkan fragmen menjadi baris, lalu meneruskan baris tersebut ke analisis penanda dan pemulihan struktur hukum.
+
+Pertanyaan evaluasi yang dijawab adalah sebagai berikut.
+
+\begin{enumerate}
+  \item Bagaimana perubahan toleransi penggabungan vertikal dan horizontal memengaruhi keutuhan struktur hasil \textit{legal parser}?
+  \item Nilai toleransi mana yang memberikan \textit{clean rate} terbaik pada korpus dokumen bertipe \texttt{VECTOR}?
+  \item Apakah jalur \textit{native} dapat memproses seluruh korpus tanpa kegagalan terminal dan dengan biaya yang sesuai untuk pemrosesan korpus?
+\end{enumerate}
+
+\subsubsection{Rancangan Eksperimen}
+\label{sec:rancangan-legal-parser-vector}
+
+Eksperimen menggunakan sensus seluruh 4.459 dokumen \texttt{ALL\_VECTOR} yang mencakup 79.017 halaman karena jalur \textit{native} cukup murah secara komputasi dibandingkan jalur OCR sehingga tidak memerlukan pengambilan sampel.
+Dokumen \texttt{MIXED} tidak disertakan karena halaman pindainya akan menggunakan jalur OCR.
+
+Sebanyak 48 profil dijalankan melalui kombinasi dua parameter.
+Parameter vertikal \path{merge_y_tolerance} diuji pada nilai 0, 2, 4, 6, 8, 10, 12, dan 16 pt.
+Parameter horizontal \path{merge_x_tolerance} diuji pada nilai 0, 0,5, 1, 2, 4, dan 6 pt.
+Ambang \textit{routing} hasil eksperimen sebelumnya tetap menggunakan cakupan citra 0,50 dan teks minimum 100 karakter.
+
+Dokumen disebut bersih apabila berhasil menghasilkan dokumen kanonik tanpa peringatan.
+Makna kode peringatan yang digunakan pada evaluasi telah ditetapkan pada \autoref{sec:solusi-verifikasi-ekstraksi}.
+Klasifikasi kode peringatan pada eksperimen dirangkum pada \autoref{tab:klasifikasi-warning-legal-parser}.
+Dokumen tanpa peringatan dikategorikan sebagai bersih.
+Jika terdapat kedua jenis peringatan, kategori \textit{severe} diprioritaskan.
+Kegagalan dihitung terpisah karena dokumen tidak menghasilkan keluaran \textit{parser}.
+Definisi \textit{outcome} ini juga digunakan pada eksperimen jalur OCR pada subbab berikutnya.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Klasifikasi kode peringatan pada eksperimen \textit{legal parser}}
+  \label{tab:klasifikasi-warning-legal-parser}
+  \begin{tabularx}{\textwidth}{@{}p{2.0cm}>{\raggedright\arraybackslash}p{6.4cm}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \textbf{Kategori} & \textbf{Kode} & \textbf{Interpretasi} \\
+    \midrule
+    \textit{Advisory} &
+    \path{sequence_gap}, \path{revise_pasal_count}, \path{BODY_STRUCTURAL_MARKER_IN_REVISION} &
+    Dokumen kanonik tetap terbentuk, tetapi terdapat ketidakteraturan sumber atau konteks pembacaan yang perlu ditinjau. \\
+    \textit{Severe} &
+    \path{empty_leaf}, \path{revise_pasal_no_children}, \path{location_invalid}, \path{pembukaan_incomplete}, \path{empty_batang_tubuh} &
+    Terdapat risiko lebih besar bahwa bagian struktur hilang, kosong, atau tidak terbentuk sesuai aturan domain. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{table}[htb]
+  \centering
+  \footnotesize
+  \caption{Rancangan eksperimen \textit{legal parser} pada korpus \texttt{ALL\_VECTOR}}
+  \label{tab:rancangan-vector-parser}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    \textbf{Komponen} & \textbf{Nilai} \\
+    \midrule
+    Dokumen & 4.459 \\
+    Halaman & 79.017 \\
+    Jumlah profil & 48 \\
+    Level \path{merge_y_tolerance} & 0, 2, 4, 6, 8, 10, 12, 16 pt \\
+    Level \path{merge_x_tolerance} & 0, 0,5, 1, 2, 4, 6 pt \\
+    Jalur ekstraksi & Teks \textit{native} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection{Hasil dan Analisis Pengaruh Toleransi Penggabungan}
+\label{sec:hasil-legal-parser-vector}
+
+Hasil seluruh profil memperlihatkan bahwa tidak ada dokumen yang gagal pada 48 profil.
+Dengan demikian, terdapat 214.032 pemrosesan dokumen tanpa kegagalan terminal.
+Perbedaan antarkonfigurasi terutama terlihat pada proporsi dokumen yang bersih dan jumlah peringatan struktural.
+
+Profil \path{y6-x0.5} dipilih sebagai profil operasional.
+Profil tersebut menghasilkan 3.216 dokumen bersih, 1.026 dokumen \textit{advisory}, 217 dokumen \textit{severe}, dan tidak memiliki kegagalan.
+\textit{Clean rate}-nya adalah 72,1\%.
+Perbandingan \textit{clean rate} pada seluruh 48 profil ditampilkan pada \autoref{fig:vector-clean-rate-grid}.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Hasil profil operasional \textit{legal parser} pada korpus \texttt{ALL\_VECTOR}}
+  \label{tab:hasil-vector-parser}
+  \begin{tabular}{@{}lrrrrrr@{}}
+    \toprule
+    \textbf{Profil} & \textbf{Bersih} & \textbf{\textit{Advisory}} & \textbf{\textit{Severe}} & \textbf{Gagal} & \textbf{\textit{Clean rate}} & \textbf{Peringatan} \\
+    \midrule
+    \path{y6-x0.5} & 3.216 & 1.026 & 217 & 0 & 72,1\% & 3.060 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.88\textwidth]{experiments/parser-vector-clean-rate-grid.png}
+  \caption{\textit{Clean rate} pada grid toleransi penggabungan jalur \textit{native}}
+  \label{fig:vector-clean-rate-grid}
+\end{figure}
+
+Rata-rata marginal adalah rata-rata \textit{clean rate} pada seluruh nilai parameter lain.
+Dengan demikian, rata-rata untuk satu nilai \path{merge_y_tolerance} dihitung dari enam nilai \path{merge_x_tolerance}, sedangkan rata-rata untuk satu nilai \path{merge_x_tolerance} dihitung dari delapan nilai \path{merge_y_tolerance}.
+Angka marginal digunakan untuk membaca kecenderungan satu parameter secara terpisah dan bukan untuk menggantikan hasil pada satu sel konfigurasi tertentu.
+Rata-rata marginal \path{merge_y_tolerance} meningkat dari 63,3\% pada 0 pt menjadi 70,9\% pada 6 pt.
+Nilainya berada pada sekitar 70,9\% sampai 10 pt, lalu menurun menjadi 62,5\% pada 16 pt.
+Pada parameter horizontal, nilai 0,5 pt menghasilkan rata-rata marginal tertinggi sebesar 69,9\%, sedangkan nilai 4 dan 6 pt menghasilkan 66,9\%.
+Artinya, toleransi vertikal antara 4--10 pt relatif stabil pada korpus ini, sementara toleransi horizontal yang terlalu besar cenderung menurunkan \textit{clean rate}.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{\textit{Clean rate} marginal berdasarkan toleransi penggabungan}
+  \label{tab:efek-toleransi-vector}
+  \begin{tabular}{@{}llr@{}}
+    \toprule
+  \textbf{Parameter} & \textbf{Nilai} & \textbf{\textit{Clean rate} marginal} \\
+    \midrule
+    \path{merge_y_tolerance} & 0 pt & 63,3\% \\
+    & 2 pt & 70,5\% \\
+    & 4 pt & 70,8\% \\
+    & 6 pt & 70,9\% \\
+    & 8 pt & 70,9\% \\
+    & 10 pt & 70,9\% \\
+    & 12 pt & 70,7\% \\
+    & 16 pt & 62,5\% \\
+    \midrule
+    \path{merge_x_tolerance} & 0 pt & 69,8\% \\
+    & 0,5 pt & 69,9\% \\
+    & 1 pt & 69,8\% \\
+    & 2 pt & 69,6\% \\
+    & 4 pt & 66,9\% \\
+    & 6 pt & 66,9\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Komposisi \textit{outcome} untuk seluruh 48 profil ditampilkan pada \autoref{fig:vector-outcome-composition}.
+Gambar tersebut memperlihatkan bahwa perubahan toleransi mengubah proporsi dokumen bersih, \textit{advisory}, dan \textit{severe}, meskipun seluruh profil tetap menghasilkan keluaran \textit{parser} tanpa kegagalan.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{experiments/parser-vector-outcome-composition.png}
+  \caption{Komposisi hasil pemrosesan pada grid profil \textit{legal parser} jalur \textit{native}}
+  \label{fig:vector-outcome-composition}
+\end{figure}
+
+Pada profil \path{y6-x0.5}, peringatan yang paling banyak adalah \path{sequence_gap} sebanyak 2.171 kejadian.
+Peringatan tersebut tidak selalu menunjukkan kesalahan \textit{parser} karena dokumen sumber sering kali memang melewati nomor tertentu.
+Peringatan lain yang muncul adalah \path{BODY_STRUCTURAL_MARKER_IN_REVISION} sebanyak 494 kejadian, \path{pembukaan_incomplete} sebanyak 213 kejadian, dan \path{empty_leaf} sebanyak 131 kejadian.
+Dua kode lain yang muncul adalah \path{revise_pasal_no_children} sebanyak 49 kejadian dan \path{revise_pasal_count} sebanyak 2 kejadian.
+Makna keenam kode tersebut mengikuti definisi pada \autoref{tab:kode-peringatan-legal-parser}.
+Distribusi seluruh kode peringatan pada profil-profil yang diuji ditampilkan pada \autoref{fig:vector-warning-codes}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{experiments/parser-vector-warning-codes.png}
+  \caption{Peringatan \textit{parser} pada jalur \textit{native}}
+  \label{fig:vector-warning-codes}
+\end{figure}
+
+Pengukuran \textit{throughput} dilakukan pada profil \path{y6-x0.5} dalam eksekusi \textit{standalone} sehingga tidak bercampur dengan kontensi dari profil lain.
+Profil tersebut memproses 552 dokumen per menit atau 163 halaman per detik.
+Median waktu pemrosesan satu dokumen adalah 72 ms, sedangkan tambahan waktu per halaman setelah halaman pertama adalah sekitar 5,0 ms.
+Perkembangan pemrosesan dan hubungan waktu dengan jumlah halaman ditampilkan pada \autoref{fig:vector-throughput}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{experiments/parser-vector-throughput.png}
+  \caption{\textit{Throughput} profil \texttt{y6-x0.5}}
+  \label{fig:vector-throughput}
+\end{figure}
+
+\subsubsection{Analisis dan Kesimpulan Eksperimen}
+\label{sec:kesimpulan-legal-parser-vector}
+
+Toleransi vertikal yang terlalu ketat dapat memecah fragmen teks yang seharusnya berada pada satu baris, sedangkan toleransi yang terlalu longgar dapat menggabungkan fragmen dari baris yang berbeda.
+Pola tersebut terlihat pada penurunan \textit{clean rate} di 0 pt dan 16 pt.
+Toleransi horizontal yang besar juga menurunkan \textit{clean rate} karena lebih banyak fragmen yang dapat digabungkan tanpa pemisah yang semestinya.
+Profil \path{y6-x0.5} berada pada \textit{plateau clean rate} terbaik dan dipilih sebagai konfigurasi \textit{native} operasional.
+\textit{Clean rate} dan peringatan pada eksperimen ini merupakan indikator operasional berbasis pemeriksaan \textit{parser}, bukan pengukuran terhadap anotasi struktur hukum yang dibuat secara manual.
+Seluruh profil berhasil memproses korpus tanpa kegagalan, sedangkan profil operasional mencapai 552 dokumen per menit.
+
+\subsection{Eksperimen \textit{Legal Parser} pada Korpus \texttt{ALL\_SCAN}}
+\label{sec:eksperimen-legal-parser-ocr}
+
+\subsubsection{Tujuan dan Pertanyaan Evaluasi}
+\label{sec:tujuan-evaluasi-legal-parser-ocr}
+
+Eksperimen ini mengevaluasi jalur OCR pada dokumen hukum hasil pindai.
+Istilah \textit{jalur OCR} merujuk pada tahap pengambilan teks halaman sebelum baris tersebut diproses oleh lexer, segmenter, dan pemeriksa struktur \textit{legal parser}.
+Dengan demikian, eksperimen tidak hanya mengukur layanan OCR secara terpisah, tetapi mengukur dampaknya terhadap keluaran struktur hukum.
+
+Pertanyaan evaluasi yang dijawab adalah sebagai berikut.
+
+\begin{enumerate}
+  \item Model OCR mana yang menghasilkan proporsi dokumen bersih paling tinggi pada korpus peraturan hasil pindai?
+  \item Apakah deteksi \textit{layout} meningkatkan keutuhan struktur atau justru menambah gangguan pada urutan baca?
+  \item Bagaimana perubahan model dan deteksi \textit{layout} memengaruhi waktu pemrosesan, \textit{throughput}, dan kegagalan pengenalan?
+\end{enumerate}
+
+\subsubsection{Rancangan Eksperimen}
+\label{sec:rancangan-legal-parser-ocr}
+
+Sampel dipilih dari 2.577 dokumen \texttt{ALL\_SCAN} yang memiliki paling banyak 15 halaman.
+Sebanyak 250 dokumen dipilih secara acak tanpa pengembalian menggunakan seed \texttt{20260816}.
+Sampel tersebut mencakup 2.249 halaman dan digunakan kembali pada keempat profil agar perbandingan dilakukan pada dokumen dan halaman yang sama.
+
+Eksperimen menggunakan rancangan faktorial 2 x 2 yang mengombinasikan dua model OCR dan dua pilihan deteksi \textit{layout}.
+Model OCR yang diuji adalah GLM-OCR dan PaddleOCR-VL 1.6.
+Deteksi \textit{layout} menggunakan PP-DocLayoutV3 atau dinonaktifkan.
+
+Parameter faktor dan kontrol eksperimen dirangkum pada \autoref{tab:kontrol-ocr-parser}.
+
+Metrik yang dicatat adalah jumlah dan proporsi dokumen bersih, \textit{advisory}, \textit{severe}, dan gagal, jumlah peringatan berdasarkan kode, jenis kegagalan, waktu per halaman, \textit{throughput} dokumen, \textit{throughput} halaman, serta jumlah permintaan OCR per halaman.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Parameter eksperimen \textit{legal parser} jalur OCR}
+  \label{tab:kontrol-ocr-parser}
+  \begin{tabularx}{\textwidth}{@{}p{4.2cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \textbf{Parameter} & \textbf{Nilai} & \textbf{Peran} \\
+    \midrule
+    Model OCR & GLM-OCR; PaddleOCR-VL 1.6 & Faktor eksperimen \\
+    Prompt OCR & \texttt{Text Recognition:}; \texttt{OCR:} & Prompt sesuai model OCR \\
+    Model \textit{layout} & \path{none}; PP-DocLayoutV3 & Faktor eksperimen \\
+    \textit{Region} dikecualikan & \path{chart}, \path{image}, \path{seal} & Diterapkan saat PP-DocLayoutV3 digunakan \\
+    Resolusi rasterisasi & 150 DPI & Kontrol kualitas citra halaman \\
+    \path{scan_image_coverage_threshold} & 0,5 & Ambang \textit{routing} dari eksperimen classifier \\
+    \path{scan_min_text_threshold} & 100 & Ambang teks \textit{native} dari eksperimen classifier \\
+    \path{max_tokens} & 4.096 & Batas keluaran satu permintaan OCR \\
+    \path{temperature} & 0 & Decoding deterministik \\
+    \path{repetition_penalty} & 1,1 & Mengurangi pengulangan keluaran \\
+    \path{top_p} & 0,00001 & Membatasi kandidat probabilitas token \\
+    \path{top_k} & 1 & Memilih token dengan probabilitas tertinggi \\
+    \path{max_concurrent_requests} & 4 & Batas permintaan konkuren \\
+    Ambang skor \textit{layout} & 0,3 & Kontrol deteksi region \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Parameter \path{merge_y_tolerance} dan \path{merge_x_tolerance} tidak menjadi faktor pada eksperimen ini karena jalur OCR membentuk baris dari keluaran model, bukan dari penggabungan fragmen teks berdasarkan geometri PDF.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Profil eksperimen \textit{legal parser} jalur OCR}
+  \label{tab:konfigurasi-ocr-parser}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \textbf{Profil} & \textbf{Model OCR} & \textbf{\textit{Layout}} & \textbf{\textit{Region} yang dikecualikan} \\
+    \midrule
+    \path{glm-ocr} & GLM-OCR & Tidak ada & Tidak ada \\
+    \shortstack[l]{\texttt{glm-ocr-}\\\texttt{pp-doclayout-v3}} & GLM-OCR & PP-DocLayoutV3 & \path{chart}, \path{image}, \path{seal} \\
+    \path{paddle-ocr} & PaddleOCR-VL 1.6 & Tidak ada & Tidak ada \\
+    \shortstack[l]{\texttt{paddle-ocr-}\\\texttt{pp-doclayout-v3}} & PaddleOCR-VL 1.6 & PP-DocLayoutV3 & \path{chart}, \path{image}, \path{seal} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{Hasil Keutuhan Struktur}
+\label{sec:hasil-legal-parser-ocr}
+
+Profil \path{glm-ocr} tanpa deteksi \textit{layout} menghasilkan proporsi dokumen bersih tertinggi, yaitu 173 dari 250 dokumen atau 69,2\%.
+Profil tersebut juga menghasilkan sembilan dokumen \textit{severe} dan satu kegagalan.
+Hasil keempat profil dirangkum pada \autoref{tab:hasil-ocr-parser}.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Hasil keutuhan struktur pada eksperimen \textit{legal parser} jalur OCR}
+  \label{tab:hasil-ocr-parser}
+  \begin{tabular}{@{}lrrrrrr@{}}
+    \toprule
+    \textbf{Profil} & \textbf{Bersih} & \textbf{\textit{Advisory}} & \textbf{\textit{Severe}} & \textbf{Gagal} & \textbf{\textit{Clean rate}} & \textbf{\textit{Failure rate}} \\
+    \midrule
+    \path{glm-ocr} & 173 & 67 & 9 & 1 & 69,2\% & 0,4\% \\
+    \path{glm-ocr-pp-doclayout-v3} & 37 & 144 & 67 & 2 & 14,8\% & 0,8\% \\
+    \path{paddle-ocr} & 97 & 122 & 20 & 11 & 38,8\% & 4,4\% \\
+    \path{paddle-ocr-pp-doclayout-v3} & 68 & 109 & 67 & 6 & 27,2\% & 2,4\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.88\textwidth]{experiments/parser-ocr-outcome-composition.png}
+  \caption{Komposisi hasil pemrosesan pada eksperimen \textit{legal parser} jalur OCR}
+  \label{fig:ocr-outcome-composition}
+\end{figure}
+
+Penambahan PP-DocLayoutV3 menurunkan \textit{clean rate} pada kedua model OCR.
+Pada GLM-OCR, \textit{clean rate} turun dari 69,2\% menjadi 14,8\%, sedangkan pada PaddleOCR-VL 1.6 turun dari 38,8\% menjadi 27,2\%.
+Peringatan \path{sequence_gap} juga meningkat pada GLM-OCR dari 91 menjadi 598 dan pada PaddleOCR dari 269 menjadi 364 ketika deteksi \textit{layout} diaktifkan.
+Pola tersebut menunjukkan bahwa peningkatan pemrosesan berbasis region tidak otomatis menghasilkan urutan baca yang lebih sesuai untuk struktur peraturan.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.92\textwidth]{experiments/parser-ocr-warning-codes.png}
+  \caption{Peringatan \textit{parser} pada jalur OCR}
+  \label{fig:ocr-warning-codes}
+\end{figure}
+
+\subsubsection{Biaya Pemrosesan dan Kegagalan OCR}
+\label{sec:biaya-kegagalan-legal-parser-ocr}
+
+PaddleOCR tanpa deteksi \textit{layout} memiliki waktu median terendah, yaitu 3,87 detik per halaman, dengan \textit{throughput} 1,69 dokumen per menit dan 0,240 halaman per detik.
+GLM-OCR tanpa deteksi \textit{layout} membutuhkan 9,54 detik per halaman dan menghasilkan 0,68 dokumen per menit.
+Namun, deteksi \textit{layout} mempercepat GLM-OCR menjadi 5,49 detik per halaman, sementara pada PaddleOCR justru memperlambatnya menjadi 6,32 detik per halaman.
+
+Deteksi \textit{layout} mengganti satu permintaan OCR halaman penuh menjadi sekitar 17 permintaan \textit{region} per halaman.
+Karena itu, dampaknya terhadap waktu bergantung pada model OCR dan biaya penjadwalan region.
+
+\begin{table}[htb]
+  \centering
+  \scriptsize
+  \caption{Biaya pemrosesan eksperimen \textit{legal parser} jalur OCR}
+  \label{tab:biaya-ocr-parser}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xcccc@{}}
+    \toprule
+    \textbf{Profil} & \shortstack{\textbf{Median}\\\textbf{detik/halaman}} & \shortstack{\textbf{Dokumen/}\\\textbf{menit}} & \shortstack{\textbf{Halaman/}\\\textbf{detik}} & \shortstack{\textbf{Permintaan OCR/}\\\textbf{halaman}} \\
+    \midrule
+    \path{glm-ocr} & 9,54 & 0,68 & 0,101 & 1,00 \\
+    \shortstack[l]{\texttt{glm-ocr-}\\\texttt{pp-doclayout-v3}} & 5,49 & 1,17 & 0,174 & 17,15 \\
+    \path{paddle-ocr} & 3,87 & 1,69 & 0,240 & 1,00 \\
+    \shortstack[l]{\texttt{paddle-ocr-}\\\texttt{pp-doclayout-v3}} & 6,32 & 1,02 & 0,149 & 17,20 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Seluruh 20 kegagalan pada keempat profil terjadi pada tahap \path{ocr.recognition} ketika keluaran mencapai batas 4.096 token.
+Jumlah kegagalan berturut-turut adalah satu pada GLM-OCR, dua pada GLM-OCR dengan \textit{layout}, sebelas pada PaddleOCR, dan enam pada PaddleOCR dengan \textit{layout}.
+Kegagalan tersebut tidak dianggap dapat diselesaikan dengan pengulangan biasa karena decoding yang deterministik akan mencapai batas yang sama.
+
+\begin{figure}[htb]
+  \centering
+  \subfloat[Durasi dan \textit{throughput}]{\includegraphics[width=0.47\textwidth]{experiments/parser-ocr-duration-throughput.png}}
+  \hfill
+  \subfloat[Kegagalan pengenalan]{\includegraphics[width=0.47\textwidth]{experiments/parser-ocr-failures.png}}
+  \caption{Biaya dan kegagalan pada eksperimen \textit{legal parser} jalur OCR}
+  \label{fig:ocr-cost-failures}
+\end{figure}
+
+\subsubsection{Analisis dan Kesimpulan Eksperimen}
+\label{sec:kesimpulan-legal-parser-ocr}
+
+Berdasarkan keutuhan struktur, \path{glm-ocr} tanpa \textit{layout} dipilih sebagai konfigurasi operasional karena menghasilkan \textit{clean rate} tertinggi dan jumlah kegagalan paling rendah.
+PP-DocLayoutV3 menurunkan \textit{clean rate} pada kedua model, meskipun mempercepat GLM-OCR dari 9,54 menjadi 5,49 detik per halaman dan memperlambat PaddleOCR dari 3,87 menjadi 6,32 detik per halaman.
+PaddleOCR tanpa \textit{layout} merupakan konfigurasi tercepat, tetapi mutu struktur yang dihasilkan lebih rendah.
+Dengan demikian, eksperimen memilih GLM-OCR tanpa \textit{layout} untuk prioritas keutuhan struktur dan mencatat batas 4.096 token sebagai penyebab seluruh kegagalan OCR.
+
+\section{Evaluasi \textit{Generic Outline Parser} pada Domain \textit{Customer Service}}
+\label{sec:evaluasi-generic-outline-customer-service}
+
+Evaluasi ini menguji \textit{generic outline parser} pada manual produk NETGEAR yang digunakan sebagai sumber pengetahuan domain \textit{customer service}.
+Berbeda dari eksperimen \textit{legal parser}, evaluasi ini merupakan \textit{coverage check} dengan satu konfigurasi default dan tidak membandingkan beberapa model atau nilai parameter.
+
+\subsection{Tujuan dan Pertanyaan Evaluasi}
+\label{sec:tujuan-evaluasi-generic-outline}
+
+Evaluasi bertujuan menilai apakah \textit{bookmark outline} pada manual produk dapat dipetakan menjadi hierarki dokumen kanonik.
+Evaluasi juga memeriksa keberhasilan penautan setiap \textit{bookmark} ke baris judul dan kemampuan parser menghasilkan keluaran tanpa peringatan atau kegagalan.
+
+Pertanyaan evaluasi yang dijawab adalah sebagai berikut.
+
+\begin{enumerate}
+  \item Apakah seluruh manual NETGEAR pada \textit{datasource} dapat diproses oleh \textit{generic outline parser}?
+  \item Apakah setiap \textit{bookmark} dapat ditautkan ke judul bagian yang sesuai?
+  \item Apakah struktur \textit{bookmark} dapat dimaterialisasi menjadi hierarki blok kanonik?
+  \item Apakah bagian yang dikecualikan seperti \textit{Contents} tidak mengganggu pembentukan struktur?
+\end{enumerate}
+
+\subsection{Rancangan Evaluasi}
+\label{sec:rancangan-evaluasi-generic-outline}
+
+Evaluasi menggunakan seluruh 9 dokumen aktif pada \textit{datasource} \texttt{netgear\_products}, yang mencakup 1.400 halaman dan 1.566 \textit{bookmark}.
+Dokumen diurutkan berdasarkan nama berkas sehingga pengulangan evaluasi menggunakan himpunan yang sama tanpa seed dan tanpa pengambilan sampel.
+Seluruh dokumen diproses dengan satu konfigurasi default.
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \caption{Konfigurasi evaluasi \textit{generic outline parser}}
+  \label{tab:konfigurasi-generic-outline}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{5.1cm}>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \textbf{Parameter} & \textbf{Nilai} & \textbf{Peran} \\
+    \midrule
+    \path{header_margin_ratio} & 0,075 & Proporsi tinggi halaman yang diperlakukan sebagai \textit{header} \\
+    \path{footer_margin_ratio} & 0,90 & Batas awal area \textit{footer} \\
+    \path{anchor_search_window_points} & 150 pt & Jendela pencarian judul di sekitar tujuan \textit{bookmark} \\
+    \path{line_merge_tolerance_points} & 4 pt & Toleransi penggabungan fragmen teks menjadi satu baris \\
+    \path{text_decoration} & \path{true} & Mempertahankan dekorasi teks sebagai \textit{markdown} \\
+    \path{excluded_section_titles} & \path{contents}, \path{table of contents} & Bagian yang dibuang beserta turunannya dan dicatat sebagai \textit{metadata} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textit{Bookmark} menjadi sumber hierarki karena manual produk tidak memiliki aturan penomoran domain yang dapat digunakan untuk menyimpulkan tingkat judul.
+Judul \textit{bookmark} dicari pada jendela baris di sekitar tujuan \textit{bookmark}.
+Jika pencocokan judul tidak ditemukan, parser menggunakan baris pertama pada atau setelah tujuan sebagai \textit{fallback} dan mencatat peringatan sesuai kode yang berlaku.
+PDF tanpa \textit{outline} atau tanpa teks yang dapat diekstraksi ditolak sebagai kegagalan sumber.
+Parser tidak menggunakan OCR atau deteksi \textit{layout}, dan tabel tidak dimodelkan sebagai struktur khusus.
+
+\subsection{Hasil Pemrosesan}
+\label{sec:hasil-pemrosesan-generic-outline}
+
+Seluruh 9 manual berhasil diproses sebagai dokumen bersih.
+Tidak terdapat dokumen dengan peringatan, tidak ada dokumen gagal, dan tidak ada dokumen yang ditolak karena \textit{outline} atau teks tidak tersedia.
+Ringkasan hasil pemrosesan ditampilkan pada \autoref{tab:ringkasan-generic-outline}.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \caption{Ringkasan hasil evaluasi \textit{generic outline parser}}
+  \label{tab:ringkasan-generic-outline}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    \textbf{Metrik} & \textbf{Nilai} \\
+    \midrule
+    Dokumen diproses & 9 \\
+    Dokumen bersih & 9 \\
+    Dokumen dengan peringatan & 0 \\
+    Dokumen gagal & 0 \\
+    Halaman & 1.400 \\
+    \textit{Bookmark} & 1.566 \\
+    \textit{Heading} terbentuk & 1.557 \\
+    \textit{Anchor title-match} & 1.566/1.566 (100\%) \\
+    Durasi total & 7,6 detik \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Sebanyak 1.566 \textit{bookmark} menghasilkan 1.557 \textit{heading}.
+Selisih sembilan \textit{heading} berasal dari bagian \textit{Contents} yang dikecualikan pada masing-masing manual.
+Bagian yang dikecualikan disimpan dalam \textit{metadata} \path{excluded_sections} dan tidak dihitung sebagai peringatan.
+
+Perincian setiap manual ditampilkan pada \autoref{tab:hasil-perdokumen-generic-outline}.
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \caption{Hasil per dokumen pada evaluasi \textit{generic outline parser}}
+  \label{tab:hasil-perdokumen-generic-outline}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrr@{}}
+    \toprule
+    \textbf{Dokumen} & \textbf{Halaman} & \textbf{\textit{Bookmark}} & \textbf{\textit{Heading}} & \textbf{\textit{Text block}} & \textbf{\textit{Title-match}} & \textbf{Detik} \\
+    \midrule
+    \path{netgear-cm2000.pdf} & 26 & 29 & 28 & 29 & 100\% & 0,15 \\
+    \path{netgear-lm1200.pdf} & 105 & 105 & 104 & 105 & 100\% & 0,50 \\
+    \path{netgear-r6350.pdf} & 204 & 226 & 225 & 226 & 100\% & 1,08 \\
+    \path{netgear-r7000.pdf} & 186 & 213 & 212 & 213 & 100\% & 0,97 \\
+    \path{netgear-rax120.pdf} & 175 & 202 & 201 & 202 & 100\% & 1,08 \\
+    \path{netgear-rax50.pdf} & 160 & 185 & 184 & 185 & 100\% & 0,87 \\
+    \path{netgear-raxe500.pdf} & 169 & 192 & 191 & 192 & 100\% & 0,93 \\
+    \path{netgear-rbk852.pdf} & 161 & 183 & 182 & 183 & 100\% & 0,85 \\
+    \path{netgear-xr500.pdf} & 214 & 231 & 230 & 231 & 100\% & 1,17 \\
+    \midrule
+    \textbf{Total} & \textbf{1.400} & \textbf{1.566} & \textbf{1.557} & \textbf{1.566} & \textbf{100\%} & \textbf{7,60} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Jumlah \textit{text block} melebihi jumlah \textit{heading} sebanyak satu pada setiap dokumen.
+Blok tambahan tersebut merupakan materi awal dokumen sebelum \textit{bookmark} pertama dan disimpan sebagai \textit{front matter}.
+
+\subsection{Analisis Anchoring, Kinerja, dan Kesimpulan}
+\label{sec:analisis-kesimpulan-generic-outline}
+
+Seluruh 1.566 \textit{bookmark} berhasil dicocokkan dengan judulnya.
+Hasil ini mendukung strategi pencarian judul pada jendela di sekitar tujuan \textit{bookmark}, bukan sekadar mengambil baris pertama setelah tujuan.
+Pada konfigurasi ini, seluruh dokumen juga lolos pemeriksaan struktur tanpa \textit{empty node} atau rentang halaman yang tidak valid.
+
+Evaluasi selesai dalam 7,6 detik, dengan \textit{throughput} 71 dokumen per menit dan 184 halaman per detik.
+Median waktu pemrosesan adalah 0,93 detik per dokumen, sedangkan biaya tambahan berdasarkan jumlah halaman adalah sekitar 5,4 ms per halaman.
+
+Dengan demikian, \textit{generic outline parser} berhasil memulihkan hierarki manual produk menjadi dokumen kanonik pada seluruh 9 dokumen yang diuji.
+Anchoring \textit{bookmark} ke judul berhasil pada seluruh 1.566 \textit{bookmark}.
+Pengecualian bagian \textit{Contents} bekerja sesuai konfigurasi dan tidak diperlakukan sebagai cacat struktur.
+Hasil ini mendukung penggunaan kontrak \textit{parser plugin} yang sama untuk domain \textit{customer service} dengan strategi ekstraksi berbasis \textit{outline}.
+Evaluasi ini tidak digeneralisasikan ke seluruh PDF ber-\textit{bookmark} karena korpus hanya berasal dari satu produsen dan satu \textit{toolchain}.

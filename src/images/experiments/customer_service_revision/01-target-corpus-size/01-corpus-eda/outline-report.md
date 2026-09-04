@@ -1,0 +1,1622 @@
+# Analisis outline corpus customer service
+
+Laporan ini menampilkan heading/section yang benar-benar dikeluarkan parser, bukan label topic. Satu node outline dapat memiliki child node; angka block langsung dan descendant dibedakan agar section besar tidak disalahartikan sebagai satu evidence.
+
+## Ringkasan per dokumen
+
+| Dokumen | Halaman | Node outline | Top-level | Leaf | Kandidat outline | Kedalaman maksimum |
+|---|---:|---:|---:|---:|---:|---:|
+| netgear-cm2000.pdf | 26 | 28 | 4 | 22 | 22 | 3 |
+| netgear-lm1200.pdf | 105 | 104 | 10 | 84 | 84 | 3 |
+| netgear-r6350.pdf | 204 | 225 | 16 | 175 | 175 | 4 |
+| netgear-r7000.pdf | 186 | 212 | 15 | 168 | 168 | 4 |
+| netgear-rax120.pdf | 175 | 201 | 13 | 161 | 161 | 3 |
+| netgear-rax50.pdf | 160 | 184 | 13 | 148 | 148 | 3 |
+| netgear-raxe500.pdf | 169 | 191 | 12 | 155 | 155 | 3 |
+| netgear-rbk852.pdf | 161 | 182 | 11 | 144 | 144 | 3 |
+| netgear-xr500.pdf | 214 | 230 | 18 | 183 | 183 | 3 |
+
+## Daftar outline per dokumen
+
+### netgear-cm2000.pdf — CM2000
+
+26 halaman; 28 node outline; 22 leaf outline kandidat.
+
+- **Hardware Setup** — hal. 4–12; block langsung 1; block descendant 10; candidate langsung 1
+  - **Front Panel and LEDs** [KANDIDAT] — hal. 5–6; block langsung 1; block descendant 1; candidate langsung 1
+  - **Rear Panel** [KANDIDAT] — hal. 6–8; block langsung 1; block descendant 1; candidate langsung 1
+  - **Label** [KANDIDAT] — hal. 8–8; block langsung 1; block descendant 1; candidate langsung 1
+  - **System Requirements** [KANDIDAT] — hal. 8–9; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install and Activate Your Cable Modem** — hal. 9–12; block langsung 1; block descendant 5; candidate langsung 1
+    - **Connect Your Cable Modem to a Computer** [KANDIDAT] — hal. 9–10; block langsung 1; block descendant 1; candidate langsung 1
+    - **Activate Your Internet Service** [KANDIDAT] — hal. 10–11; block langsung 1; block descendant 1; candidate langsung 1
+    - **Perform a Speed Test** [KANDIDAT] — hal. 11–11; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect Your Cable Modem to a Router After Installation and Activation** [KANDIDAT] — hal. 11–12; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Your Network** — hal. 13–19; block langsung 1; block descendant 11; candidate langsung 1
+  - **Log in to the cable modem** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 14–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **View cable modem initialization** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **View cable modem status** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and clear event logs** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify the cable connection starting frequency** [KANDIDAT] — hal. 17–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Reboot the cable modem** [KANDIDAT] — hal. 17–18; block langsung 1; block descendant 1; candidate langsung 1
+  - **Reset the cable modem to factory default settings** — hal. 18–19; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the reset button on the back panel** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use the factory reset software button** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 20–23; block langsung 1; block descendant 4; candidate langsung 1
+  - **Use LEDs to Troubleshoot** [KANDIDAT] — hal. 21–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Cannot log in to the cable modem** [KANDIDAT] — hal. 23–23; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot the cable internet connection** [KANDIDAT] — hal. 23–23; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 24–26; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory Settings** [KANDIDAT] — hal. 25–25; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical Specifications** [KANDIDAT] — hal. 25–26; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-lm1200.pdf — LM1200
+
+105 halaman; 104 node outline; 84 leaf outline kandidat.
+
+- **Introduction and Hardware Overview** — hal. 6–16; block langsung 1; block descendant 12; candidate langsung 1
+  - **Introduction** [KANDIDAT] — hal. 8–8; block langsung 1; block descendant 1; candidate langsung 1
+  - **Supported Mobile Broadband Bands** [KANDIDAT] — hal. 8–9; block langsung 1; block descendant 1; candidate langsung 1
+  - **Package Contents** [KANDIDAT] — hal. 9–9; block langsung 1; block descendant 1; candidate langsung 1
+  - **Modem Rear Panel** [KANDIDAT] — hal. 9–10; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install the Nano SIM Card** [KANDIDAT] — hal. 10–10; block langsung 1; block descendant 1; candidate langsung 1
+  - **Power on Your Modem** [KANDIDAT] — hal. 10–11; block langsung 1; block descendant 1; candidate langsung 1
+  - **Ensure the Modem Firmware is Up to Date** [KANDIDAT] — hal. 11–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Top Panel With Status LEDs** [KANDIDAT] — hal. 13–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back Panel Connectors, Buttons, and Ports** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position the Modem** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Optional External Antenna** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+- **Get Started** — hal. 17–22; block langsung 1; block descendant 7; candidate langsung 1
+  - **Internet Connection Over Mobile Broadband** [KANDIDAT] — hal. 18–18; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a Computer, Switch, Hub, Router, or WiFi Router to the Modem** — hal. 18–19; block langsung 1; block descendant 3; candidate langsung 1
+    - **Connect a Computer to the LAN Port of the Modem** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect a Router or WiFi Router to the LAN Port of the Modem** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access the Modem’s Web Pages for the First Time** [KANDIDAT] — hal. 19–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Language** [KANDIDAT] — hal. 22–22; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Modem LAN Settings** — hal. 23–33; block langsung 1; block descendant 7; candidate langsung 1
+  - **Change the LAN Settings** [KANDIDAT] — hal. 24–25; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Router Mode and Bridge Mode** [KANDIDAT] — hal. 26–27; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the DHCP Server Settings** [KANDIDAT] — hal. 28–30; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP Server** [KANDIDAT] — hal. 30–31; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable the DMZ** [KANDIDAT] — hal. 31–32; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable VPN Pass-Through** [KANDIDAT] — hal. 32–33; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Mobile Broadband Connection** — hal. 34–42; block langsung 1; block descendant 8; candidate langsung 1
+  - **Manage Mobile Broadband Auto Connect Options** [KANDIDAT] — hal. 35–36; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually Connect to or Disconnect From the Mobile Broadband Network** [KANDIDAT] — hal. 36–37; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage APN Profiles for Mobile Broadband Connections** — hal. 37–42; block langsung 1; block descendant 5; candidate langsung 1
+    - **View APN Profiles or Add a Custom APN Profile** [KANDIDAT] — hal. 37–39; block langsung 1; block descendant 1; candidate langsung 1
+    - **Select an APN Profile** [KANDIDAT] — hal. 40–40; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change an APN Profile** [KANDIDAT] — hal. 40–41; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove an APN Profile** [KANDIDAT] — hal. 41–42; block langsung 1; block descendant 1; candidate langsung 1
+- **Secure Your Network** — hal. 43–63; block langsung 1; block descendant 18; candidate langsung 1
+  - **Change the Modem Password** [KANDIDAT] — hal. 44–44; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Port Forwarding for Incoming Traffic** — hal. 44–48; block langsung 1; block descendant 4; candidate langsung 1
+    - **Enable Port Forwarding and Add a Service or Application** [KANDIDAT] — hal. 45–46; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a Service or Application for Port Forwarding** [KANDIDAT] — hal. 46–47; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable Port Forwarding** [KANDIDAT] — hal. 47–48; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Port Filtering for Outgoing Traffic** — hal. 48–55; block langsung 1; block descendant 6; candidate langsung 1
+    - **Block Specific Services and Applications From Accessing the Internet and Allow All Other Services and Applications** [KANDIDAT] — hal. 49–50; block langsung 1; block descendant 1; candidate langsung 1
+    - **Allow Specific Services and Applications to Access the Internet and Block All Other Services and Applications** [KANDIDAT] — hal. 50–51; block langsung 1; block descendant 1; candidate langsung 1
+    - **View Services and Applications on the Blacklist and Remove a Service or Application From the List** [KANDIDAT] — hal. 52–53; block langsung 1; block descendant 1; candidate langsung 1
+    - **View Services and Applications on the Whitelist and Remove a Service or Application From the List** [KANDIDAT] — hal. 53–54; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable Port Filtering** [KANDIDAT] — hal. 54–55; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage SIM Card Security** — hal. 55–63; block langsung 1; block descendant 6; candidate langsung 1
+    - **Enable SIM Card Security** [KANDIDAT] — hal. 55–57; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enter the SIM PIN to Enable the Modem to Connect to the Internet** [KANDIDAT] — hal. 57–58; block langsung 1; block descendant 1; candidate langsung 1
+    - **Personalize the SIM PIN** [KANDIDAT] — hal. 59–60; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable SIM Card Security** [KANDIDAT] — hal. 60–61; block langsung 1; block descendant 1; candidate langsung 1
+    - **Unblock the SIM Card With a PUK** [KANDIDAT] — hal. 61–63; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Modem and Monitor Usage and the Network** — hal. 64–81; block langsung 1; block descendant 18; candidate langsung 1
+  - **Upgrade the Firmware of the Modem** [KANDIDAT] — hal. 65–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back Up and Restore the Modem Settings** — hal. 66–68; block langsung 1; block descendant 3; candidate langsung 1
+    - **Back Up the Settings** [KANDIDAT] — hal. 66–67; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore the Settings** [KANDIDAT] — hal. 67–68; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the Modem to Its Factory Default Settings** — hal. 68–69; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the Reset Button** [KANDIDAT] — hal. 68–68; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use the Modem’s Web Pages to Reset the Modem to Factory Defaults** [KANDIDAT] — hal. 69–69; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Monthly Data and Session Data Usage** [KANDIDAT] — hal. 69–70; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set a Plan Limit for the Data Counter** [KANDIDAT] — hal. 70–71; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Billing Cycle Counter or Reset the Data Counter** [KANDIDAT] — hal. 71–72; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Service Provider, Type of Service, and Signal Strength** [KANDIDAT] — hal. 72–73; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Account Details and Other Details About Your Modem** [KANDIDAT] — hal. 74–75; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Information About the Mobile Broadband Connection** [KANDIDAT] — hal. 75–76; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up SMS Alert Messages** [KANDIDAT] — hal. 76–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set the Data Limit for SMS Alert Messages** [KANDIDAT] — hal. 78–79; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Alerts** [KANDIDAT] — hal. 79–80; block langsung 1; block descendant 1; candidate langsung 1
+  - **Turn Off the LEDs** [KANDIDAT] — hal. 80–81; block langsung 1; block descendant 1; candidate langsung 1
+- **Frequently Asked Questions** — hal. 82–89; block langsung 1; block descendant 13; candidate langsung 1
+  - **What do I do when I can’t connect a device to the modem?** [KANDIDAT] — hal. 83–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **What do I do when I can’t access the Internet?** [KANDIDAT] — hal. 83–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **What do I do when the No Signal icon displays?** [KANDIDAT] — hal. 83–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Why is the download or upload speed slow?** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **Can I connect multiple LAN devices to the modem?** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **How do I access the modem’s web pages?** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **What do I do if I forget my admin login password?** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **How do I disconnect from the mobile broadband network?** [KANDIDAT] — hal. 85–85; block langsung 1; block descendant 1; candidate langsung 1
+  - **How do I find my computer’s IP address?** [KANDIDAT] — hal. 85–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **How do I find a device’s MAC address?** [KANDIDAT] — hal. 87–89; block langsung 1; block descendant 1; candidate langsung 1
+  - **How do I find my mobile phone number?** [KANDIDAT] — hal. 89–89; block langsung 1; block descendant 1; candidate langsung 1
+  - **Where can I find more information?** [KANDIDAT] — hal. 89–89; block langsung 1; block descendant 1; candidate langsung 1
+- **Alerts and Troubleshooting** — hal. 90–98; block langsung 1; block descendant 15; candidate langsung 1
+  - **Alert Messages** [KANDIDAT] — hal. 91–91; block langsung 1; block descendant 1; candidate langsung 1
+  - **Quick Tips for Troubleshooting** [KANDIDAT] — hal. 91–92; block langsung 1; block descendant 1; candidate langsung 1
+  - **Verify Normal Behavior With the LEDs** [KANDIDAT] — hal. 92–92; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot With the LEDs** — hal. 93–94; block langsung 1; block descendant 3; candidate langsung 1
+    - **Power LED Is Off** [KANDIDAT] — hal. 93–93; block langsung 1; block descendant 1; candidate langsung 1
+    - **LAN LED Is Off** [KANDIDAT] — hal. 94–94; block langsung 1; block descendant 1; candidate langsung 1
+  - **You Cannot Log In to the Modem** [KANDIDAT] — hal. 94–94; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot the Mobile Broadband Internet Connection** — hal. 95–96; block langsung 1; block descendant 3; candidate langsung 1
+    - **Obtain an Internet IP Address From Your Service Provider** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+    - **Troubleshoot Internet Browsing** [KANDIDAT] — hal. 96–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes Not Saved on the Modem’s Web Pages** [KANDIDAT] — hal. 96–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **TCP/IP Network Not Responding** — hal. 97–98; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN Path to Your Modem** [KANDIDAT] — hal. 97–97; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the Path From Your Computer to a Remote Device** [KANDIDAT] — hal. 97–98; block langsung 1; block descendant 1; candidate langsung 1
+- **Default Settings and Specifications** — hal. 99–101; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory Default Settings** [KANDIDAT] — hal. 100–101; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical and Environmental Specifications** [KANDIDAT] — hal. 101–101; block langsung 1; block descendant 1; candidate langsung 1
+- **Wall-Mount the Modem** — hal. 102–105; block langsung 1; block descendant 3; candidate langsung 1
+  - **Position Your Modem** [KANDIDAT] — hal. 103–103; block langsung 1; block descendant 1; candidate langsung 1
+  - **Mount Your Modem** [KANDIDAT] — hal. 104–105; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-r6350.pdf — R6350
+
+204 halaman; 225 node outline; 175 leaf outline kandidat.
+
+- **Hardware Overview of the Router** — hal. 10–17; block langsung 1; block descendant 8; candidate langsung 1
+  - **Unpack Your Router** [KANDIDAT] — hal. 11–11; block langsung 1; block descendant 1; candidate langsung 1
+  - **LEDs and Buttons on the Top Panel** [KANDIDAT] — hal. 12–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Ports, Buttons, and Connectors on the Back Panel** [KANDIDAT] — hal. 13–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router Label** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position the Router** [KANDIDAT] — hal. 14–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Cable Your Router** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+  - **Wall-Mount Your Router** [KANDIDAT] — hal. 16–17; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the Network and Access the Router** — hal. 18–23; block langsung 1; block descendant 11; candidate langsung 1
+  - **Connect to the network** — hal. 19–20; block langsung 1; block descendant 4; candidate langsung 1
+    - **Connect to the network using a wired connection** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+    - **Find and connect to the WiFi network** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi connection using WPS** [KANDIDAT] — hal. 19–20; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of logins** [KANDIDAT] — hal. 20–20; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a web browser to access the router** — hal. 20–22; block langsung 1; block descendant 3; candidate langsung 1
+    - **Automatic Internet Setup** [KANDIDAT] — hal. 20–22; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log in to the router** [KANDIDAT] — hal. 22–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install and manage your router with the Nighthawk app** [KANDIDAT] — hal. 22–23; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the language** [KANDIDAT] — hal. 23–23; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 24–43; block langsung 1; block descendant 19; candidate langsung 1
+  - **Use the Internet Setup Wizard** [KANDIDAT] — hal. 25–25; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually set up the Internet connection** — hal. 25–30; block langsung 1; block descendant 4; candidate langsung 1
+    - **Specify an Internet connection without a login** [KANDIDAT] — hal. 25–27; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet connection that uses a login and PPPoE service** [KANDIDAT] — hal. 27–28; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet connection that uses a login and PPTP or L2TP service** [KANDIDAT] — hal. 28–30; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify IPv6 Internet connections** — hal. 30–41; block langsung 1; block descendant 10; candidate langsung 1
+    - **Requirements for entering IPv6 addresses** [KANDIDAT] — hal. 31–31; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Auto Config for an IPv6 Internet connection** [KANDIDAT] — hal. 31–32; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Auto Detect for an IPv6 Internet connection** [KANDIDAT] — hal. 33–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6to4 tunnel Internet connection** [KANDIDAT] — hal. 34–35; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 6rd Tunnel Connection** [KANDIDAT] — hal. 35–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 pass-through Internet connection** [KANDIDAT] — hal. 37–37; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a fixed IPv6 Internet connection** [KANDIDAT] — hal. 37–38; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 DHCP Internet connection** [KANDIDAT] — hal. 38–40; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 PPPoE Internet connection** [KANDIDAT] — hal. 40–41; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the MTU size** — hal. 42–43; block langsung 1; block descendant 3; candidate langsung 1
+    - **MTU concepts** [KANDIDAT] — hal. 42–43; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the MTU size** [KANDIDAT] — hal. 43–43; block langsung 1; block descendant 1; candidate langsung 1
+- **Optimize Performance** — hal. 44–53; block langsung 1; block descendant 11; candidate langsung 1
+  - **Optimize Traffic With QoS** [KANDIDAT] — hal. 45–45; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Default and Custom QoS Rules** — hal. 46–50; block langsung 1; block descendant 6; candidate langsung 1
+    - **Add a Custom QoS Rule for a Service or Application** [KANDIDAT] — hal. 46–47; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a Custom QoS Rule for a Device** [KANDIDAT] — hal. 47–48; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a QoS Rule or Change the Priority for a Rule** [KANDIDAT] — hal. 48–49; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a QoS Rule** [KANDIDAT] — hal. 49–49; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove All QoS Rules** [KANDIDAT] — hal. 50–50; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Uplink Bandwidth Control** [KANDIDAT] — hal. 50–51; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Wi-Fi Multimedia Quality of Service** [KANDIDAT] — hal. 51–52; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve network connections with Universal Plug and Play** [KANDIDAT] — hal. 52–53; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Basic WiFi Network Settings** — hal. 54–71; block langsung 1; block descendant 10; candidate langsung 1
+  - **Manage the Basic WiFi Settings and WiFi Security of the Main Network** — hal. 55–64; block langsung 1; block descendant 4; candidate langsung 1
+    - **View or Change the Basic WiFi Settings and WiFi Security Settings** [KANDIDAT] — hal. 55–61; block langsung 1; block descendant 1; candidate langsung 1
+    - **Configure WEP Legacy WiFi Security** [KANDIDAT] — hal. 61–62; block langsung 1; block descendant 1; candidate langsung 1
+    - **Configure WPA/WPA2 Enterprise WiFi Security** [KANDIDAT] — hal. 62–64; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use WPS to Add a Device to the WiFi Network** — hal. 64–66; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use WPS With the Push Button Method** [KANDIDAT] — hal. 65–65; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use WPS With the PIN Method** [KANDIDAT] — hal. 66–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the Basic WiFi Settings and WiFi Security of the Guest Network** [KANDIDAT] — hal. 67–70; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or Disable the WiFi Radios** [KANDIDAT] — hal. 71–71; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 72–88; block langsung 1; block descendant 19; candidate langsung 1
+  - **Set Up Parental Controls** [KANDIDAT] — hal. 73–73; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable access control to allow or block access to the Internet** — hal. 73–78; block langsung 1; block descendant 5; candidate langsung 1
+    - **Enable and Manage Network Access Control** [KANDIDAT] — hal. 75–76; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage Network Access Control Lists** — hal. 76–78; block langsung 1; block descendant 3; candidate langsung 1
+      - **Add Devices to or Remove Them From the Allowed List** [KANDIDAT] — hal. 76–77; block langsung 1; block descendant 1; candidate langsung 1
+      - **Add Devices to or Remove Them From the Blocked List** [KANDIDAT] — hal. 77–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use Keywords to Block Internet Sites** — hal. 78–81; block langsung 1; block descendant 5; candidate langsung 1
+    - **Set Up Blocking** [KANDIDAT] — hal. 78–79; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a Keyword or Domain From the Blocked List** [KANDIDAT] — hal. 79–80; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove All Keywords and Domains From the Blocked List** [KANDIDAT] — hal. 80–80; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a Trusted Computer** [KANDIDAT] — hal. 81–81; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Simple Outbound Firewall Rules for Services and Applications** — hal. 81–86; block langsung 1; block descendant 5; candidate langsung 1
+    - **Add an Outbound Firewall Rule** [KANDIDAT] — hal. 82–83; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add an Outbound Firewall Rule for a Custom Service or Application** [KANDIDAT] — hal. 83–84; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change an Outbound Firewall Rule** [KANDIDAT] — hal. 85–85; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove an Outbound Firewall Rule** [KANDIDAT] — hal. 85–86; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a Schedule for Keyword Blocking and Outbound Firewall Rules** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up security event email notifications** [KANDIDAT] — hal. 87–88; block langsung 1; block descendant 1; candidate langsung 1
+- **Share USB Storage Devices Attached to the Router** — hal. 89–102; block langsung 1; block descendant 18; candidate langsung 1
+  - **USB device requirements** [KANDIDAT] — hal. 90–90; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a USB storage device to the router** [KANDIDAT] — hal. 90–90; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device connected to the router** — hal. 91–92; block langsung 1; block descendant 3; candidate langsung 1
+    - **Access a storage device connected to the router from a Windows-based computer** [KANDIDAT] — hal. 91–91; block langsung 1; block descendant 1; candidate langsung 1
+    - **Access a storage device that is connected to the router from a Mac** [KANDIDAT] — hal. 91–92; block langsung 1; block descendant 1; candidate langsung 1
+  - **Map a USB device to a Windows network drive** [KANDIDAT] — hal. 92–93; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back up Windows-based computers with ReadySHARE Vault** [KANDIDAT] — hal. 93–93; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back up Mac computers with Time Machine** — hal. 94–96; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a USB hard drive on a Mac** [KANDIDAT] — hal. 94–94; block langsung 1; block descendant 1; candidate langsung 1
+    - **Prepare to back up a large amount of data** [KANDIDAT] — hal. 95–95; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Time Machine to back up onto a USB hard disk** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Access to a Storage Device** [KANDIDAT] — hal. 97–98; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable FTP access within your network** [KANDIDAT] — hal. 99–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **View network folders on a storage device** [KANDIDAT] — hal. 99–100; block langsung 1; block descendant 1; candidate langsung 1
+  - **Add a network folder on a USB storage device** [KANDIDAT] — hal. 100–101; block langsung 1; block descendant 1; candidate langsung 1
+  - **Edit a network folder on a USB storage device** [KANDIDAT] — hal. 101–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **Safely remove a USB storage device** [KANDIDAT] — hal. 102–102; block langsung 1; block descendant 1; candidate langsung 1
+- **Use Dynamic DNS to Access USB Storage Devices Through the Internet** — hal. 103–108; block langsung 1; block descendant 9; candidate langsung 1
+  - **Set up and manage Dynamic DNS** [KANDIDAT] — hal. 104–104; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up FTP Access Through the Internet** [KANDIDAT] — hal. 104–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **Your personal FTP server** — hal. 105–108; block langsung 1; block descendant 5; candidate langsung 1
+    - **Set Up Your Personal FTP Server** [KANDIDAT] — hal. 105–106; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a new Dynamic DNS account** [KANDIDAT] — hal. 106–106; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a DNS account that you already created** [KANDIDAT] — hal. 106–107; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS settings** [KANDIDAT] — hal. 107–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access USB storage devices through the Internet** [KANDIDAT] — hal. 108–108; block langsung 1; block descendant 1; candidate langsung 1
+- **Use the Router as a Media Server** — hal. 109–114; block langsung 1; block descendant 6; candidate langsung 1
+  - **Specify ReadyDLNA Media Server Settings** [KANDIDAT] — hal. 110–111; block langsung 1; block descendant 1; candidate langsung 1
+  - **Play Music From a Storage Device With iTunes Server** — hal. 111–113; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set Up the Router’s iTunes Server With iTunes** [KANDIDAT] — hal. 111–112; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up the Router’s iTunes Server With the Remote App** [KANDIDAT] — hal. 112–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up the Router to Work With TiVo** [KANDIDAT] — hal. 113–114; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the WAN and LAN Network Settings** — hal. 115–133; block langsung 1; block descendant 23; candidate langsung 1
+  - **Change the WiFi Mbps Settings** [KANDIDAT] — hal. 116–116; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the WAN Security Settings** [KANDIDAT] — hal. 116–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a default DMZ server** [KANDIDAT] — hal. 117–118; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage IGMP Proxying** [KANDIDAT] — hal. 118–119; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage VPN Pass-Through** [KANDIDAT] — hal. 119–119; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage NAT Filtering** [KANDIDAT] — hal. 119–120; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the SIP Application-Level Gateway** [KANDIDAT] — hal. 120–121; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the LAN IP Address Settings** [KANDIDAT] — hal. 121–122; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the Router Information Protocol Settings** [KANDIDAT] — hal. 122–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the DHCP Server Address Pool** [KANDIDAT] — hal. 123–124; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage reserved LAN IP addresses** — hal. 124–125; block langsung 1; block descendant 3; candidate langsung 1
+    - **Edit a reserved IP address** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a reserved IP address entry** [KANDIDAT] — hal. 125–125; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the Built-In DHCP Server** [KANDIDAT] — hal. 125–126; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Router’s Device Name** [KANDIDAT] — hal. 126–127; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up and Manage Custom Static Routes** — hal. 127–130; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set Up a Static Route** [KANDIDAT] — hal. 128–129; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a Static Route** [KANDIDAT] — hal. 129–129; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a Static Route** [KANDIDAT] — hal. 130–130; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a Bridge for a Port Group or VLAN Tag Group** — hal. 130–133; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set Up a Bridge for a Port Group** [KANDIDAT] — hal. 131–131; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up a Bridge for a VLAN Tag Group** [KANDIDAT] — hal. 132–133; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Your Router** — hal. 134–154; block langsung 1; block descendant 31; candidate langsung 1
+  - **Update the router firmware** — hal. 135–136; block langsung 1; block descendant 3; candidate langsung 1
+    - **Check for new firmware and update the router** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually upload firmware to the router** [KANDIDAT] — hal. 136–136; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 137–137; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin password recovery** [KANDIDAT] — hal. 137–138; block langsung 1; block descendant 1; candidate langsung 1
+  - **Recover the admin password** [KANDIDAT] — hal. 138–139; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the router configuration file** — hal. 139–140; block langsung 1; block descendant 3; candidate langsung 1
+    - **Back up the settings** [KANDIDAT] — hal. 139–139; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore the settings** [KANDIDAT] — hal. 139–140; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable or Enable LED Blinking or Turn Off LEDs** [KANDIDAT] — hal. 140–141; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the router to its factory default settings** — hal. 141–142; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the Reset button** [KANDIDAT] — hal. 141–142; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 142–142; block langsung 1; block descendant 1; candidate langsung 1
+  - **View the Status and Statistics of the Router** — hal. 143–145; block langsung 1; block descendant 4; candidate langsung 1
+    - **View information about the router and the Internet and WiFi settings** [KANDIDAT] — hal. 143–143; block langsung 1; block descendant 1; candidate langsung 1
+    - **Display the statistics of the Internet port** [KANDIDAT] — hal. 144–145; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the Internet connection status** [KANDIDAT] — hal. 145–145; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the Activity Log** — hal. 146–147; block langsung 1; block descendant 3; candidate langsung 1
+    - **View, Email, or Clear the Logs** [KANDIDAT] — hal. 146–146; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify Which Activities Are Logged** [KANDIDAT] — hal. 147–147; block langsung 1; block descendant 1; candidate langsung 1
+  - **View devices currently on the network** [KANDIDAT] — hal. 147–148; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor and Meter Internet Traffic** — hal. 148–152; block langsung 1; block descendant 6; candidate langsung 1
+    - **Start the Traffic Meter Without Traffic Volume Restrictions** [KANDIDAT] — hal. 148–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **View the Internet Traffic Volume and Statistics** [KANDIDAT] — hal. 149–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restrict Internet Traffic by Volume** [KANDIDAT] — hal. 150–151; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restrict Internet Traffic by Connection Time** [KANDIDAT] — hal. 151–152; block langsung 1; block descendant 1; candidate langsung 1
+    - **Unblock the Traffic Meter After the Traffic Limit Is Reached** [KANDIDAT] — hal. 152–152; block langsung 1; block descendant 1; candidate langsung 1
+  - **Remote access** — hal. 153–154; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up remote management** [KANDIDAT] — hal. 153–154; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use remote access** [KANDIDAT] — hal. 154–154; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Advanced WiFi Features** — hal. 155–165; block langsung 1; block descendant 10; candidate langsung 1
+  - **Set Up a WiFi Schedule** [KANDIDAT] — hal. 156–156; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the WPS Settings** [KANDIDAT] — hal. 157–158; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Advanced WiFi Settings** [KANDIDAT] — hal. 158–159; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify How the Router Manages WiFi Clients** — hal. 159–161; block langsung 1; block descendant 4; candidate langsung 1
+    - **Manage Airtime Fairness** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage Implicit Beamforming** [KANDIDAT] — hal. 160–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage MU-MIMO** [KANDIDAT] — hal. 161–161; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a WiFi Bridge Between the Router and Another Device** [KANDIDAT] — hal. 161–164; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the Router as a WiFi Access Point Only** [KANDIDAT] — hal. 164–165; block langsung 1; block descendant 1; candidate langsung 1
+- **Use VPN to Access Your Network** — hal. 166–176; block langsung 1; block descendant 14; candidate langsung 1
+  - **Set up a VPN connection** [KANDIDAT] — hal. 167–167; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify VPN Service in the Router** [KANDIDAT] — hal. 167–168; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN software** — hal. 168–172; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN Software on Your Windows-Based Computer** [KANDIDAT] — hal. 168–170; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN Software on Your Mac Computer** [KANDIDAT] — hal. 170–171; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN Software on an iOS Device** [KANDIDAT] — hal. 171–171; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN Software on an Android Device** [KANDIDAT] — hal. 172–172; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a VPN Tunnel on Your Windows-Based Computer** [KANDIDAT] — hal. 173–173; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to Access the Router’s USB Device and Media** [KANDIDAT] — hal. 174–174; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a VPN Tunnel to Access Your Internet Service at Home** — hal. 174–176; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set Up VPN Client Internet Access in the Router** [KANDIDAT] — hal. 175–175; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN Client Internet Access in the Router** [KANDIDAT] — hal. 175–176; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use VPN to access your Internet service at home** [KANDIDAT] — hal. 176–176; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Port Forwarding and Port Triggering** — hal. 177–188; block langsung 1; block descendant 15; candidate langsung 1
+  - **Manage Port Forwarding to a Local Server for Services and Applications** — hal. 178–183; block langsung 1; block descendant 7; candidate langsung 1
+    - **Forward Incoming Traffic for a Default Service or Application** [KANDIDAT] — hal. 178–179; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a Port Forwarding Rule With a Custom Service or Application** [KANDIDAT] — hal. 179–180; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a Port Forwarding Rule** [KANDIDAT] — hal. 180–181; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a Port Forwarding Rule** [KANDIDAT] — hal. 181–181; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application Example: Make a Local Web Server Public** [KANDIDAT] — hal. 182–182; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the Router Implements the Port Forwarding Rule** [KANDIDAT] — hal. 182–183; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Port Triggering for Services and Applications** — hal. 183–188; block langsung 1; block descendant 7; candidate langsung 1
+    - **Add a Port Triggering Rule** [KANDIDAT] — hal. 183–184; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a Port Triggering Rule** [KANDIDAT] — hal. 185–185; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a Port Triggering Rule** [KANDIDAT] — hal. 185–186; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify the Time-Out for Port Triggering** [KANDIDAT] — hal. 186–187; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable Port Triggering** [KANDIDAT] — hal. 187–187; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application Example: Port Triggering for Internet Relay Chat** [KANDIDAT] — hal. 187–188; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 189–198; block langsung 1; block descendant 18; candidate langsung 1
+  - **Quick tips** — hal. 190–191; block langsung 1; block descendant 5; candidate langsung 1
+    - **Sequence to restart your network** [KANDIDAT] — hal. 190–190; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the power adapter and Ethernet cable connections** [KANDIDAT] — hal. 190–190; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the WiFi settings** [KANDIDAT] — hal. 190–190; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the network settings** [KANDIDAT] — hal. 190–191; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot with the LEDs** — hal. 191–192; block langsung 1; block descendant 4; candidate langsung 1
+    - **Standard LED behavior when the router is powered on** [KANDIDAT] — hal. 191–191; block langsung 1; block descendant 1; candidate langsung 1
+    - **Power LED is off or blinking** [KANDIDAT] — hal. 191–191; block langsung 1; block descendant 1; candidate langsung 1
+    - **Internet or Ethernet LAN port LEDs are off** [KANDIDAT] — hal. 192–192; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot log in to the router** [KANDIDAT] — hal. 192–193; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot access the Internet** [KANDIDAT] — hal. 193–194; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet browsing** [KANDIDAT] — hal. 194–195; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes are not saved** [KANDIDAT] — hal. 195–195; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi connectivity** [KANDIDAT] — hal. 195–196; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot your network using the ping utility** — hal. 196–198; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN path to your router** [KANDIDAT] — hal. 196–197; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the path from a Windows-based computer to a remote device** [KANDIDAT] — hal. 197–198; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 199–204; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory Settings** [KANDIDAT] — hal. 200–202; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical Specifications** [KANDIDAT] — hal. 203–204; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-r7000.pdf — R7000
+
+186 halaman; 212 node outline; 168 leaf outline kandidat.
+
+- **Hardware Setup** — hal. 9–17; block langsung 1; block descendant 8; candidate langsung 1
+  - **Unpack Your Router** [KANDIDAT] — hal. 10–10; block langsung 1; block descendant 1; candidate langsung 1
+  - **Top Panel LEDs and Buttons** [KANDIDAT] — hal. 11–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Rear Panel** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Extend the Antennas** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router Label** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position Your Router** [KANDIDAT] — hal. 16–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Cable Your Router** [KANDIDAT] — hal. 17–17; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the Network and Access the Router** — hal. 18–23; block langsung 1; block descendant 11; candidate langsung 1
+  - **Connect to the Network** — hal. 19–20; block langsung 1; block descendant 4; candidate langsung 1
+    - **Wired Connection** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi Connection** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi Connection Using WPS** [KANDIDAT] — hal. 19–20; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of Logins** [KANDIDAT] — hal. 20–20; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a Web Browser to Access the Router** — hal. 20–22; block langsung 1; block descendant 3; candidate langsung 1
+    - **Automatic Internet Setup** [KANDIDAT] — hal. 20–22; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log In to the Router** [KANDIDAT] — hal. 22–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install and Manage Your Router With the Nighthawk App** [KANDIDAT] — hal. 22–23; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Language** [KANDIDAT] — hal. 23–23; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 24–42; block langsung 1; block descendant 18; candidate langsung 1
+  - **Use the Internet Setup Wizard** [KANDIDAT] — hal. 25–25; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually Set Up the Internet Connection** — hal. 25–28; block langsung 1; block descendant 3; candidate langsung 1
+    - **Specify an Internet Connection Without a Login** [KANDIDAT] — hal. 25–27; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet Connection That Uses a Login** [KANDIDAT] — hal. 27–28; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify IPv6 Internet Connections** — hal. 28–40; block langsung 1; block descendant 10; candidate langsung 1
+    - **Requirements for Entering IPv6 Addresses** [KANDIDAT] — hal. 29–29; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Auto Detect for an IPv6 Internet Connection** [KANDIDAT] — hal. 29–30; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 6to4 Tunnel Internet Connection** [KANDIDAT] — hal. 30–32; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 Pass Through Internet Connection** [KANDIDAT] — hal. 32–32; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 Fixed Internet Connection** [KANDIDAT] — hal. 32–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 DHCP Internet Connection** [KANDIDAT] — hal. 34–35; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 PPPoE Internet Connection** [KANDIDAT] — hal. 35–37; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Auto Config for an IPv6 Internet Connection** [KANDIDAT] — hal. 37–38; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up an IPv6 6rd Internet Connection** [KANDIDAT] — hal. 38–40; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the MTU Size** — hal. 40–42; block langsung 1; block descendant 3; candidate langsung 1
+    - **MTU Concepts** [KANDIDAT] — hal. 40–42; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the MTU Size** [KANDIDAT] — hal. 42–42; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 43–52; block langsung 1; block descendant 9; candidate langsung 1
+  - **Allow or Block Access to Your Network** [KANDIDAT] — hal. 44–45; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use Keywords to Block Internet Sites** — hal. 45–49; block langsung 1; block descendant 4; candidate langsung 1
+    - **Block Services From the Internet** [KANDIDAT] — hal. 47–48; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete Keywords From the Blocked List** [KANDIDAT] — hal. 48–48; block langsung 1; block descendant 1; candidate langsung 1
+    - **Avoid Blocking on a Trusted Computer** [KANDIDAT] — hal. 48–49; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Network Access Control Lists** [KANDIDAT] — hal. 49–50; block langsung 1; block descendant 1; candidate langsung 1
+  - **Schedule When to Block Internet Sites and Services** [KANDIDAT] — hal. 50–50; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up Security Event Email Notifications** [KANDIDAT] — hal. 51–52; block langsung 1; block descendant 1; candidate langsung 1
+- **Optimize Performance** — hal. 53–63; block langsung 1; block descendant 14; candidate langsung 1
+  - **Optimize Internet Streaming With Dynamic QoS** — hal. 54–60; block langsung 1; block descendant 10; candidate langsung 1
+    - **Enable Advanced QoS and Manually Set Up QoS Rules** — hal. 54–59; block langsung 1; block descendant 7; candidate langsung 1
+      - **Add a QoS Rule by Service** [KANDIDAT] — hal. 55–55; block langsung 1; block descendant 1; candidate langsung 1
+      - **Add a QoS Rule by Device** [KANDIDAT] — hal. 55–56; block langsung 1; block descendant 1; candidate langsung 1
+      - **Add a QoS Rule by LAN pot** [KANDIDAT] — hal. 56–57; block langsung 1; block descendant 1; candidate langsung 1
+      - **Edit a QoS Rule** [KANDIDAT] — hal. 57–58; block langsung 1; block descendant 1; candidate langsung 1
+      - **Delete a QoS Rule** [KANDIDAT] — hal. 58–58; block langsung 1; block descendant 1; candidate langsung 1
+      - **Delete All QoS Rules** [KANDIDAT] — hal. 58–59; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable Dynamic QoS** — hal. 59–60; block langsung 1; block descendant 2; candidate langsung 1
+      - **Enable or Disable the Automatic QoS Database Update** [KANDIDAT] — hal. 60–60; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve Network Connections With Universal Plug-N-Play** [KANDIDAT] — hal. 61–62; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Wi-Fi Multimedia Quality of Service** [KANDIDAT] — hal. 62–63; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or Disable Smart Connect** [KANDIDAT] — hal. 63–63; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Network Settings** — hal. 64–93; block langsung 1; block descendant 31; candidate langsung 1
+  - **View or Change WAN Settings** [KANDIDAT] — hal. 65–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a Default DMZ Server** [KANDIDAT] — hal. 66–67; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Router’s Device Name** [KANDIDAT] — hal. 67–67; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the LAN TCP/IP Settings** [KANDIDAT] — hal. 67–69; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify the IP Addresses That the Router Assigns** [KANDIDAT] — hal. 69–70; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP Server Feature in the Router** [KANDIDAT] — hal. 70–71; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Reserved LAN IP Addresses** — hal. 71–73; block langsung 1; block descendant 4; candidate langsung 1
+    - **Reserve an IP Address** [KANDIDAT] — hal. 71–72; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a Reserved IP Address** [KANDIDAT] — hal. 72–72; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a Reserved IP Address Entry** [KANDIDAT] — hal. 72–73; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the WPS Wizard for WiFi Connections** [KANDIDAT] — hal. 73–74; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify Basic WiFi Settings** [KANDIDAT] — hal. 74–75; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi Mbps Settings** [KANDIDAT] — hal. 75–77; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi Password or the WiFi Security** [KANDIDAT] — hal. 77–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a Guest WiFi Network** [KANDIDAT] — hal. 78–80; block langsung 1; block descendant 1; candidate langsung 1
+  - **Control the WiFi Radios** — hal. 80–81; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the WiFi On/Off Button** [KANDIDAT] — hal. 81–81; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable or Disable the WiFi Radios** [KANDIDAT] — hal. 81–81; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a WiFi Schedule** [KANDIDAT] — hal. 81–82; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify WPS Settings** [KANDIDAT] — hal. 82–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up the Router as a WiFi Access Point** [KANDIDAT] — hal. 83–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up the Router in Bridge Mode** [KANDIDAT] — hal. 84–86; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up the Router as a WiFi Repeater** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up a Bridge for a Port Group or VLAN Tag Group** — hal. 87–90; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set Up a Bridge for a Port Group** [KANDIDAT] — hal. 87–88; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up a Bridge for a VLAN Tag Group** [KANDIDAT] — hal. 88–90; block langsung 1; block descendant 1; candidate langsung 1
+  - **Custom Static Routes** — hal. 90–93; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set Up a Static Route** [KANDIDAT] — hal. 91–92; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a Static Route** [KANDIDAT] — hal. 92–92; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a Static Route** [KANDIDAT] — hal. 93–93; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Your Router** — hal. 94–112; block langsung 1; block descendant 27; candidate langsung 1
+  - **Update the Router Firmware** — hal. 95–96; block langsung 1; block descendant 3; candidate langsung 1
+    - **Check for New Firmware and Update the Router** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually Upload Firmware to the Router** [KANDIDAT] — hal. 96–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin Password** [KANDIDAT] — hal. 97–97; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin Password Recovery** [KANDIDAT] — hal. 97–98; block langsung 1; block descendant 1; candidate langsung 1
+  - **Recover the admin Password** [KANDIDAT] — hal. 98–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Information About the Router and the Internet and WiFi Settings** [KANDIDAT] — hal. 99–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **Display Internet Port Statistics** [KANDIDAT] — hal. 100–101; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check the Internet Connection Status** [KANDIDAT] — hal. 101–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and Manage Logs of Router Activity** [KANDIDAT] — hal. 102–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **View Devices Currently on the Network** [KANDIDAT] — hal. 103–103; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor Internet Traffic** [KANDIDAT] — hal. 103–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the Router Configuration File** — hal. 105–106; block langsung 1; block descendant 4; candidate langsung 1
+    - **Back Up Settings** [KANDIDAT] — hal. 105–105; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the Settings** [KANDIDAT] — hal. 105–106; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore Configuration Settings** [KANDIDAT] — hal. 106–106; block langsung 1; block descendant 1; candidate langsung 1
+  - **Remote Access** — hal. 107–108; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set Up Remote Management** [KANDIDAT] — hal. 107–108; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Remote Access** [KANDIDAT] — hal. 108–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Remotely Access Your Router Using the Nighthawk App** [KANDIDAT] — hal. 108–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable LED Blinking or Turn Off LEDs** [KANDIDAT] — hal. 109–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Your Time Zone** [KANDIDAT] — hal. 109–110; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the NTP Server** [KANDIDAT] — hal. 110–110; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the Router to Its Factory Default Settings** — hal. 111–112; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the Reset Button** [KANDIDAT] — hal. 111–111; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the Settings** [KANDIDAT] — hal. 111–112; block langsung 1; block descendant 1; candidate langsung 1
+- **Share USB Storage Devices Attached to the Router** — hal. 113–128; block langsung 1; block descendant 21; candidate langsung 1
+  - **USB Device Requirements** [KANDIDAT] — hal. 114–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a USB Storage Device to the Router** [KANDIDAT] — hal. 114–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a Storage Device Connected to the Router From a Windows-Based Computer** [KANDIDAT] — hal. 115–115; block langsung 1; block descendant 1; candidate langsung 1
+  - **Map a USB Device to a Windows Network Drive** [KANDIDAT] — hal. 115–116; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a Storage Device That Is Connected to the Router From a Mac** [KANDIDAT] — hal. 116–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back Up Windows-Based Computers With ReadySHARE Vault** [KANDIDAT] — hal. 117–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back Up Mac Computers With Time Machine** — hal. 117–120; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set Up a USB Hard Drive on a Mac** [KANDIDAT] — hal. 118–118; block langsung 1; block descendant 1; candidate langsung 1
+    - **Prepare to Back Up a Large Amount of Data** [KANDIDAT] — hal. 119–119; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Time Machine to Back Up Onto a USB Hard Disk** [KANDIDAT] — hal. 119–120; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable FTP Access Within Your Network** [KANDIDAT] — hal. 121–121; block langsung 1; block descendant 1; candidate langsung 1
+  - **View or Change Network Folders on a Storage Device** [KANDIDAT] — hal. 121–122; block langsung 1; block descendant 1; candidate langsung 1
+  - **Add a Network Folder on a USB Storage Device** [KANDIDAT] — hal. 122–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **Edit a Network Folder on a USB Storage Device** [KANDIDAT] — hal. 123–124; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up NETGEAR Downloader** — hal. 124–127; block langsung 1; block descendant 5; candidate langsung 1
+    - **Download Files Using NETGEAR Downloader** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up Email Notifications for NETGEAR Downloader** [KANDIDAT] — hal. 125–126; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the NETGEAR Downloader Settings** [KANDIDAT] — hal. 126–126; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage NETGEAR Downloader Tasks** [KANDIDAT] — hal. 127–127; block langsung 1; block descendant 1; candidate langsung 1
+  - **Safely Remove a USB Storage Device** [KANDIDAT] — hal. 127–128; block langsung 1; block descendant 1; candidate langsung 1
+- **Use Dynamic DNS to Access USB Storage Devices Through the Internet** — hal. 129–137; block langsung 1; block descendant 12; candidate langsung 1
+  - **Set Up and Manage Dynamic DNS** [KANDIDAT] — hal. 130–130; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up FTP Access Through the Internet** [KANDIDAT] — hal. 130–131; block langsung 1; block descendant 1; candidate langsung 1
+  - **Your Personal FTP Server** — hal. 131–134; block langsung 1; block descendant 5; candidate langsung 1
+    - **Set Up Your Personal FTP Server** [KANDIDAT] — hal. 131–132; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up a New Dynamic DNS Account** [KANDIDAT] — hal. 132–132; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a DNS Account That You Already Created** [KANDIDAT] — hal. 132–133; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS Settings** [KANDIDAT] — hal. 133–134; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access USB Storage Devices Through the Internet** [KANDIDAT] — hal. 135–135; block langsung 1; block descendant 1; candidate langsung 1
+  - **Remotely Access a USB Device Using ReadyCLOUD** — hal. 135–137; block langsung 1; block descendant 3; candidate langsung 1
+    - **Create a ReadyCLOUD Account** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+    - **Register Your Router With ReadyCLOUD** [KANDIDAT] — hal. 136–137; block langsung 1; block descendant 1; candidate langsung 1
+- **Use the Router as a Media Server** — hal. 138–144; block langsung 1; block descendant 7; candidate langsung 1
+  - **Specify ReadyDLNA Media Server Settings** [KANDIDAT] — hal. 139–140; block langsung 1; block descendant 1; candidate langsung 1
+  - **Play Music From a Storage Device With iTunes Server** — hal. 140–142; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set Up the Router’s iTunes Server With iTunes** [KANDIDAT] — hal. 140–141; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set Up the Router’s iTunes Server With the Remote App** [KANDIDAT] — hal. 141–142; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up the Router to Work With TiVo** [KANDIDAT] — hal. 142–143; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the NTP Server** [KANDIDAT] — hal. 143–144; block langsung 1; block descendant 1; candidate langsung 1
+- **Share a USB Printer** — hal. 145–148; block langsung 1; block descendant 5; candidate langsung 1
+  - **Install the Printer Driver and Cable the Printer** [KANDIDAT] — hal. 146–146; block langsung 1; block descendant 1; candidate langsung 1
+  - **Download the ReadySHARE Printer Utility** [KANDIDAT] — hal. 146–146; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install the ReadySHARE Printer Utility** [KANDIDAT] — hal. 146–147; block langsung 1; block descendant 1; candidate langsung 1
+  - **Print Using the NETGEAR USB Control Center** [KANDIDAT] — hal. 147–148; block langsung 1; block descendant 1; candidate langsung 1
+- **Use VPN to Access Your Network** — hal. 149–161; block langsung 1; block descendant 14; candidate langsung 1
+  - **Set Up a VPN Connection** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify VPN Service in the Router** [KANDIDAT] — hal. 150–151; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN Software** — hal. 151–156; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN Software on Your Windows Computer** [KANDIDAT] — hal. 151–154; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN Software on Your Mac Computer** [KANDIDAT] — hal. 154–154; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN Software on an iOS Device** [KANDIDAT] — hal. 155–155; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN Software on an Android Device** [KANDIDAT] — hal. 155–156; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a VPN Tunnel on Your Windows Computer** [KANDIDAT] — hal. 156–157; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to Access the Router’s USB Device and Media** [KANDIDAT] — hal. 158–158; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to Access Your Internet Service at Home** — hal. 158–161; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set Up VPN Client Internet Access in the Router** [KANDIDAT] — hal. 159–159; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN Client Internet Access in the Router** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use a VPN Tunnel to Access Your Internet Service at Home** [KANDIDAT] — hal. 160–161; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Port Forwarding and Port Triggering** — hal. 162–170; block langsung 1; block descendant 12; candidate langsung 1
+  - **Manage Port Forwarding to a Local Server** — hal. 163–167; block langsung 1; block descendant 7; candidate langsung 1
+    - **Set Up Port Forwarding to a Local Server** [KANDIDAT] — hal. 163–164; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a Custom Port Forwarding Service** [KANDIDAT] — hal. 164–165; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a Port Forwarding Service** [KANDIDAT] — hal. 165–165; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a Port Forwarding Entry** [KANDIDAT] — hal. 166–166; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application Example: Make a Local Web Server Public** [KANDIDAT] — hal. 166–166; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the Router Implements the Port Forwarding Rule** [KANDIDAT] — hal. 167–167; block langsung 1; block descendant 1; candidate langsung 1
+  - **Port Triggering** — hal. 167–170; block langsung 1; block descendant 4; candidate langsung 1
+    - **Add a Port Triggering Service** [KANDIDAT] — hal. 168–168; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable Port Triggering** [KANDIDAT] — hal. 169–169; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application Example: Port Triggering for Internet Relay Chat** [KANDIDAT] — hal. 169–170; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 171–180; block langsung 1; block descendant 20; candidate langsung 1
+  - **Quick Tips** — hal. 172–172; block langsung 1; block descendant 5; candidate langsung 1
+    - **Sequence to Restart Your Network** [KANDIDAT] — hal. 172–172; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check Ethernet Cable Connections** [KANDIDAT] — hal. 172–172; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi Settings** [KANDIDAT] — hal. 172–172; block langsung 1; block descendant 1; candidate langsung 1
+    - **Network Settings** [KANDIDAT] — hal. 172–172; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot With the LEDs** — hal. 173–174; block langsung 1; block descendant 6; candidate langsung 1
+    - **Standard LED Behavior When the Router Is Powered On** [KANDIDAT] — hal. 173–173; block langsung 1; block descendant 1; candidate langsung 1
+    - **Power LED Is Off or Blinking** [KANDIDAT] — hal. 173–173; block langsung 1; block descendant 1; candidate langsung 1
+    - **LEDs Never Turn Off** [KANDIDAT] — hal. 173–174; block langsung 1; block descendant 1; candidate langsung 1
+    - **Internet or Ethernet Port LEDs Are Off** [KANDIDAT] — hal. 174–174; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi LED Is Off** [KANDIDAT] — hal. 174–174; block langsung 1; block descendant 1; candidate langsung 1
+  - **You Cannot Log In to the Router** [KANDIDAT] — hal. 174–175; block langsung 1; block descendant 1; candidate langsung 1
+  - **You Cannot Access the Internet** [KANDIDAT] — hal. 175–176; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet Browsing** [KANDIDAT] — hal. 176–177; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes Are Not Saved** [KANDIDAT] — hal. 177–177; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi Connectivity** [KANDIDAT] — hal. 177–178; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Your Network Using the Ping Utility** — hal. 178–180; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN Path to Your Router** [KANDIDAT] — hal. 178–179; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the Path From a Windows-Based Computer to a Remote Device** [KANDIDAT] — hal. 179–180; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 181–186; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory Settings** [KANDIDAT] — hal. 182–184; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical Specifications** [KANDIDAT] — hal. 185–186; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-rax120.pdf — RAX120
+
+175 halaman; 201 node outline; 161 leaf outline kandidat.
+
+- **Hardware Setup** — hal. 9–18; block langsung 1; block descendant 9; candidate langsung 1
+  - **Unpack your router** [KANDIDAT] — hal. 10–10; block langsung 1; block descendant 1; candidate langsung 1
+  - **Top panel LEDs and buttons** [KANDIDAT] — hal. 11–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Rear panel** [KANDIDAT] — hal. 13–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Extend the antennas** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router label** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position your router** [KANDIDAT] — hal. 15–16; block langsung 1; block descendant 1; candidate langsung 1
+  - **Cable your router** [KANDIDAT] — hal. 17–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Turn the LEDs on or off using the LED On/Off switch** [KANDIDAT] — hal. 18–18; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the network and access the router** — hal. 19–24; block langsung 1; block descendant 11; candidate langsung 1
+  - **Connect to the router network** — hal. 20–21; block langsung 1; block descendant 4; candidate langsung 1
+    - **Connect to the router using a wired connection** [KANDIDAT] — hal. 20–20; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect to the router WiFi network** [KANDIDAT] — hal. 20–20; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect to the WiFi network using WPS** [KANDIDAT] — hal. 20–21; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of logins** [KANDIDAT] — hal. 21–21; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a web browser to access the router** — hal. 21–23; block langsung 1; block descendant 3; candidate langsung 1
+    - **Automatic Internet setup** [KANDIDAT] — hal. 21–23; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log in to the router** [KANDIDAT] — hal. 23–23; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install and manage your router with the Nighthawk app** [KANDIDAT] — hal. 23–24; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the language** [KANDIDAT] — hal. 24–24; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 25–46; block langsung 1; block descendant 21; candidate langsung 1
+  - **Use the Internet Setup Wizard** [KANDIDAT] — hal. 26–26; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually set up the Internet connection** — hal. 26–30; block langsung 1; block descendant 3; candidate langsung 1
+    - **Specify an Internet connection without a login** [KANDIDAT] — hal. 26–28; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet connection that uses a login** [KANDIDAT] — hal. 28–30; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage a Multi-Gig Internet connection** — hal. 30–32; block langsung 1; block descendant 3; candidate langsung 1
+    - **Get Multi-Gig Internet with the Multi-Gig port** [KANDIDAT] — hal. 30–31; block langsung 1; block descendant 1; candidate langsung 1
+    - **Get Multi-Gig Internet with port aggregation** [KANDIDAT] — hal. 31–32; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify IPv6 Internet connections** — hal. 32–45; block langsung 1; block descendant 10; candidate langsung 1
+    - **Requirements for entering IPv6 addresses** [KANDIDAT] — hal. 33–33; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto detect for an IPv6 Internet connection** [KANDIDAT] — hal. 33–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6to4 tunnel Internet connection** [KANDIDAT] — hal. 34–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 pass-through Internet connection** [KANDIDAT] — hal. 36–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 fixed Internet connection** [KANDIDAT] — hal. 37–38; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 DHCP Internet connection** [KANDIDAT] — hal. 38–39; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 PPPoE Internet connection** [KANDIDAT] — hal. 40–41; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto config for an IPv6 Internet connection** [KANDIDAT] — hal. 41–43; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6rd Internet connection** [KANDIDAT] — hal. 43–45; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the MTU size** — hal. 45–46; block langsung 1; block descendant 3; candidate langsung 1
+    - **MTU concepts** [KANDIDAT] — hal. 45–46; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the MTU size** [KANDIDAT] — hal. 46–46; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 47–59; block langsung 1; block descendant 11; candidate langsung 1
+  - **Network access control list** — hal. 48–53; block langsung 1; block descendant 4; candidate langsung 1
+    - **Enable the network access control list, set the access rule, and allow or block connected devices** [KANDIDAT] — hal. 48–50; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage allowed devices currently not on the network** [KANDIDAT] — hal. 50–52; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage blocked devices currently not on the network** [KANDIDAT] — hal. 52–53; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use keywords to block Internet sites** [KANDIDAT] — hal. 54–55; block langsung 1; block descendant 1; candidate langsung 1
+  - **Block services from the Internet** [KANDIDAT] — hal. 55–56; block langsung 1; block descendant 1; candidate langsung 1
+  - **Delete keywords from the blocked list** [KANDIDAT] — hal. 56–57; block langsung 1; block descendant 1; candidate langsung 1
+  - **Prevent blocking on a trusted computer** [KANDIDAT] — hal. 57–57; block langsung 1; block descendant 1; candidate langsung 1
+  - **Schedule when to block Internet sites and services** [KANDIDAT] — hal. 57–58; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up security event email notifications** [KANDIDAT] — hal. 58–59; block langsung 1; block descendant 1; candidate langsung 1
+- **Optimize Performance** — hal. 60–68; block langsung 1; block descendant 11; candidate langsung 1
+  - **Optimize Internet streaming with QoS** — hal. 61–64; block langsung 1; block descendant 6; candidate langsung 1
+    - **Enable upstream QoS** [KANDIDAT] — hal. 61–61; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a custom QoS rule** [KANDIDAT] — hal. 62–62; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a QoS rule** [KANDIDAT] — hal. 62–63; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a QoS rule** [KANDIDAT] — hal. 63–64; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete all QoS rules** [KANDIDAT] — hal. 64–64; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve network connections with Universal Plug and Play** [KANDIDAT] — hal. 64–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Wi-Fi Multimedia Quality of Service** [KANDIDAT] — hal. 66–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable Smart Connect** [KANDIDAT] — hal. 66–67; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable AX WiFi** [KANDIDAT] — hal. 67–68; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Network Settings** — hal. 69–102; block langsung 1; block descendant 36; candidate langsung 1
+  - **View or change the WAN settings** [KANDIDAT] — hal. 70–71; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a default DMZ server** [KANDIDAT] — hal. 71–72; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the router’s device name** [KANDIDAT] — hal. 72–72; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the LAN TCP/IP settings** [KANDIDAT] — hal. 72–74; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify the IP addresses that the router assigns** [KANDIDAT] — hal. 74–75; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP server feature in the router** [KANDIDAT] — hal. 75–76; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage reserved LAN IP addresses** — hal. 76–78; block langsung 1; block descendant 4; candidate langsung 1
+    - **Reserve an IP address** [KANDIDAT] — hal. 76–77; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a reserved IP address** [KANDIDAT] — hal. 77–77; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a reserved IP address entry** [KANDIDAT] — hal. 77–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the WPS Wizard for WiFi connections** [KANDIDAT] — hal. 78–79; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify basic WiFi settings** [KANDIDAT] — hal. 79–80; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi password or the WiFi security** [KANDIDAT] — hal. 80–82; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi mode** [KANDIDAT] — hal. 82–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the transmission power control** [KANDIDAT] — hal. 83–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a guest WiFi network** [KANDIDAT] — hal. 84–86; block langsung 1; block descendant 1; candidate langsung 1
+  - **Control the WiFi radios** — hal. 86–87; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the WiFi On/Off button** [KANDIDAT] — hal. 86–86; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable or disable the WiFi radios** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a WiFi schedule** [KANDIDAT] — hal. 87–88; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up the router as a WiFi access point** [KANDIDAT] — hal. 88–89; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up the router in bridge mode** [KANDIDAT] — hal. 89–90; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the router to router mode** [KANDIDAT] — hal. 90–91; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a bridge for a port group or VLAN tag group** — hal. 91–95; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a bridge for a port group** [KANDIDAT] — hal. 91–92; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a bridge for a VLAN tag group** [KANDIDAT] — hal. 92–94; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPTV port** [KANDIDAT] — hal. 94–95; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage custom static routes** — hal. 95–98; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a static route** [KANDIDAT] — hal. 96–97; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a static route** [KANDIDAT] — hal. 97–97; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a static route** [KANDIDAT] — hal. 98–98; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable MU-MIMO** [KANDIDAT] — hal. 98–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Ethernet port aggregation to a LAN device** — hal. 99–102; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up Ethernet port aggregation to a LAN device** [KANDIDAT] — hal. 100–101; block langsung 1; block descendant 1; candidate langsung 1
+    - **View or change the router Ethernet port aggregation mode** [KANDIDAT] — hal. 101–102; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Your Router** — hal. 103–121; block langsung 1; block descendant 26; candidate langsung 1
+  - **Update the router firmware** — hal. 104–105; block langsung 1; block descendant 3; candidate langsung 1
+    - **Check for new firmware and update the router** [KANDIDAT] — hal. 104–105; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually upload firmware to the router** [KANDIDAT] — hal. 105–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 106–106; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin password reset** [KANDIDAT] — hal. 106–107; block langsung 1; block descendant 1; candidate langsung 1
+  - **Reset the admin password** [KANDIDAT] — hal. 107–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Always use HTTPS to access the router** [KANDIDAT] — hal. 108–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **View information about the router and the Internet and WiFi settings** [KANDIDAT] — hal. 109–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **Display the statistics of the Internet port** [KANDIDAT] — hal. 109–110; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check the Internet connection status** [KANDIDAT] — hal. 111–111; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and manage logs of router activity** [KANDIDAT] — hal. 112–112; block langsung 1; block descendant 1; candidate langsung 1
+  - **View devices currently on the network** [KANDIDAT] — hal. 113–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor Internet traffic** [KANDIDAT] — hal. 113–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the router configuration file** — hal. 115–116; block langsung 1; block descendant 4; candidate langsung 1
+    - **Back up the settings** [KANDIDAT] — hal. 115–115; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 115–116; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore the settings** [KANDIDAT] — hal. 116–116; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect to your router with Anywhere Access** [KANDIDAT] — hal. 117–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable LED blinking or turn off LEDs** [KANDIDAT] — hal. 117–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set your time zone** [KANDIDAT] — hal. 118–118; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set the NTP server** [KANDIDAT] — hal. 118–119; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify ReadyDLNA media server settings** [KANDIDAT] — hal. 119–120; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the router to its factory default settings** — hal. 120–121; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the Reset button** [KANDIDAT] — hal. 120–121; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 121–121; block langsung 1; block descendant 1; candidate langsung 1
+- **Share USB Storage Devices Attached to the Router** — hal. 122–132; block langsung 1; block descendant 15; candidate langsung 1
+  - **USB device requirements** [KANDIDAT] — hal. 123–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a USB storage device to the router** [KANDIDAT] — hal. 123–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device connected to the router from a Windows-based computer** [KANDIDAT] — hal. 124–124; block langsung 1; block descendant 1; candidate langsung 1
+  - **Map a USB device to a Windows network drive** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device that is connected to the router from a Mac** [KANDIDAT] — hal. 125–126; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back up Mac computers with Time Machine** — hal. 126–128; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a USB hard drive on a Mac** [KANDIDAT] — hal. 126–127; block langsung 1; block descendant 1; candidate langsung 1
+    - **Prepare to back up a large amount of data** [KANDIDAT] — hal. 127–127; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Time Machine to back up onto a USB hard disk** [KANDIDAT] — hal. 127–128; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable FTP access within your network** [KANDIDAT] — hal. 129–129; block langsung 1; block descendant 1; candidate langsung 1
+  - **View network folders on a storage device** [KANDIDAT] — hal. 129–130; block langsung 1; block descendant 1; candidate langsung 1
+  - **Add a network folder on a USB storage device** [KANDIDAT] — hal. 130–131; block langsung 1; block descendant 1; candidate langsung 1
+  - **Edit a network folder on a USB storage device** [KANDIDAT] — hal. 131–132; block langsung 1; block descendant 1; candidate langsung 1
+  - **Safely remove a USB storage device** [KANDIDAT] — hal. 132–132; block langsung 1; block descendant 1; candidate langsung 1
+- **Use Dynamic DNS to Access USB Storage Devices Through the Internet** — hal. 133–141; block langsung 1; block descendant 13; candidate langsung 1
+  - **Set up and manage Dynamic DNS** — hal. 134–136; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a new Dynamic DNS account** [KANDIDAT] — hal. 134–135; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a DNS account that you already created** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS settings** [KANDIDAT] — hal. 136–136; block langsung 1; block descendant 1; candidate langsung 1
+  - **Your personal FTP server** — hal. 136–138; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up your personal FTP server** [KANDIDAT] — hal. 137–137; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up FTP access through the Internet** [KANDIDAT] — hal. 137–138; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up HTTPS access through the Internet** [KANDIDAT] — hal. 138–139; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access USB storage devices through the Internet** [KANDIDAT] — hal. 139–140; block langsung 1; block descendant 1; candidate langsung 1
+  - **Remotely access a USB device using ReadyCLOUD** — hal. 140–141; block langsung 1; block descendant 3; candidate langsung 1
+    - **Create a ReadyCLOUD account** [KANDIDAT] — hal. 140–141; block langsung 1; block descendant 1; candidate langsung 1
+    - **Register your router with ReadyCLOUD** [KANDIDAT] — hal. 141–141; block langsung 1; block descendant 1; candidate langsung 1
+- **Use OpenVPN to Access Your Network** — hal. 142–152; block langsung 1; block descendant 13; candidate langsung 1
+  - **About VPN connections** [KANDIDAT] — hal. 143–143; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable OpenVPN service in the router** [KANDIDAT] — hal. 144–145; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN software on a VPN client** — hal. 145–149; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN software on a Windows-based computer** [KANDIDAT] — hal. 145–147; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on a Mac computer** [KANDIDAT] — hal. 147–148; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an iOS device** [KANDIDAT] — hal. 148–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an Android device** [KANDIDAT] — hal. 149–149; block langsung 1; block descendant 1; candidate langsung 1
+  - **LAN IP addressing in VPN networks** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to remotely access a USB storage device attached to the router** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to access your Internet service at home** — hal. 150–152; block langsung 1; block descendant 3; candidate langsung 1
+    - **Allow VPN client Internet access in the router** [KANDIDAT] — hal. 151–151; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN client Internet access in the router** [KANDIDAT] — hal. 151–152; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage port forwarding and port triggering** — hal. 153–161; block langsung 1; block descendant 12; candidate langsung 1
+  - **Manage port forwarding to a local server** — hal. 154–158; block langsung 1; block descendant 7; candidate langsung 1
+    - **Set up port forwarding to a local server** [KANDIDAT] — hal. 154–155; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a custom port forwarding service** [KANDIDAT] — hal. 155–156; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a port forwarding service** [KANDIDAT] — hal. 156–156; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a port forwarding entry** [KANDIDAT] — hal. 157–157; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Make a local web server public** [KANDIDAT] — hal. 157–157; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the router implements the port forwarding rule** [KANDIDAT] — hal. 158–158; block langsung 1; block descendant 1; candidate langsung 1
+  - **Port triggering** — hal. 158–161; block langsung 1; block descendant 4; candidate langsung 1
+    - **Add a port triggering service** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable port triggering** [KANDIDAT] — hal. 160–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Port triggering for Internet relay chat** [KANDIDAT] — hal. 160–161; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 162–171; block langsung 1; block descendant 20; candidate langsung 1
+  - **Quick tips** — hal. 163–164; block langsung 1; block descendant 5; candidate langsung 1
+    - **Sequence to restart your network** [KANDIDAT] — hal. 163–163; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the power adapter and Ethernet cable connections** [KANDIDAT] — hal. 163–163; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the WiFi settings** [KANDIDAT] — hal. 163–163; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the network settings** [KANDIDAT] — hal. 163–164; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot with the LEDs** — hal. 164–165; block langsung 1; block descendant 6; candidate langsung 1
+    - **Standard LED behavior when the router is powered on** [KANDIDAT] — hal. 164–164; block langsung 1; block descendant 1; candidate langsung 1
+    - **Power LED is off or blinking** [KANDIDAT] — hal. 164–164; block langsung 1; block descendant 1; candidate langsung 1
+    - **LEDs never turn off** [KANDIDAT] — hal. 164–165; block langsung 1; block descendant 1; candidate langsung 1
+    - **Internet or Ethernet LAN port LEDs are off** [KANDIDAT] — hal. 165–165; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi LED is off** [KANDIDAT] — hal. 165–165; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot log in to the router** [KANDIDAT] — hal. 165–166; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot access the Internet** [KANDIDAT] — hal. 166–168; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet browsing** [KANDIDAT] — hal. 168–168; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes are not saved** [KANDIDAT] — hal. 168–168; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi connectivity** [KANDIDAT] — hal. 169–169; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot your network using the ping utility** — hal. 169–171; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN path to your router** [KANDIDAT] — hal. 169–170; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the path from a Windows-based computer to a remote device** [KANDIDAT] — hal. 170–171; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 172–175; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory settings** [KANDIDAT] — hal. 173–174; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical specifications** [KANDIDAT] — hal. 174–175; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-rax50.pdf — RAX50
+
+160 halaman; 184 node outline; 148 leaf outline kandidat.
+
+- **Hardware Setup** — hal. 8–16; block langsung 1; block descendant 9; candidate langsung 1
+  - **Unpack your router** [KANDIDAT] — hal. 9–9; block langsung 1; block descendant 1; candidate langsung 1
+  - **Top panel LEDs and buttons** [KANDIDAT] — hal. 10–11; block langsung 1; block descendant 1; candidate langsung 1
+  - **Rear panel** [KANDIDAT] — hal. 12–12; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router label** [KANDIDAT] — hal. 13–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Attach and position the antennas** [KANDIDAT] — hal. 13–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position your router** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Wall-mount your router** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Cable your router** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the Network and Access the Router** — hal. 17–22; block langsung 1; block descendant 11; candidate langsung 1
+  - **Connect to the router network** — hal. 18–19; block langsung 1; block descendant 4; candidate langsung 1
+    - **Connect to the router using a wired connection** [KANDIDAT] — hal. 18–18; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect to the router WiFi network** [KANDIDAT] — hal. 18–18; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect to the WiFi network using WPS** [KANDIDAT] — hal. 18–19; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of logins** [KANDIDAT] — hal. 19–19; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a web browser to access the router** — hal. 19–21; block langsung 1; block descendant 3; candidate langsung 1
+    - **Automatic Internet setup** [KANDIDAT] — hal. 19–21; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log in to the router** [KANDIDAT] — hal. 21–21; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install and manage your router with the Nighthawk app** [KANDIDAT] — hal. 21–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the language** [KANDIDAT] — hal. 22–22; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 23–41; block langsung 1; block descendant 18; candidate langsung 1
+  - **Use the Internet Setup Wizard** [KANDIDAT] — hal. 24–24; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually set up the Internet connection** — hal. 24–27; block langsung 1; block descendant 3; candidate langsung 1
+    - **Specify an Internet connection without a login** [KANDIDAT] — hal. 24–26; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet connection that uses a login** [KANDIDAT] — hal. 26–27; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify IPv6 Internet connections** — hal. 27–40; block langsung 1; block descendant 10; candidate langsung 1
+    - **Requirements for entering IPv6 addresses** [KANDIDAT] — hal. 28–28; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto detect for an IPv6 Internet connection** [KANDIDAT] — hal. 28–29; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6to4 tunnel Internet connection** [KANDIDAT] — hal. 29–31; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 pass-through Internet connection** [KANDIDAT] — hal. 31–31; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 fixed Internet connection** [KANDIDAT] — hal. 32–33; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 DHCP Internet connection** [KANDIDAT] — hal. 33–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 PPPoE Internet connection** [KANDIDAT] — hal. 35–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto config for an IPv6 Internet connection** [KANDIDAT] — hal. 36–38; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6rd Internet connection** [KANDIDAT] — hal. 38–40; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the MTU size** — hal. 40–41; block langsung 1; block descendant 3; candidate langsung 1
+    - **MTU concepts** [KANDIDAT] — hal. 40–41; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the MTU size** [KANDIDAT] — hal. 41–41; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 42–54; block langsung 1; block descendant 11; candidate langsung 1
+  - **Network access control list** — hal. 43–48; block langsung 1; block descendant 4; candidate langsung 1
+    - **Enable the network access control list, set the access rule, and allow or block connected devices** [KANDIDAT] — hal. 43–45; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage allowed devices currently not on the network** [KANDIDAT] — hal. 45–47; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage blocked devices currently not on the network** [KANDIDAT] — hal. 47–48; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use keywords to block Internet sites** [KANDIDAT] — hal. 49–50; block langsung 1; block descendant 1; candidate langsung 1
+  - **Delete keywords from the blocked list** [KANDIDAT] — hal. 50–50; block langsung 1; block descendant 1; candidate langsung 1
+  - **Block services from the Internet** [KANDIDAT] — hal. 50–52; block langsung 1; block descendant 1; candidate langsung 1
+  - **Prevent blocking on a trusted computer** [KANDIDAT] — hal. 52–52; block langsung 1; block descendant 1; candidate langsung 1
+  - **Schedule when to block Internet sites and services** [KANDIDAT] — hal. 52–53; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up security event email notifications** [KANDIDAT] — hal. 53–54; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Network Settings** — hal. 55–84; block langsung 1; block descendant 32; candidate langsung 1
+  - **View or change the WAN settings** [KANDIDAT] — hal. 56–57; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a default DMZ server** [KANDIDAT] — hal. 57–58; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the router’s device name** [KANDIDAT] — hal. 58–58; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the LAN TCP/IP settings** [KANDIDAT] — hal. 58–60; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify the IP addresses that the router assigns** [KANDIDAT] — hal. 60–61; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP server feature in the router** [KANDIDAT] — hal. 61–62; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage reserved LAN IP addresses** — hal. 62–64; block langsung 1; block descendant 4; candidate langsung 1
+    - **Reserve an IP address** [KANDIDAT] — hal. 62–63; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a reserved IP address** [KANDIDAT] — hal. 63–63; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a reserved IP address entry** [KANDIDAT] — hal. 63–64; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the WPS Wizard for WiFi connections** [KANDIDAT] — hal. 64–65; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify basic WiFi settings** [KANDIDAT] — hal. 65–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi mode** — hal. 66–69; block langsung 1; block descendant 3; candidate langsung 1
+    - **Change the WiFi mode if AX WiFi is enabled** [KANDIDAT] — hal. 67–68; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WiFi mode if AX WiFi is disabled** [KANDIDAT] — hal. 68–69; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi password or the WiFi security** [KANDIDAT] — hal. 69–70; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a guest WiFi network** [KANDIDAT] — hal. 70–72; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable the WiFi radios** [KANDIDAT] — hal. 73–73; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a WiFi schedule** [KANDIDAT] — hal. 73–74; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up the router as a WiFi access point** [KANDIDAT] — hal. 74–75; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a bridge for a port group or VLAN tag group** — hal. 75–79; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a bridge for a port group** [KANDIDAT] — hal. 75–76; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPTV port** [KANDIDAT] — hal. 77–78; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a bridge for a VLAN tag group** [KANDIDAT] — hal. 78–79; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage custom static routes** — hal. 79–82; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a static route** [KANDIDAT] — hal. 80–81; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a static route** [KANDIDAT] — hal. 81–82; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a static route** [KANDIDAT] — hal. 82–82; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable implicit beamforming** [KANDIDAT] — hal. 82–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable MU-MIMO** [KANDIDAT] — hal. 83–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable AX WiFi** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+- **Optimize Performance** — hal. 85–91; block langsung 1; block descendant 8; candidate langsung 1
+  - **Use Dynamic QoS to optimize Internet traffic management** — hal. 86–88; block langsung 1; block descendant 4; candidate langsung 1
+    - **Enable Dynamic QoS** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable or disable the automatic QoS database update** [KANDIDAT] — hal. 87–87; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually update the dynamic QoS database** [KANDIDAT] — hal. 87–88; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve network connections with Universal Plug and Play** [KANDIDAT] — hal. 88–89; block langsung 1; block descendant 1; candidate langsung 1
+  - **Wi-Fi Multimedia Quality of Service** [KANDIDAT] — hal. 89–90; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable AX WiFi** [KANDIDAT] — hal. 90–91; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Your Router** — hal. 92–110; block langsung 1; block descendant 26; candidate langsung 1
+  - **Update the router firmware** — hal. 93–94; block langsung 1; block descendant 3; candidate langsung 1
+    - **Check for new firmware and update the router** [KANDIDAT] — hal. 93–94; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually upload firmware to the router** [KANDIDAT] — hal. 94–94; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 95–95; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin password reset** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Reset the admin password** [KANDIDAT] — hal. 96–97; block langsung 1; block descendant 1; candidate langsung 1
+  - **Always use HTTPS to access the router** [KANDIDAT] — hal. 97–97; block langsung 1; block descendant 1; candidate langsung 1
+  - **View information about the router and the Internet and WiFi settings** [KANDIDAT] — hal. 98–98; block langsung 1; block descendant 1; candidate langsung 1
+  - **Display the statistics of the Internet port** [KANDIDAT] — hal. 98–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check the Internet connection status** [KANDIDAT] — hal. 100–100; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and manage logs of router activity** [KANDIDAT] — hal. 101–101; block langsung 1; block descendant 1; candidate langsung 1
+  - **View devices currently on the network** [KANDIDAT] — hal. 102–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor Internet traffic** [KANDIDAT] — hal. 102–103; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the router configuration file** — hal. 104–105; block langsung 1; block descendant 4; candidate langsung 1
+    - **Back up the settings** [KANDIDAT] — hal. 104–104; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 104–105; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore the settings** [KANDIDAT] — hal. 105–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect to your router with Anywhere Access** [KANDIDAT] — hal. 106–106; block langsung 1; block descendant 1; candidate langsung 1
+  - **Turn off the router LEDs** [KANDIDAT] — hal. 106–106; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set your time zone** [KANDIDAT] — hal. 107–107; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set the NTP server** [KANDIDAT] — hal. 107–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify ReadyDLNA media server settings** [KANDIDAT] — hal. 108–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the router to its factory default settings** — hal. 109–110; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the Reset button** [KANDIDAT] — hal. 109–110; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 110–110; block langsung 1; block descendant 1; candidate langsung 1
+- **Share USB Storage Devices Attached to the Router** — hal. 111–118; block langsung 1; block descendant 11; candidate langsung 1
+  - **USB device requirements** [KANDIDAT] — hal. 112–112; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a USB storage device to the router** [KANDIDAT] — hal. 112–112; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device connected to the router from a Windows-based computer** [KANDIDAT] — hal. 113–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Map a USB device to a Windows network drive** [KANDIDAT] — hal. 113–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device that is connected to the router from a Mac** [KANDIDAT] — hal. 114–115; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable FTP access within your network** [KANDIDAT] — hal. 115–115; block langsung 1; block descendant 1; candidate langsung 1
+  - **View network folders on a storage device** [KANDIDAT] — hal. 115–116; block langsung 1; block descendant 1; candidate langsung 1
+  - **Add a network folder on a USB storage device** [KANDIDAT] — hal. 116–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Edit a network folder on a USB storage device** [KANDIDAT] — hal. 117–118; block langsung 1; block descendant 1; candidate langsung 1
+  - **Safely remove a USB storage device** [KANDIDAT] — hal. 118–118; block langsung 1; block descendant 1; candidate langsung 1
+- **Use Dynamic DNS to Access USB Storage Devices Through the Internet** — hal. 119–126; block langsung 1; block descendant 10; candidate langsung 1
+  - **Set up and manage Dynamic DNS** — hal. 120–122; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a new Dynamic DNS account** [KANDIDAT] — hal. 120–121; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a DNS account that you already created** [KANDIDAT] — hal. 121–122; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS settings** [KANDIDAT] — hal. 122–122; block langsung 1; block descendant 1; candidate langsung 1
+  - **Your personal FTP server** — hal. 122–124; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up your personal FTP server** [KANDIDAT] — hal. 123–123; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up FTP access through the Internet** [KANDIDAT] — hal. 123–124; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up HTTPS access through the Internet** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access USB storage devices through the Internet** [KANDIDAT] — hal. 125–126; block langsung 1; block descendant 1; candidate langsung 1
+- **Use OpenVPN to Access Your Network** — hal. 127–137; block langsung 1; block descendant 13; candidate langsung 1
+  - **About VPN connections** [KANDIDAT] — hal. 128–128; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable OpenVPN service in the router** [KANDIDAT] — hal. 129–130; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN software on a VPN client** — hal. 130–134; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN software on a Windows-based computer** [KANDIDAT] — hal. 130–132; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on a Mac computer** [KANDIDAT] — hal. 132–133; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an iOS device** [KANDIDAT] — hal. 133–134; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an Android device** [KANDIDAT] — hal. 134–134; block langsung 1; block descendant 1; candidate langsung 1
+  - **LAN IP addressing in VPN networks** [KANDIDAT] — hal. 135–135; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to access your Internet service at home** — hal. 135–137; block langsung 1; block descendant 3; candidate langsung 1
+    - **Allow VPN client Internet access in the router** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN client Internet access in the router** [KANDIDAT] — hal. 136–137; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to remotely access a USB storage device attached to the router** [KANDIDAT] — hal. 137–137; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Port Forwarding and Port Triggering** — hal. 138–146; block langsung 1; block descendant 12; candidate langsung 1
+  - **Manage port forwarding to a local server** — hal. 139–143; block langsung 1; block descendant 7; candidate langsung 1
+    - **Set up port forwarding to a local server** [KANDIDAT] — hal. 139–140; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a custom port forwarding service** [KANDIDAT] — hal. 140–141; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a port forwarding service** [KANDIDAT] — hal. 141–141; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a port forwarding entry** [KANDIDAT] — hal. 142–142; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Make a local web server public** [KANDIDAT] — hal. 142–142; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the router implements the port forwarding rule** [KANDIDAT] — hal. 143–143; block langsung 1; block descendant 1; candidate langsung 1
+  - **Port triggering** — hal. 143–146; block langsung 1; block descendant 4; candidate langsung 1
+    - **Add a port triggering service** [KANDIDAT] — hal. 144–145; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable port triggering** [KANDIDAT] — hal. 145–145; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Port triggering for Internet relay chat** [KANDIDAT] — hal. 145–146; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 147–156; block langsung 1; block descendant 20; candidate langsung 1
+  - **Quick tips** — hal. 148–149; block langsung 1; block descendant 5; candidate langsung 1
+    - **Sequence to restart your network** [KANDIDAT] — hal. 148–148; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the power adapter and Ethernet cable connections** [KANDIDAT] — hal. 148–148; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the WiFi settings** [KANDIDAT] — hal. 148–148; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the network settings** [KANDIDAT] — hal. 148–149; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot with the LEDs** — hal. 149–150; block langsung 1; block descendant 6; candidate langsung 1
+    - **Standard LED behavior when the router is powered on** [KANDIDAT] — hal. 149–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **LEDs never turn off** [KANDIDAT] — hal. 149–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **Power LED is off or blinking** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+    - **Internet or Ethernet LAN port LEDs are off** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi LED is off** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot log in to the router** [KANDIDAT] — hal. 151–151; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot access the Internet** [KANDIDAT] — hal. 152–153; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet browsing** [KANDIDAT] — hal. 153–153; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes are not saved** [KANDIDAT] — hal. 154–154; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi connectivity** [KANDIDAT] — hal. 154–154; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot your network using the ping utility** — hal. 155–156; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN path to your router** [KANDIDAT] — hal. 155–155; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the path from a Windows-based computer to a remote device** [KANDIDAT] — hal. 156–156; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 157–160; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory settings** [KANDIDAT] — hal. 158–159; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical specifications** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-raxe500.pdf — RAXE500
+
+169 halaman; 191 node outline; 155 leaf outline kandidat.
+
+- **Hardware Setup** — hal. 8–18; block langsung 1; block descendant 9; candidate langsung 1
+  - **Unpack your router** [KANDIDAT] — hal. 9–9; block langsung 1; block descendant 1; candidate langsung 1
+  - **Top panel LEDs and buttons** [KANDIDAT] — hal. 10–12; block langsung 1; block descendant 1; candidate langsung 1
+  - **Rear panel** [KANDIDAT] — hal. 13–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Extend the antennas** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router label** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position your router** [KANDIDAT] — hal. 15–16; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect your router to a modem** [KANDIDAT] — hal. 16–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Wall-Mount Your Router** [KANDIDAT] — hal. 18–18; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the network and access the router** — hal. 19–24; block langsung 1; block descendant 11; candidate langsung 1
+  - **Connect to the network** — hal. 20–21; block langsung 1; block descendant 4; candidate langsung 1
+    - **Connect to the network using a wired connection** [KANDIDAT] — hal. 20–20; block langsung 1; block descendant 1; candidate langsung 1
+    - **Find and connect to the WiFi network** [KANDIDAT] — hal. 20–20; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi connection using WPS** [KANDIDAT] — hal. 20–21; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of logins** [KANDIDAT] — hal. 21–21; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install and manage your router with the Nighthawk app** [KANDIDAT] — hal. 21–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a web browser to access the router** — hal. 22–24; block langsung 1; block descendant 3; candidate langsung 1
+    - **Automatic Internet Setup** [KANDIDAT] — hal. 22–23; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log in to the router** [KANDIDAT] — hal. 24–24; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the language** [KANDIDAT] — hal. 24–24; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 25–46; block langsung 1; block descendant 21; candidate langsung 1
+  - **Use the Internet Setup Wizard** [KANDIDAT] — hal. 26–26; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually set up the Internet connection** — hal. 26–30; block langsung 1; block descendant 3; candidate langsung 1
+    - **Specify an Internet connection without a login** [KANDIDAT] — hal. 26–28; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet connection that uses a login** [KANDIDAT] — hal. 28–30; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage a Multi-Gig Internet connection** — hal. 30–32; block langsung 1; block descendant 3; candidate langsung 1
+    - **Get Multi-Gig Internet With the Multi-Gig Port** [KANDIDAT] — hal. 31–31; block langsung 1; block descendant 1; candidate langsung 1
+    - **Get Multi-Gig Internet With Internet Port Aggregation** [KANDIDAT] — hal. 31–32; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify IPv6 Internet connections** — hal. 32–44; block langsung 1; block descendant 10; candidate langsung 1
+    - **Requirements for entering IPv6 addresses** [KANDIDAT] — hal. 33–33; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto detect for an IPv6 Internet connection** [KANDIDAT] — hal. 33–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6to4 tunnel Internet connection** [KANDIDAT] — hal. 35–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 pass-through Internet connection** [KANDIDAT] — hal. 36–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 fixed Internet connection** [KANDIDAT] — hal. 37–38; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 DHCP Internet connection** [KANDIDAT] — hal. 38–39; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 PPPoE Internet connection** [KANDIDAT] — hal. 39–41; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto config for an IPv6 Internet connection** [KANDIDAT] — hal. 41–42; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6rd Internet connection** [KANDIDAT] — hal. 43–44; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the MTU size** — hal. 44–46; block langsung 1; block descendant 3; candidate langsung 1
+    - **MTU concepts** [KANDIDAT] — hal. 44–46; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the MTU size** [KANDIDAT] — hal. 46–46; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 47–56; block langsung 1; block descendant 12; candidate langsung 1
+  - **Manage NETGEAR Armor** — hal. 48–48; block langsung 1; block descendant 3; candidate langsung 1
+    - **Activate Armor using the Nighthawk app** [KANDIDAT] — hal. 48–48; block langsung 1; block descendant 1; candidate langsung 1
+    - **View or change your NETGEAR Armor settings using the Nighthawk app** [KANDIDAT] — hal. 48–48; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable access control to allow or block access to the Internet** [KANDIDAT] — hal. 49–50; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use keywords to block Internet sites** [KANDIDAT] — hal. 50–51; block langsung 1; block descendant 1; candidate langsung 1
+  - **Delete keywords from the blocked list** [KANDIDAT] — hal. 51–51; block langsung 1; block descendant 1; candidate langsung 1
+  - **Block services from the Internet** [KANDIDAT] — hal. 52–53; block langsung 1; block descendant 1; candidate langsung 1
+  - **Prevent blocking on a trusted computer** [KANDIDAT] — hal. 53–53; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage network access control lists** [KANDIDAT] — hal. 54–54; block langsung 1; block descendant 1; candidate langsung 1
+  - **Schedule when to block Internet sites and services** [KANDIDAT] — hal. 54–55; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up security event email notifications** [KANDIDAT] — hal. 55–56; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Network Settings** — hal. 57–99; block langsung 1; block descendant 44; candidate langsung 1
+  - **View or change the WAN settings** [KANDIDAT] — hal. 59–60; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a default DMZ server** [KANDIDAT] — hal. 60–61; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Router’s Device Name** [KANDIDAT] — hal. 61–61; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the LAN TCP/IP settings** [KANDIDAT] — hal. 61–63; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify the IP addresses that the router assigns** [KANDIDAT] — hal. 63–64; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP server feature in the router** [KANDIDAT] — hal. 64–65; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage reserved LAN IP addresses** — hal. 65–67; block langsung 1; block descendant 4; candidate langsung 1
+    - **Reserve an IP address** [KANDIDAT] — hal. 65–66; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a reserved IP address** [KANDIDAT] — hal. 66–66; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a reserved IP address entry** [KANDIDAT] — hal. 66–67; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the WPS Wizard for WiFi connections** [KANDIDAT] — hal. 67–67; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify basic WiFi settings** [KANDIDAT] — hal. 68–69; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi mode** — hal. 69–72; block langsung 1; block descendant 3; candidate langsung 1
+    - **Change the WiFi mode if AX WiFi is enabled** [KANDIDAT] — hal. 69–71; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WiFi mode if AX WiFi is disabled** [KANDIDAT] — hal. 71–72; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi password or the WiFi security** [KANDIDAT] — hal. 73–74; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a guest WiFi network** [KANDIDAT] — hal. 75–77; block langsung 1; block descendant 1; candidate langsung 1
+  - **Control the WiFi radios** — hal. 77–78; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the WiFi On/Off button** [KANDIDAT] — hal. 77–77; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable or disable the WiFi radios** [KANDIDAT] — hal. 78–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable AX WiFi** [KANDIDAT] — hal. 78–79; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable 20/40 MHz coexistence for the 2.4 GHz radio** [KANDIDAT] — hal. 79–80; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable OFDMA** [KANDIDAT] — hal. 80–81; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the Transmission Power Control** [KANDIDAT] — hal. 81–82; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a WiFi schedule** [KANDIDAT] — hal. 82–82; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up the router as a WiFi access point** [KANDIDAT] — hal. 83–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a bridge for a port group or VLAN tag group** — hal. 84–87; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a bridge for a port group** [KANDIDAT] — hal. 84–85; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a bridge for a VLAN tag group** [KANDIDAT] — hal. 85–86; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPTV port** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage custom static routes** — hal. 87–90; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a static route** [KANDIDAT] — hal. 88–89; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a static route** [KANDIDAT] — hal. 89–90; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a static route** [KANDIDAT] — hal. 90–90; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable implicit beamforming** [KANDIDAT] — hal. 90–91; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable airtime fairness** [KANDIDAT] — hal. 91–92; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable MU-MIMO** [KANDIDAT] — hal. 92–92; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable Smart Connect** [KANDIDAT] — hal. 93–93; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve network connections with Universal Plug and Play** [KANDIDAT] — hal. 94–95; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set Up the Router in Bridge Mode** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Ethernet Port Aggregation to a LAN Device** — hal. 96–99; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set Up Ethernet Port Aggregation to a LAN Device** [KANDIDAT] — hal. 97–98; block langsung 1; block descendant 1; candidate langsung 1
+    - **View or Change the Router Ethernet Port Aggregation Mode** [KANDIDAT] — hal. 98–99; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage Your Router** — hal. 100–118; block langsung 1; block descendant 25; candidate langsung 1
+  - **Update the router firmware** — hal. 101–102; block langsung 1; block descendant 3; candidate langsung 1
+    - **Check for new firmware and update the router** [KANDIDAT] — hal. 101–102; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually upload firmware to the router** [KANDIDAT] — hal. 102–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 103–103; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin password recovery** [KANDIDAT] — hal. 103–104; block langsung 1; block descendant 1; candidate langsung 1
+  - **Recover the admin password** [KANDIDAT] — hal. 104–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **View information about the router and the Internet and WiFi settings** [KANDIDAT] — hal. 105–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **Display the statistics of the Internet port** [KANDIDAT] — hal. 106–107; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check the Internet connection status** [KANDIDAT] — hal. 107–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and manage logs of router activity** [KANDIDAT] — hal. 108–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **View devices currently on the network** [KANDIDAT] — hal. 109–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor Internet traffic** [KANDIDAT] — hal. 109–111; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the router configuration file** — hal. 111–113; block langsung 1; block descendant 4; candidate langsung 1
+    - **Back up the settings** [KANDIDAT] — hal. 111–111; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 111–112; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore the settings** [KANDIDAT] — hal. 112–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect to your router with Anywhere Access** [KANDIDAT] — hal. 113–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable LED blinking or turn off LEDs** [KANDIDAT] — hal. 113–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set your time zone** [KANDIDAT] — hal. 114–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set the NTP Server** [KANDIDAT] — hal. 114–115; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify ReadyDLNA Media Server Settings** [KANDIDAT] — hal. 116–116; block langsung 1; block descendant 1; candidate langsung 1
+  - **Return the router to its factory default settings** — hal. 117–118; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the Reset button** [KANDIDAT] — hal. 117–117; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the settings** [KANDIDAT] — hal. 117–118; block langsung 1; block descendant 1; candidate langsung 1
+- **Share USB Storage Devices Attached to the Router** — hal. 119–127; block langsung 1; block descendant 11; candidate langsung 1
+  - **USB device requirements** [KANDIDAT] — hal. 120–120; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a USB storage device to the router** [KANDIDAT] — hal. 120–120; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device connected to the router from a Windows-based computer** [KANDIDAT] — hal. 121–121; block langsung 1; block descendant 1; candidate langsung 1
+  - **Map a USB device to a Windows network drive** [KANDIDAT] — hal. 121–122; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device that is connected to the router from a Mac** [KANDIDAT] — hal. 122–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable FTP access within your network** [KANDIDAT] — hal. 123–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **View network folders on a storage device** [KANDIDAT] — hal. 123–124; block langsung 1; block descendant 1; candidate langsung 1
+  - **Add a network folder on a USB storage device** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+  - **Edit a network folder on a USB storage device** [KANDIDAT] — hal. 125–126; block langsung 1; block descendant 1; candidate langsung 1
+  - **Safely remove a USB storage device** [KANDIDAT] — hal. 126–127; block langsung 1; block descendant 1; candidate langsung 1
+- **Use Dynamic DNS to Access USB Storage Devices Through the Internet** — hal. 128–133; block langsung 1; block descendant 9; candidate langsung 1
+  - **Set up and manage Dynamic DNS** [KANDIDAT] — hal. 129–129; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up FTP access through the Internet** [KANDIDAT] — hal. 129–130; block langsung 1; block descendant 1; candidate langsung 1
+  - **Your personal FTP server** — hal. 130–133; block langsung 1; block descendant 5; candidate langsung 1
+    - **Set up your personal FTP server** [KANDIDAT] — hal. 130–131; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a new Dynamic DNS account** [KANDIDAT] — hal. 131–131; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a DNS account that you already created** [KANDIDAT] — hal. 131–132; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS settings** [KANDIDAT] — hal. 132–133; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access USB storage devices through the Internet** [KANDIDAT] — hal. 133–133; block langsung 1; block descendant 1; candidate langsung 1
+- **Use VPN to Access Your Network** — hal. 134–146; block langsung 1; block descendant 14; candidate langsung 1
+  - **Set up a VPN connection** [KANDIDAT] — hal. 135–135; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify VPN service in the router** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN software** — hal. 136–141; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN Software on Your Windows Computer** [KANDIDAT] — hal. 136–139; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on your Mac computer** [KANDIDAT] — hal. 139–139; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an iOS device** [KANDIDAT] — hal. 140–140; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an Android device** [KANDIDAT] — hal. 140–141; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a VPN tunnel on your Windows computer** [KANDIDAT] — hal. 141–142; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to access the router’s USB device and media** [KANDIDAT] — hal. 143–143; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to access your Internet service at home** — hal. 143–146; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up VPN client Internet access in the router** [KANDIDAT] — hal. 144–144; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN client Internet access in the router** [KANDIDAT] — hal. 144–145; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use a VPN tunnel to access your Internet service at home** [KANDIDAT] — hal. 145–146; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage port forwarding and port triggering** — hal. 147–155; block langsung 1; block descendant 12; candidate langsung 1
+  - **Manage port forwarding to a local server** — hal. 148–152; block langsung 1; block descendant 7; candidate langsung 1
+    - **Set up port forwarding to a local server** [KANDIDAT] — hal. 148–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a custom port forwarding service** [KANDIDAT] — hal. 149–150; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a port forwarding service** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a port forwarding entry** [KANDIDAT] — hal. 151–151; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application xxample: Make a local web server public** [KANDIDAT] — hal. 151–151; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the router implements the port forwarding rule** [KANDIDAT] — hal. 152–152; block langsung 1; block descendant 1; candidate langsung 1
+  - **Port triggering** — hal. 152–155; block langsung 1; block descendant 4; candidate langsung 1
+    - **Add a port triggering service** [KANDIDAT] — hal. 153–153; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable port triggering** [KANDIDAT] — hal. 154–154; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Port triggering for Internet relay chat** [KANDIDAT] — hal. 154–155; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 156–165; block langsung 1; block descendant 20; candidate langsung 1
+  - **Quick tips** — hal. 157–158; block langsung 1; block descendant 5; candidate langsung 1
+    - **Sequence to restart your network** [KANDIDAT] — hal. 157–157; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the power adapter and Ethernet cable connections** [KANDIDAT] — hal. 157–157; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the WiFi settings** [KANDIDAT] — hal. 157–157; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the network settings** [KANDIDAT] — hal. 157–158; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot with the LEDs** — hal. 158–159; block langsung 1; block descendant 6; candidate langsung 1
+    - **Standard LED behavior when the router is powered on** [KANDIDAT] — hal. 158–158; block langsung 1; block descendant 1; candidate langsung 1
+    - **Power LED is off or blinking** [KANDIDAT] — hal. 158–158; block langsung 1; block descendant 1; candidate langsung 1
+    - **LEDs never turn off** [KANDIDAT] — hal. 158–159; block langsung 1; block descendant 1; candidate langsung 1
+    - **Internet or Ethernet LAN port LEDs are off** [KANDIDAT] — hal. 159–159; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi LED is off** [KANDIDAT] — hal. 159–159; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot log in to the router** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot access the Internet** [KANDIDAT] — hal. 160–162; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet browsing** [KANDIDAT] — hal. 162–162; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes are not saved** [KANDIDAT] — hal. 162–162; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi connectivity** [KANDIDAT] — hal. 163–163; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot your network using the ping utility** — hal. 163–165; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN path to your router** [KANDIDAT] — hal. 163–164; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the path from a Windows-based computer to a remote device** [KANDIDAT] — hal. 164–165; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 166–169; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory settings** [KANDIDAT] — hal. 167–168; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical specifications** [KANDIDAT] — hal. 168–169; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-rbk852.pdf — RBK852
+
+161 halaman; 182 node outline; 144 leaf outline kandidat.
+
+- **Overview** — hal. 8–14; block langsung 1; block descendant 10; candidate langsung 1
+  - **Orbi router overview** — hal. 9–11; block langsung 1; block descendant 3; candidate langsung 1
+    - **Orbi router hardware features** [KANDIDAT] — hal. 9–10; block langsung 1; block descendant 1; candidate langsung 1
+    - **Orbi router LED behavior** [KANDIDAT] — hal. 10–11; block langsung 1; block descendant 1; candidate langsung 1
+  - **Orbi satellite overview** — hal. 11–12; block langsung 1; block descendant 3; candidate langsung 1
+    - **Orbi satellite hardware features** [KANDIDAT] — hal. 11–12; block langsung 1; block descendant 1; candidate langsung 1
+    - **Orbi satellite LED behavior** [KANDIDAT] — hal. 12–12; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect your router** [KANDIDAT] — hal. 13–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Place your Orbi satellite** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Sync your Orbi satellite with your Orbi router** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the Network and Access the Router** — hal. 15–21; block langsung 1; block descendant 12; candidate langsung 1
+  - **Connect to the network** — hal. 16–17; block langsung 1; block descendant 4; candidate langsung 1
+    - **Wired connection** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi connection** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi connection using WPS** [KANDIDAT] — hal. 17–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of logins** [KANDIDAT] — hal. 17–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router and satellite labels** [KANDIDAT] — hal. 17–18; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up and manage with the NETGEAR Orbi app** [KANDIDAT] — hal. 18–19; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a web browser to access the router** — hal. 19–21; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the automatic Internet setup option** [KANDIDAT] — hal. 19–20; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log in to the Orbi router web interface** [KANDIDAT] — hal. 20–21; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the language** [KANDIDAT] — hal. 21–21; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 22–41; block langsung 1; block descendant 16; candidate langsung 1
+  - **Manually set up the Internet connection** [KANDIDAT] — hal. 23–23; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify an Internet connection without a login** [KANDIDAT] — hal. 23–24; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify an Internet connection that uses a login** [KANDIDAT] — hal. 25–26; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage an IPv6 Internet connection** — hal. 27–40; block langsung 1; block descendant 11; candidate langsung 1
+    - **Requirements for entering IPv6 addresses** [KANDIDAT] — hal. 27–27; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify IPv6 Internet connections** [KANDIDAT] — hal. 27–28; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto detection for an IPv6 Internet connection** [KANDIDAT] — hal. 28–29; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use auto configuration for an IPv6 Internet connection** [KANDIDAT] — hal. 29–31; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6to4 tunnel Internet connection** [KANDIDAT] — hal. 31–32; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6rd tunnel Internet connection** [KANDIDAT] — hal. 32–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 pass-through Internet connection** [KANDIDAT] — hal. 34–35; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 fixed Internet connection** [KANDIDAT] — hal. 35–36; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 DHCP Internet connection** [KANDIDAT] — hal. 36–38; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 PPPoE Internet connection** [KANDIDAT] — hal. 38–40; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the MTU size** [KANDIDAT] — hal. 40–41; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 42–51; block langsung 1; block descendant 10; candidate langsung 1
+  - **Manage NETGEAR Armor** [KANDIDAT] — hal. 43–43; block langsung 1; block descendant 1; candidate langsung 1
+  - **Allow or block access to your network** [KANDIDAT] — hal. 43–44; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage network access control lists** [KANDIDAT] — hal. 44–45; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use keywords to block Internet sites** [KANDIDAT] — hal. 45–46; block langsung 1; block descendant 1; candidate langsung 1
+  - **Delete keywords that are used to block Internet sites** [KANDIDAT] — hal. 46–47; block langsung 1; block descendant 1; candidate langsung 1
+  - **Avoid blocking on a trusted computer** [KANDIDAT] — hal. 47–47; block langsung 1; block descendant 1; candidate langsung 1
+  - **Block services from the Internet** [KANDIDAT] — hal. 47–49; block langsung 1; block descendant 1; candidate langsung 1
+  - **Schedule when to block Internet sites and services** [KANDIDAT] — hal. 49–49; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up security event email notifications** [KANDIDAT] — hal. 49–51; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify WiFi Settings** — hal. 52–65; block langsung 1; block descendant 17; candidate langsung 1
+  - **About the WiFi networks** [KANDIDAT] — hal. 53–53; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the settings for the main WiFi network** — hal. 53–57; block langsung 1; block descendant 5; candidate langsung 1
+    - **Enable or disable the AX feature for the 2.4 GHz or 5 GHz radio band** [KANDIDAT] — hal. 54–55; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the name of the main WiFi network** [KANDIDAT] — hal. 55–55; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the 2.4 GHz or 5 GHz WiFi channel** [KANDIDAT] — hal. 55–56; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WiFi password or security option for the main WiFi network** [KANDIDAT] — hal. 56–57; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the IoT WiFi settings** — hal. 57–60; block langsung 1; block descendant 5; candidate langsung 1
+    - **Enable or disable the IoT network** [KANDIDAT] — hal. 58–58; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WiFi radio band for the IoT network** [KANDIDAT] — hal. 58–59; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WiFi network name for the IoT network** [KANDIDAT] — hal. 59–59; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WiFi password or security option for the IoT network** [KANDIDAT] — hal. 60–60; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a guest WiFi network** [KANDIDAT] — hal. 60–61; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change your region** [KANDIDAT] — hal. 62–62; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable or disable 20/40 MHz coexistence for the 2.4 GHz radio** [KANDIDAT] — hal. 62–63; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the preamble mode for a radio** [KANDIDAT] — hal. 63–64; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the radio transmission power control** [KANDIDAT] — hal. 64–65; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Network Settings** — hal. 66–91; block langsung 1; block descendant 32; candidate langsung 1
+  - **View or change WAN settings** [KANDIDAT] — hal. 67–68; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the WAN preference for Orbi router model RBR860** — hal. 68–70; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up Internet port aggregation for Orbi router model RBR860** [KANDIDAT] — hal. 68–69; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WAN preference back to the Internet port for Orbi router model RBR860** [KANDIDAT] — hal. 69–70; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the WAN preference for Orbi router model RBR850 or RBR840** — hal. 70–72; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up Internet port aggregation for Orbi router model RBR850 or RBR840** [KANDIDAT] — hal. 70–71; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the WAN preference back to the Internet port for Orbi router model RBR850 or RBR840** [KANDIDAT] — hal. 71–72; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage Dynamic DNS** — hal. 72–74; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a new Dynamic DNS account** [KANDIDAT] — hal. 72–73; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a Dynamic DNS account that you already created** [KANDIDAT] — hal. 73–74; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS settings** [KANDIDAT] — hal. 74–74; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a default DMZ server** [KANDIDAT] — hal. 75–75; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the router’s device name** [KANDIDAT] — hal. 76–76; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the LAN TCP/IP settings** [KANDIDAT] — hal. 76–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the router as a DHCP server** [KANDIDAT] — hal. 78–79; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP server feature in the router** [KANDIDAT] — hal. 79–79; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage reserved LAN IP addresses** — hal. 80–82; block langsung 1; block descendant 4; candidate langsung 1
+    - **Reserve an IP address** [KANDIDAT] — hal. 80–80; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a reserved IP address** [KANDIDAT] — hal. 81–81; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a reserved IP address entry** [KANDIDAT] — hal. 81–82; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage custom static routes** — hal. 82–84; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a static route** [KANDIDAT] — hal. 82–83; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a static route** [KANDIDAT] — hal. 83–84; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a static route** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the router as a WiFi access point only** [KANDIDAT] — hal. 85–86; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up router mode** [KANDIDAT] — hal. 86–86; block langsung 1; block descendant 1; candidate langsung 1
+  - **Generate a new backhaul password** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve network connections with Universal Plug and Play** [KANDIDAT] — hal. 87–88; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a bridge for a port group or VLAN tag group** — hal. 88–91; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up a bridge for a port group** [KANDIDAT] — hal. 89–89; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a bridge for a VLAN tag group** [KANDIDAT] — hal. 90–91; block langsung 1; block descendant 1; candidate langsung 1
+- **Mantain and Monitor Your Network** — hal. 92–111; block langsung 1; block descendant 30; candidate langsung 1
+  - **Update the router and satellite firmware** — hal. 93–96; block langsung 1; block descendant 5; candidate langsung 1
+    - **Check for firmware updates** [KANDIDAT] — hal. 93–93; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually update firmware** [KANDIDAT] — hal. 94–94; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually update satellite firmware** [KANDIDAT] — hal. 94–95; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually update router firmware** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 96–96; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin password reset** [KANDIDAT] — hal. 97–97; block langsung 1; block descendant 1; candidate langsung 1
+  - **Reset the admin password** [KANDIDAT] — hal. 97–98; block langsung 1; block descendant 1; candidate langsung 1
+  - **Always use HTTPS to access the router** [KANDIDAT] — hal. 98–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **View router status and usage information** [KANDIDAT] — hal. 99–99; block langsung 1; block descendant 1; candidate langsung 1
+  - **Display Internet port statistics** [KANDIDAT] — hal. 99–100; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check the Internet connection status** [KANDIDAT] — hal. 100–101; block langsung 1; block descendant 1; candidate langsung 1
+  - **View the satellite status** [KANDIDAT] — hal. 101–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and manage logs of router activity** [KANDIDAT] — hal. 102–102; block langsung 1; block descendant 1; candidate langsung 1
+  - **View devices connected to the network or edit device information** — hal. 103–104; block langsung 1; block descendant 3; candidate langsung 1
+    - **View devices connected to the network** [KANDIDAT] — hal. 103–103; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit device information on the Attached Devices page** [KANDIDAT] — hal. 104–104; block langsung 1; block descendant 1; candidate langsung 1
+  - **View satellites connected to the network or edit satellite information** — hal. 104–106; block langsung 1; block descendant 3; candidate langsung 1
+    - **View satellites connected to the network** [KANDIDAT] — hal. 105–105; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit satellite information that displays on the Attached Devices page** [KANDIDAT] — hal. 105–106; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check your Internet bandwidth** [KANDIDAT] — hal. 106–107; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor Internet traffic** [KANDIDAT] — hal. 107–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set the time zone** [KANDIDAT] — hal. 108–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the NTP server** [KANDIDAT] — hal. 109–109; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the router configuration file** — hal. 109–111; block langsung 1; block descendant 4; candidate langsung 1
+    - **Back up settings** [KANDIDAT] — hal. 110–110; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore configuration settings** [KANDIDAT] — hal. 110–111; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the current configuration settings** [KANDIDAT] — hal. 111–111; block langsung 1; block descendant 1; candidate langsung 1
+  - **Remotely access your router using the Orbi app** [KANDIDAT] — hal. 111–111; block langsung 1; block descendant 1; candidate langsung 1
+- **Use OpenVPN to Access Your Network** — hal. 112–122; block langsung 1; block descendant 12; candidate langsung 1
+  - **About VPN connections** [KANDIDAT] — hal. 113–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **LAN IP addressing in VPN networks** [KANDIDAT] — hal. 113–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable OpenVPN service in the router** [KANDIDAT] — hal. 114–115; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN software on a VPN client** — hal. 115–120; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN software on a Windows-based computer** [KANDIDAT] — hal. 116–117; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on a Mac computer** [KANDIDAT] — hal. 117–118; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an iOS device** [KANDIDAT] — hal. 118–119; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an Android device** [KANDIDAT] — hal. 119–120; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to access your Internet service at home** — hal. 120–122; block langsung 1; block descendant 3; candidate langsung 1
+    - **Allow VPN client Internet access in the router** [KANDIDAT] — hal. 120–121; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN client Internet access in the router** [KANDIDAT] — hal. 121–122; block langsung 1; block descendant 1; candidate langsung 1
+- **Customize Internet Traffic Rules for Ports** — hal. 123–131; block langsung 1; block descendant 12; candidate langsung 1
+  - **Manage port forwarding to a local server** — hal. 124–128; block langsung 1; block descendant 7; candidate langsung 1
+    - **Set up port forwarding to a local server** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a custom port forwarding service** [KANDIDAT] — hal. 125–126; block langsung 1; block descendant 1; candidate langsung 1
+    - **Edit a port forwarding service** [KANDIDAT] — hal. 126–126; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a port forwarding entry** [KANDIDAT] — hal. 127–127; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the router implements the port forwarding rule** [KANDIDAT] — hal. 127–128; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Make a local web server public** [KANDIDAT] — hal. 128–128; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage port triggering** — hal. 128–131; block langsung 1; block descendant 4; candidate langsung 1
+    - **Add a port triggering service** [KANDIDAT] — hal. 129–130; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable port triggering or change the time-out period** [KANDIDAT] — hal. 130–130; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Port triggering for Internet Relay Chat** [KANDIDAT] — hal. 130–131; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 132–140; block langsung 1; block descendant 14; candidate langsung 1
+  - **Quick tips** — hal. 133–133; block langsung 1; block descendant 4; candidate langsung 1
+    - **Sequence to restart your network** [KANDIDAT] — hal. 133–133; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi settings** [KANDIDAT] — hal. 133–133; block langsung 1; block descendant 1; candidate langsung 1
+    - **Network settings** [KANDIDAT] — hal. 133–133; block langsung 1; block descendant 1; candidate langsung 1
+  - **The router and satellite do not sync** [KANDIDAT] — hal. 133–134; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot log in to the router** [KANDIDAT] — hal. 134–134; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot access the Internet** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet browsing** [KANDIDAT] — hal. 136–136; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot PPPoE** [KANDIDAT] — hal. 137–137; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi connectivity** [KANDIDAT] — hal. 137–138; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot your network using the ping utility** — hal. 138–140; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the LAN path to your router** [KANDIDAT] — hal. 138–139; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the path from your computer to a remote device** [KANDIDAT] — hal. 139–140; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 141–161; block langsung 1; block descendant 17; candidate langsung 1
+  - **Factory settings for Orbi routers** — hal. 142–147; block langsung 1; block descendant 4; candidate langsung 1
+    - **Factory settings for Orbi router model RBR860** [KANDIDAT] — hal. 142–143; block langsung 1; block descendant 1; candidate langsung 1
+    - **Factory settings for Orbi router model RBR850** [KANDIDAT] — hal. 144–145; block langsung 1; block descendant 1; candidate langsung 1
+    - **Factory settings for Orbi router model RBR840** [KANDIDAT] — hal. 146–147; block langsung 1; block descendant 1; candidate langsung 1
+  - **Factory settings for Orbi satellites** — hal. 147–152; block langsung 1; block descendant 4; candidate langsung 1
+    - **Factory settings for Orbi satellite model RBS860** [KANDIDAT] — hal. 148–149; block langsung 1; block descendant 1; candidate langsung 1
+    - **Factory settings for Orbi satellite model RBS850** [KANDIDAT] — hal. 149–151; block langsung 1; block descendant 1; candidate langsung 1
+    - **Factory settings for Orbi satellite model RBS840** [KANDIDAT] — hal. 151–152; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical specifications for Orbi routers** — hal. 153–157; block langsung 1; block descendant 4; candidate langsung 1
+    - **Technical specifications for Orbi router model RBR860** [KANDIDAT] — hal. 153–154; block langsung 1; block descendant 1; candidate langsung 1
+    - **Technical specifications for Orbi router model RBR850** [KANDIDAT] — hal. 154–155; block langsung 1; block descendant 1; candidate langsung 1
+    - **Technical specifications for Orbi router model RBR840** [KANDIDAT] — hal. 156–157; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical specifications for Orbi satellites** — hal. 157–161; block langsung 1; block descendant 4; candidate langsung 1
+    - **Technical specifications for Orbi satellite model RBS860** [KANDIDAT] — hal. 157–158; block langsung 1; block descendant 1; candidate langsung 1
+    - **Technical specifications for Orbi satellite model RBS850** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Technical specifications for Orbi satellite model RBS840** [KANDIDAT] — hal. 160–161; block langsung 1; block descendant 1; candidate langsung 1
+
+### netgear-xr500.pdf — XR500
+
+214 halaman; 230 node outline; 183 leaf outline kandidat.
+
+- **Hardware Setup** — hal. 10–19; block langsung 1; block descendant 9; candidate langsung 1
+  - **Unpack your router** [KANDIDAT] — hal. 11–11; block langsung 1; block descendant 1; candidate langsung 1
+  - **LEDs, buttons, and borts on the front panel, top panel, and left side panel** [KANDIDAT] — hal. 12–13; block langsung 1; block descendant 1; candidate langsung 1
+  - **Rear panel** [KANDIDAT] — hal. 14–14; block langsung 1; block descendant 1; candidate langsung 1
+  - **Attach the antennas** [KANDIDAT] — hal. 15–15; block langsung 1; block descendant 1; candidate langsung 1
+  - **Router Label** [KANDIDAT] — hal. 16–16; block langsung 1; block descendant 1; candidate langsung 1
+  - **Position your router** [KANDIDAT] — hal. 16–17; block langsung 1; block descendant 1; candidate langsung 1
+  - **Cable your router** [KANDIDAT] — hal. 18–18; block langsung 1; block descendant 1; candidate langsung 1
+  - **Turn the LEDs on or off using the LED On/Off switch** [KANDIDAT] — hal. 18–19; block langsung 1; block descendant 1; candidate langsung 1
+- **Connect to the Network and Access the Router** — hal. 20–26; block langsung 1; block descendant 11; candidate langsung 1
+  - **Connect to the router network** — hal. 21–22; block langsung 1; block descendant 4; candidate langsung 1
+    - **Connect to the router using a wired connection** [KANDIDAT] — hal. 21–21; block langsung 1; block descendant 1; candidate langsung 1
+    - **Connect to the router WiFi network** [KANDIDAT] — hal. 21–21; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi connection using WPS** [KANDIDAT] — hal. 21–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Types of logins** [KANDIDAT] — hal. 22–22; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use a web browser to access the router** — hal. 22–25; block langsung 1; block descendant 4; candidate langsung 1
+    - **Automatic Internet setup** [KANDIDAT] — hal. 22–24; block langsung 1; block descendant 1; candidate langsung 1
+    - **Log in to the router** [KANDIDAT] — hal. 24–25; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the language** [KANDIDAT] — hal. 25–25; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage your router with the NETGEAR Nighthawk app** [KANDIDAT] — hal. 26–26; block langsung 1; block descendant 1; candidate langsung 1
+- **Specify Your Internet Settings** — hal. 27–46; block langsung 1; block descendant 16; candidate langsung 1
+  - **Use the Internet Setup Wizard** [KANDIDAT] — hal. 28–28; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manually set up the Internet connection** — hal. 28–31; block langsung 1; block descendant 3; candidate langsung 1
+    - **Specify an Internet connection without a login** [KANDIDAT] — hal. 28–30; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify an Internet connection that uses a login** [KANDIDAT] — hal. 30–31; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify IPv6 Internet connections** — hal. 31–44; block langsung 1; block descendant 10; candidate langsung 1
+    - **Requirements for entering IPv6 addresses** [KANDIDAT] — hal. 32–32; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Auto Detect for an IPv6 Internet connection** [KANDIDAT] — hal. 33–34; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Auto Config for an IPv6 Internet connection** [KANDIDAT] — hal. 34–35; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6to4 tunnel Internet connection** [KANDIDAT] — hal. 35–37; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 6rd Internet connection** [KANDIDAT] — hal. 37–39; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 pass through Internet connection** [KANDIDAT] — hal. 39–39; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 fixed Internet connection** [KANDIDAT] — hal. 39–41; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 DHCP Internet connection** [KANDIDAT] — hal. 41–42; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPv6 PPPoE Internet connection** [KANDIDAT] — hal. 42–44; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the MTU size** [KANDIDAT] — hal. 44–46; block langsung 1; block descendant 1; candidate langsung 1
+- **Customize Quality of Service Settings and Optimize Gaming** — hal. 47–63; block langsung 1; block descendant 17; candidate langsung 1
+  - **Improve response time by using the Geo Filter** — hal. 48–54; block langsung 1; block descendant 6; candidate langsung 1
+    - **Configure and use the Geo Filter** [KANDIDAT] — hal. 48–50; block langsung 1; block descendant 1; candidate langsung 1
+    - **Ping a device and allow or deny the device a connection** [KANDIDAT] — hal. 50–51; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a device to the Geo Filter** [KANDIDAT] — hal. 51–52; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a device from the Geo Filter** [KANDIDAT] — hal. 52–53; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manage the general Geo Filter map settings** [KANDIDAT] — hal. 53–54; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage bandwidth allocation** — hal. 54–59; block langsung 1; block descendant 5; candidate langsung 1
+    - **Prevent network congestion with Anti-Bufferbloat** [KANDIDAT] — hal. 54–55; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable Anti-Bufferbloat** [KANDIDAT] — hal. 55–56; block langsung 1; block descendant 1; candidate langsung 1
+    - **Allocate bandwidth to devices** [KANDIDAT] — hal. 56–58; block langsung 1; block descendant 1; candidate langsung 1
+    - **Reset the bandwidth distribution** [KANDIDAT] — hal. 58–59; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage traffic prioritization** — hal. 59–63; block langsung 1; block descendant 5; candidate langsung 1
+    - **Prioritize traffic for a device and view prioritization information** [KANDIDAT] — hal. 59–61; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a device for traffic prioritization** [KANDIDAT] — hal. 61–62; block langsung 1; block descendant 1; candidate langsung 1
+    - **Stop traffic prioritization for a device** [KANDIDAT] — hal. 62–62; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable automatic traffic prioritization** [KANDIDAT] — hal. 62–63; block langsung 1; block descendant 1; candidate langsung 1
+- **Monitor Devices and the Network and View Router Information** — hal. 64–70; block langsung 1; block descendant 5; candidate langsung 1
+  - **View and manage devices currently on the network** [KANDIDAT] — hal. 65–66; block langsung 1; block descendant 1; candidate langsung 1
+  - **View network usage information** [KANDIDAT] — hal. 66–68; block langsung 1; block descendant 1; candidate langsung 1
+  - **View router system information** [KANDIDAT] — hal. 68–69; block langsung 1; block descendant 1; candidate langsung 1
+  - **Customize the dashboard** [KANDIDAT] — hal. 69–70; block langsung 1; block descendant 1; candidate langsung 1
+- **Control Access to the Internet** — hal. 71–80; block langsung 1; block descendant 11; candidate langsung 1
+  - **Block access to Internet sites** — hal. 72–74; block langsung 1; block descendant 4; candidate langsung 1
+    - **Add keywords and block access to specific Internet sites** [KANDIDAT] — hal. 72–73; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete keywords from the blocked list** [KANDIDAT] — hal. 73–73; block langsung 1; block descendant 1; candidate langsung 1
+    - **Avoid blocking on a trusted computer** [KANDIDAT] — hal. 73–74; block langsung 1; block descendant 1; candidate langsung 1
+  - **Block services and applications with simple outbound firewall rules** — hal. 74–77; block langsung 1; block descendant 4; candidate langsung 1
+    - **Block a service or application from accessing the Internet** [KANDIDAT] — hal. 75–76; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change an outbound firewall rule for a service or application** [KANDIDAT] — hal. 76–77; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove an outbound firewall rule for a service or application** [KANDIDAT] — hal. 77–77; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a schedule for keyword blocking and outbound firewall rules** [KANDIDAT] — hal. 77–78; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up email notifications for security events and log messages** [KANDIDAT] — hal. 79–80; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Router’s Network Settings** — hal. 81–99; block langsung 1; block descendant 20; candidate langsung 1
+  - **View or change WAN settings** [KANDIDAT] — hal. 82–83; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a default DMZ server** [KANDIDAT] — hal. 83–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the router’s device name** [KANDIDAT] — hal. 84–84; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the router’s LAN IP address and RIP settings** [KANDIDAT] — hal. 85–86; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify the IP addresses that the router assigns** [KANDIDAT] — hal. 86–87; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable the DHCP server in the router** [KANDIDAT] — hal. 87–88; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage reserved LAN IP addresses** — hal. 88–91; block langsung 1; block descendant 4; candidate langsung 1
+    - **Reserve a LAN IP address** [KANDIDAT] — hal. 88–89; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a reserved IP address** [KANDIDAT] — hal. 89–90; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a reserved IP address entry** [KANDIDAT] — hal. 90–91; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a bridge to your ISP’s network using a port group or VLAN tag group** — hal. 91–94; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a bridge to your ISP’s network using a port group** [KANDIDAT] — hal. 91–92; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up a bridge to your ISP’s network using a VLAN tag group** [KANDIDAT] — hal. 92–93; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up an IPTV port to lease an intranet port** [KANDIDAT] — hal. 94–94; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage custom static routes** — hal. 95–97; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a static route** [KANDIDAT] — hal. 95–96; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a static route** [KANDIDAT] — hal. 96–97; block langsung 1; block descendant 1; candidate langsung 1
+    - **Delete a static route** [KANDIDAT] — hal. 97–97; block langsung 1; block descendant 1; candidate langsung 1
+  - **Improve network connections with Universal Plug and Play** [KANDIDAT] — hal. 97–99; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage the Router’s WiFi Settings** — hal. 100–118; block langsung 1; block descendant 18; candidate langsung 1
+  - **Specify basic WiFi settings** [KANDIDAT] — hal. 101–103; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi password or security level** [KANDIDAT] — hal. 103–104; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the WiFi mode for download and upload speeds** [KANDIDAT] — hal. 104–105; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a guest WiFi network** [KANDIDAT] — hal. 105–106; block langsung 1; block descendant 1; candidate langsung 1
+  - **Configure WPA/WPA2 enterprise WiFi security** [KANDIDAT] — hal. 106–108; block langsung 1; block descendant 1; candidate langsung 1
+  - **Configure WEP legacy WiFi security** [KANDIDAT] — hal. 108–110; block langsung 1; block descendant 1; candidate langsung 1
+  - **Control the WiFi radios** — hal. 110–111; block langsung 1; block descendant 3; candidate langsung 1
+    - **Use the WiFi On/Off button** [KANDIDAT] — hal. 110–110; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable or disable the WiFi radios using the router web interface** [KANDIDAT] — hal. 110–111; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the WPS Wizard for WiFi connections** [KANDIDAT] — hal. 111–112; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up a WiFi schedule** [KANDIDAT] — hal. 112–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Specify WPS settings** [KANDIDAT] — hal. 113–113; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage implicit beamforming** [KANDIDAT] — hal. 114–114; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage MU-MIMO** [KANDIDAT] — hal. 114–115; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage HT160 for 160 MHz WiFi support** [KANDIDAT] — hal. 115–116; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable Wi-Fi Multimedia Quality of Service** [KANDIDAT] — hal. 116–117; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use the router as a WiFi access point only** [KANDIDAT] — hal. 117–118; block langsung 1; block descendant 1; candidate langsung 1
+- **Maintain the Router** — hal. 119–139; block langsung 1; block descendant 27; candidate langsung 1
+  - **Update the router firmware** — hal. 120–122; block langsung 1; block descendant 3; candidate langsung 1
+    - **Check for new firmware and update the router** [KANDIDAT] — hal. 120–121; block langsung 1; block descendant 1; candidate langsung 1
+    - **Manually upload firmware to the router** [KANDIDAT] — hal. 121–122; block langsung 1; block descendant 1; candidate langsung 1
+  - **Change the admin password** [KANDIDAT] — hal. 123–123; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable admin password reset** [KANDIDAT] — hal. 123–124; block langsung 1; block descendant 1; candidate langsung 1
+  - **Reset the admin password** [KANDIDAT] — hal. 124–125; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage the router configuration file** — hal. 125–127; block langsung 1; block descendant 4; candidate langsung 1
+    - **Back up the configuration settings** [KANDIDAT] — hal. 125–125; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restore the configuration settings** [KANDIDAT] — hal. 126–126; block langsung 1; block descendant 1; candidate langsung 1
+    - **Erase the current configuration settings** [KANDIDAT] — hal. 126–127; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage remote access** — hal. 127–128; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up remote management** [KANDIDAT] — hal. 127–128; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use remote access** [KANDIDAT] — hal. 128–128; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access your router using the Nighthawk app** [KANDIDAT] — hal. 128–128; block langsung 1; block descendant 1; candidate langsung 1
+  - **Monitor and meter Internet traffic** — hal. 129–133; block langsung 1; block descendant 6; candidate langsung 1
+    - **Start the traffic meter without traffic volume restrictions** [KANDIDAT] — hal. 129–129; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restrict Internet traffic by volume** [KANDIDAT] — hal. 129–131; block langsung 1; block descendant 1; candidate langsung 1
+    - **Restrict Internet traffic by connection time** [KANDIDAT] — hal. 131–132; block langsung 1; block descendant 1; candidate langsung 1
+    - **View the Internet traffic volume and statistics** [KANDIDAT] — hal. 132–132; block langsung 1; block descendant 1; candidate langsung 1
+    - **Unblock the traffic meter after the traffic limit is reached** [KANDIDAT] — hal. 133–133; block langsung 1; block descendant 1; candidate langsung 1
+  - **View and manage the router activity log** [KANDIDAT] — hal. 133–135; block langsung 1; block descendant 1; candidate langsung 1
+  - **Display Internet port statistics** [KANDIDAT] — hal. 135–136; block langsung 1; block descendant 1; candidate langsung 1
+  - **Check the Internet connection status, view details, and release and renew the connection** [KANDIDAT] — hal. 136–137; block langsung 1; block descendant 1; candidate langsung 1
+  - **Restart the router from its web interface** [KANDIDAT] — hal. 137–138; block langsung 1; block descendant 1; candidate langsung 1
+  - **View router notifications** [KANDIDAT] — hal. 138–138; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disable or enable LED blinking or turn off LEDs** [KANDIDAT] — hal. 138–139; block langsung 1; block descendant 1; candidate langsung 1
+- **Share USB Storage Devices Attached to the Router** — hal. 140–154; block langsung 1; block descendant 19; candidate langsung 1
+  - **USB device requirements** [KANDIDAT] — hal. 141–141; block langsung 1; block descendant 1; candidate langsung 1
+  - **Connect a USB storage device to the router** [KANDIDAT] — hal. 141–141; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device connected to the router from a Windows-based computer** [KANDIDAT] — hal. 142–142; block langsung 1; block descendant 1; candidate langsung 1
+  - **Map a USB device to a Windows network drive** [KANDIDAT] — hal. 142–143; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access a storage device that is connected to the router from a Mac** [KANDIDAT] — hal. 143–143; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back up Windows-based computers with ReadySHARE Vault** [KANDIDAT] — hal. 144–144; block langsung 1; block descendant 1; candidate langsung 1
+  - **Back up Mac computers with Time Machine** — hal. 144–147; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a USB hard drive on a Mac** [KANDIDAT] — hal. 145–145; block langsung 1; block descendant 1; candidate langsung 1
+    - **Prepare to back up a large amount of data** [KANDIDAT] — hal. 145–146; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use Time Machine to back up onto a USB hard disk** [KANDIDAT] — hal. 146–147; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage access to a USB storage device** [KANDIDAT] — hal. 147–149; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use FTP within the network** [KANDIDAT] — hal. 149–149; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage network folders on a USB storage device** — hal. 150–152; block langsung 1; block descendant 4; candidate langsung 1
+    - **View network folders on a USB storage device** [KANDIDAT] — hal. 150–150; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a network folder on a USB storage device** [KANDIDAT] — hal. 151–151; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a network folder on a USB storage device** [KANDIDAT] — hal. 152–152; block langsung 1; block descendant 1; candidate langsung 1
+  - **Approve USB devices** [KANDIDAT] — hal. 152–153; block langsung 1; block descendant 1; candidate langsung 1
+  - **Safely remove a USB storage device** [KANDIDAT] — hal. 153–154; block langsung 1; block descendant 1; candidate langsung 1
+- **Use Dynamic DNS to Access USB Storage Devices Through the Internet** — hal. 155–162; block langsung 1; block descendant 11; candidate langsung 1
+  - **Set up your personal FTP server** [KANDIDAT] — hal. 156–156; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up and manage Dynamic DNS** — hal. 156–159; block langsung 1; block descendant 4; candidate langsung 1
+    - **Set up a new Dynamic DNS account** [KANDIDAT] — hal. 157–158; block langsung 1; block descendant 1; candidate langsung 1
+    - **Specify a DNS account that you already created** [KANDIDAT] — hal. 158–159; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change the Dynamic DNS settings** [KANDIDAT] — hal. 159–159; block langsung 1; block descendant 1; candidate langsung 1
+  - **Access USB storage devices through the Internet** — hal. 159–162; block langsung 1; block descendant 5; candidate langsung 1
+    - **Set up HTTPS access through the Internet** [KANDIDAT] — hal. 159–160; block langsung 1; block descendant 1; candidate langsung 1
+    - **Access USB storage devices from a remote computer** [KANDIDAT] — hal. 160–161; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up FTP access through the Internet** [KANDIDAT] — hal. 161–161; block langsung 1; block descendant 1; candidate langsung 1
+    - **Use FTP to access storage devices through the Internet** [KANDIDAT] — hal. 162–162; block langsung 1; block descendant 1; candidate langsung 1
+- **Use the Router as a Media Server** — hal. 163–168; block langsung 1; block descendant 6; candidate langsung 1
+  - **Specify ReadyDLNA media server settings** [KANDIDAT] — hal. 164–165; block langsung 1; block descendant 1; candidate langsung 1
+  - **Play music from a storage device with iTunes server** — hal. 165–167; block langsung 1; block descendant 3; candidate langsung 1
+    - **Set up the router’s iTunes server with iTunes** [KANDIDAT] — hal. 165–166; block langsung 1; block descendant 1; candidate langsung 1
+    - **Set up the router’s iTunes server with the iTunes Remote app** [KANDIDAT] — hal. 166–167; block langsung 1; block descendant 1; candidate langsung 1
+  - **Set up the router to work with TiVo** [KANDIDAT] — hal. 167–168; block langsung 1; block descendant 1; candidate langsung 1
+- **Share a USB Printer** — hal. 169–172; block langsung 1; block descendant 5; candidate langsung 1
+  - **Install the printer driver and cable the printer** [KANDIDAT] — hal. 170–170; block langsung 1; block descendant 1; candidate langsung 1
+  - **Download the ReadySHARE printer utility** [KANDIDAT] — hal. 170–170; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install the ReadySHARE printer utility** [KANDIDAT] — hal. 170–171; block langsung 1; block descendant 1; candidate langsung 1
+  - **Print using the NETGEAR USB Control Center** [KANDIDAT] — hal. 171–172; block langsung 1; block descendant 1; candidate langsung 1
+- **Use OpenVPN to Access Your Network** — hal. 173–183; block langsung 1; block descendant 13; candidate langsung 1
+  - **About VPN connections** [KANDIDAT] — hal. 174–174; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable OpenVPN service in the router** [KANDIDAT] — hal. 175–176; block langsung 1; block descendant 1; candidate langsung 1
+  - **Install OpenVPN software on a VPN client** — hal. 176–180; block langsung 1; block descendant 5; candidate langsung 1
+    - **Install OpenVPN software on a Windows-based computer** [KANDIDAT] — hal. 176–178; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on a Mac computer** [KANDIDAT] — hal. 178–179; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an iOS device** [KANDIDAT] — hal. 179–180; block langsung 1; block descendant 1; candidate langsung 1
+    - **Install OpenVPN software on an Android device** [KANDIDAT] — hal. 180–180; block langsung 1; block descendant 1; candidate langsung 1
+  - **LAN IP addressing in VPN networks** [KANDIDAT] — hal. 181–181; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to remotely access a USB storage device attached to the router** [KANDIDAT] — hal. 181–181; block langsung 1; block descendant 1; candidate langsung 1
+  - **Use VPN to access your Internet service at home** — hal. 181–183; block langsung 1; block descendant 3; candidate langsung 1
+    - **Allow VPN client Internet access in the router** [KANDIDAT] — hal. 182–182; block langsung 1; block descendant 1; candidate langsung 1
+    - **Block VPN client Internet access in the router** [KANDIDAT] — hal. 182–183; block langsung 1; block descendant 1; candidate langsung 1
+- **Use VPN to Access An External Network** — hal. 184–187; block langsung 1; block descendant 4; candidate langsung 1
+  - **Set up a VPN client connection** [KANDIDAT] — hal. 185–185; block langsung 1; block descendant 1; candidate langsung 1
+  - **Enable the VPN client in the router and connect to a VPN server** [KANDIDAT] — hal. 185–187; block langsung 1; block descendant 1; candidate langsung 1
+  - **Disconnect the router from the VPN server** [KANDIDAT] — hal. 187–187; block langsung 1; block descendant 1; candidate langsung 1
+- **Manage and Customize Internet Traffic Rules for Ports** — hal. 188–198; block langsung 1; block descendant 15; candidate langsung 1
+  - **Manage port forwarding to a local server for services and applications** — hal. 189–193; block langsung 1; block descendant 7; candidate langsung 1
+    - **Set up port forwarding to a local server** [KANDIDAT] — hal. 189–190; block langsung 1; block descendant 1; candidate langsung 1
+    - **Add a custom port forwarding service or application** [KANDIDAT] — hal. 190–191; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a port forwarding service or application** [KANDIDAT] — hal. 191–191; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a port forwarding service or application** [KANDIDAT] — hal. 192–192; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Make a local web server public** [KANDIDAT] — hal. 192–193; block langsung 1; block descendant 1; candidate langsung 1
+    - **How the router implements a port forwarding rule** [KANDIDAT] — hal. 193–193; block langsung 1; block descendant 1; candidate langsung 1
+  - **Manage port triggering for services and applications** — hal. 193–198; block langsung 1; block descendant 7; candidate langsung 1
+    - **Add a port triggering service or application** [KANDIDAT] — hal. 194–195; block langsung 1; block descendant 1; candidate langsung 1
+    - **Enable port triggering and specify the time-out value** [KANDIDAT] — hal. 195–195; block langsung 1; block descendant 1; candidate langsung 1
+    - **Change a port triggering service or application** [KANDIDAT] — hal. 196–196; block langsung 1; block descendant 1; candidate langsung 1
+    - **Remove a port triggering service or application** [KANDIDAT] — hal. 196–197; block langsung 1; block descendant 1; candidate langsung 1
+    - **Disable port triggering** [KANDIDAT] — hal. 197–197; block langsung 1; block descendant 1; candidate langsung 1
+    - **Application example: Port triggering for Internet Relay Chat** [KANDIDAT] — hal. 198–198; block langsung 1; block descendant 1; candidate langsung 1
+- **Troubleshooting** — hal. 199–209; block langsung 1; block descendant 20; candidate langsung 1
+  - **Quick tips** — hal. 200–200; block langsung 1; block descendant 5; candidate langsung 1
+    - **Sequence to restart your network** [KANDIDAT] — hal. 200–200; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the power adapter and Ethernet cable connections** [KANDIDAT] — hal. 200–200; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the network settings** [KANDIDAT] — hal. 200–200; block langsung 1; block descendant 1; candidate langsung 1
+    - **Check the WiFi settings** [KANDIDAT] — hal. 200–200; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot with the LEDs** — hal. 201–202; block langsung 1; block descendant 6; candidate langsung 1
+    - **Standard LED behavior when the router is powered on** [KANDIDAT] — hal. 201–201; block langsung 1; block descendant 1; candidate langsung 1
+    - **Power LED is off or blinking** [KANDIDAT] — hal. 201–201; block langsung 1; block descendant 1; candidate langsung 1
+    - **LEDs never turn off** [KANDIDAT] — hal. 201–202; block langsung 1; block descendant 1; candidate langsung 1
+    - **Internet or Ethernet port LEDs are off** [KANDIDAT] — hal. 202–202; block langsung 1; block descendant 1; candidate langsung 1
+    - **WiFi LEDs are off** [KANDIDAT] — hal. 202–202; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot log in to the router** [KANDIDAT] — hal. 203–203; block langsung 1; block descendant 1; candidate langsung 1
+  - **You cannot access the Internet** [KANDIDAT] — hal. 203–205; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot Internet browsing** [KANDIDAT] — hal. 205–206; block langsung 1; block descendant 1; candidate langsung 1
+  - **Changes are not saved** [KANDIDAT] — hal. 206–206; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot WiFi connectivity** [KANDIDAT] — hal. 206–207; block langsung 1; block descendant 1; candidate langsung 1
+  - **Troubleshoot your network using the ping utility** — hal. 207–209; block langsung 1; block descendant 3; candidate langsung 1
+    - **Test the path from a Windows-based computer to a remote device** [KANDIDAT] — hal. 207–208; block langsung 1; block descendant 1; candidate langsung 1
+    - **Test the LAN path to your router** [KANDIDAT] — hal. 208–209; block langsung 1; block descendant 1; candidate langsung 1
+- **Supplemental Information** — hal. 210–214; block langsung 1; block descendant 3; candidate langsung 1
+  - **Factory settings** [KANDIDAT] — hal. 211–212; block langsung 1; block descendant 1; candidate langsung 1
+  - **Technical specifications** [KANDIDAT] — hal. 213–214; block langsung 1; block descendant 1; candidate langsung 1
+

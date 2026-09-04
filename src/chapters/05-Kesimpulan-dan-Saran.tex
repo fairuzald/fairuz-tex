@@ -1,0 +1,66 @@
+\chapter[KESIMPULAN DAN SARAN]{Kesimpulan dan Saran}
+\label{chap:kesimpulan-saran}
+
+Bab ini merangkum hasil perancangan dan evaluasi Omni-RAG pada dua konteks, yaitu
+\emph{customer service} dan dokumen hukum. Kesimpulan disusun untuk menjawab tiga
+rumusan masalah penelitian.
+
+\section{Kesimpulan}
+\label{sec:kesimpulan}
+
+\begin{enumerate}
+  \item \textbf{Pembentukan unit informasi.} Sistem menyediakan beberapa strategi
+  \emph{chunking} melalui kontrak \emph{plugin} yang sama, sehingga unit hasil
+  \emph{chunking} tetap memiliki identitas sumber, struktur, dan \emph{context reference}.
+  Pada \emph{customer service}, \emph{structure-aware chunker} memperoleh \emph{recall}
+  gabungan 0,740 pada \(K=25\) karena membawa konteks induk bersama blok yang dicari.
+  Pada dokumen hukum, \emph{legal structure-aware chunker} memperoleh \emph{recall}
+  0,64 pada \(K=25\). Strategi ini paling sesuai untuk hukum karena mempertahankan batas
+  Pasal dan Ayat serta pemetaan kembali ke \emph{context reference}.
+  Dengan kontrak tersebut, strategi baru dapat ditambahkan tanpa mengubah orkestrator inti.
+
+  \item \textbf{Strategi pencarian.} Sistem mendukung pencarian \emph{sparse},
+  \emph{dense}, dan \emph{hybrid} dengan konfigurasi \emph{chunker}, \emph{indexer},
+  dan model \emph{embedding} yang dapat dibandingkan secara terpisah. Pada
+  \emph{customer service}, \emph{dense indexer} memperoleh \emph{recall} gabungan
+  0,830 pada \(K=40\) dan tetap menjadi konfigurasi terbaik pada bahasa Inggris maupun
+  Indonesia. Pada dokumen hukum, \emph{hybrid indexer} memperoleh \emph{recall} 0,67
+  pada \(K=25\). Hasil ini menunjukkan bahwa strategi pencarian perlu disesuaikan dengan
+  karakteristik pertanyaan: kemiripan makna lebih membantu pada \emph{customer service},
+  sedangkan kombinasi istilah dan makna lebih sesuai untuk pertanyaan hukum.
+
+  \item \textbf{Knowledge graph dan keterlacakan hubungan.} \emph{Knowledge graph}
+  dibangun dari \emph{canonical artifact} yang sama dengan yang digunakan oleh
+  \emph{indexer}, sehingga entitas dan relasi dapat ditelusuri kembali ke sumbernya.
+  Pada pertanyaan hukum yang memerlukan penelusuran relasi, mekanisme ini membantu
+  mengambil informasi hubungan dari sumber yang sesuai. Secara arsitektur, mekanisme KG
+  dapat diganti atau ditambahkan melalui \emph{plugin} tanpa mengubah komponen inti.
+\end{enumerate}
+
+\section{Saran}
+\label{sec:saran}
+
+Pengembangan selanjutnya disarankan untuk memperkuat evaluasi konfigurasi dan
+memperluas cakupan pengujian sebagai berikut.
+
+\begin{enumerate}
+  \item \textbf{Mengevaluasi konfigurasi komponen RAG secara terpadu.}
+  Gunakan rancangan \emph{full factorial} untuk menguji seluruh kombinasi strategi
+  \emph{chunker}, \emph{indexer}, model \emph{embedding}, ukuran \emph{chunk},
+  \emph{overlap}, dan cutoff \(K\). Setiap strategi perlu disertai konfigurasi
+  parameternya secara jelas, seperti jenis \emph{plugin}, ukuran \emph{chunk}, metode
+  pemisah, serta pengaturan indeks. Laporkan pengaruh utama setiap komponen dan
+  interaksi antarkomponen, bukan hanya hasil pengujian satu faktor pada satu waktu.
+  \emph{Ablation study} dapat digunakan sebagai analisis tambahan untuk mengukur
+  kontribusi tiap komponen ketika komponen lainnya dibuat tetap.
+
+  \item \textbf{Memperkuat validasi korpus dan \emph{dataset}.} Uji sistem pada korpus
+  hukum yang lebih beragam dan manual \emph{customer service} dari produk lain.
+  Pertahankan pembagian strata, \emph{context reference}, dan evaluasi per bahasa agar
+  hasil dapat dibandingkan secara adil.
+
+  \item \textbf{Meningkatkan kesiapan operasional \emph{plugin}.} Sediakan paket
+  instalasi yang memuat manifest, implementasi, dependensi, versi kontrak, dan pengujian.
+  Sistem perlu memvalidasi kompatibilitas serta keamanan paket sebelum strategi baru
+  diaktifkan.
+\end{enumerate}

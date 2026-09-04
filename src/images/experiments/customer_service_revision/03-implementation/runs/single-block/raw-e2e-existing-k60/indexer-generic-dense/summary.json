@@ -1,0 +1,19 @@
+{
+  "condition_id": "indexer-generic-dense",
+  "profile_id": "ebfdd1ad-df71-4b99-b0d7-ccda978c8c0b",
+  "profile_name": "customer-service-e2e-indexer-generic-dense-ting-k60",
+  "question_count": 200,
+  "valid_trace_count": 200,
+  "failed_question_count": 0,
+  "document_count": 9,
+  "metric_mode": "single-block",
+  "use_reranker": false,
+  "intent_provider": "passthrough",
+  "answer_generation_provider": "deterministic",
+  "kg_mode": "none",
+  "chunk_precision@10": 0.09849999999999999,
+  "chunk_success@10": 0.625,
+  "gold_block_recall@10": 0.625,
+  "chunk_ndcg@10": 0.27174172789517115,
+  "median_latency_ms": 3612.9645
+}

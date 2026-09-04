@@ -1,0 +1,47 @@
+\chapter{Spesifikasi Kebutuhan Sistem}
+\label{app:spesifikasi}
+
+Lampiran ini berisi spesifikasi kebutuhan fungsional dan nonfungsional dari sistem \emph{chatbot} hukum yang dikembangkan. Spesifikasi disusun berdasarkan modul utama sistem yang saling terpisah namun terintegrasi dalam satu \emph{workflow} \emph{end-to-end}.
+
+\section{Spesifikasi Kebutuhan Fungsional Sistem}
+
+Berikut adalah spesifikasi kebutuhan fungsional sistem berdasarkan modul utama yang telah didefinisikan.
+
+{\setlength{\tabcolsep}{4pt}
+\begin{longtable}{|p{0.09\textwidth}|p{0.34\textwidth}|p{0.49\textwidth}|}
+\caption{Spesifikasi Kebutuhan Fungsional Sistem \emph{Chatbot} Hukum}\label{tab:functional}\endfirsthead
+\hline \textbf{ID} & \textbf{Modul} & \textbf{Kebutuhan} \\\hline
+\endhead
+\hline
+F01 & Modul data \emph{ingestion} (\emph{scraping} dan \emph{parsing}) serta modul \emph{admin} dan \emph{landing page} & Modul dapat mengumpulkan dokumen peraturan perundang-undangan dari sumber resmi. \\\hline
+F02 & Modul data \emph{ingestion} (\emph{scraping} dan \emph{parsing}) serta modul \emph{admin} dan \emph{landing page} & Modul dapat melakukan \emph{cleaning} dan normalisasi dokumen peraturan perundang-undangan. \\\hline
+F03 & Modul data \emph{ingestion} (\emph{scraping} dan \emph{parsing}) serta modul \emph{admin} dan \emph{landing page} & Modul dapat melakukan \emph{parsing} struktur hukum secara hierarkis menjadi undang-undang, bab, bagian, pasal, dan ayat. \\\hline
+F04 & Modul \emph{Document Processing Orchestrator} (DPO) dan \emph{query} pre-planning & Modul dapat melakukan segmentasi dokumen hukum menjadi unit makna yang lebih kecil. \\\hline
+F05 & Modul \emph{Document Processing Orchestrator} (DPO) dan \emph{query} pre-planning & Modul dapat melakukan \emph{embedding} terhadap unit dokumen hukum beserta \emph{metadata} strukturnya. \\\hline
+F06 & Modul \emph{Document Processing Orchestrator} (DPO) dan \emph{query} pre-planning & Modul dapat melakukan \emph{guardrails} dan sanitasi PII. \\\hline
+F07 & Modul \emph{Document Processing Orchestrator} (DPO) dan \emph{query} pre-planning & Modul dapat melakukan deteksi \emph{intent} dan transformasi \emph{query} agar selaras dengan struktur hukum formal. \\\hline
+F08 & Modul \emph{hybrid retrieval} dan \emph{Knowledge Graph} serta modul autentikasi & Modul dapat melakukan \emph{hybrid retrieval} untuk menemukan \emph{chunk} pasal yang relevan dengan \emph{query}. \\\hline
+F09 & Modul \emph{hybrid retrieval} dan \emph{Knowledge Graph} serta modul autentikasi & Modul dapat melakukan penelusuran relasi hukum melalui \emph{Knowledge Graph}. \\\hline
+F10 & Modul \emph{hybrid retrieval} dan \emph{Knowledge Graph} serta modul autentikasi & Modul dapat memperluas konteks hukum berdasarkan relasi yang telah didapatkan pada \emph{Knowledge Graph}. \\\hline
+F11 & Lapisan \emph{Explainable AI} (XAI) serta modul \emph{chat} & Modul dapat menghasilkan jawaban hukum berdasarkan konteks hasil \emph{retrieval} dan \emph{reasoning}. \\\hline
+F12 & Lapisan \emph{Explainable AI} (XAI) serta modul \emph{chat} & Modul dapat menampilkan dasar hukum berupa undang-undang, pasal, dan ayat yang dirujuk. \\\hline
+F13 & Lapisan \emph{Explainable AI} (XAI) serta modul \emph{chat} & Modul dapat menyediakan mekanisme \emph{explainability} berupa \emph{source attribution} dan jalur \emph{reasoning}. \\\hline
+F14 & Lapisan Explainable AI (XAI) serta modul \emph{chat} & Modul dapat menyajikan penjelasan tambahan berbasis \emph{input saliency} dan \emph{counterfactual}. \\\hline
+\end{longtable}}
+
+\section{Spesifikasi Kebutuhan Nonfungsional Sistem}
+
+Berikut adalah spesifikasi kebutuhan nonfungsional sistem \emph{chatbot} hukum.
+
+\begin{table}[H]
+\centering
+\caption{Spesifikasi Kebutuhan Nonfungsional Sistem}
+\label{tab:nonfunctional}
+\begin{tabularx}{\textwidth}{|p{0.14\textwidth}|p{0.25\textwidth}|X|}
+\hline \textbf{ID} & \textbf{Parameter} & \textbf{Kebutuhan} \\\hline
+NF01 & \emph{Usability} & Sistem menyediakan antarmuka yang dapat digunakan oleh pengguna umum. \\\hline
+NF02 & \emph{Usability} & Sistem menampilkan pesan kesalahan dan informasi sistem dalam Bahasa Indonesia yang jelas. \\\hline
+NF03 & \emph{Reliability} & Sistem tetap dapat memberikan umpan balik kepada pengguna ketika terjadi kegagalan sebagian modul. \\\hline
+NF04 & \emph{Reliability} & \emph{Auto-save draft query} setiap 5 detik. \\\hline
+\end{tabularx}
+\end{table}

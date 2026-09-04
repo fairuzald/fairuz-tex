@@ -1,0 +1,7 @@
+%%{init: {"theme":"base", "themeVariables": {"fontFamily":"Arial, sans-serif", "fontSize":"24px", "primaryTextColor":"#111827", "lineColor":"#475569"}, "flowchart": {"htmlLabels":true, "nodeSpacing":48, "rankSpacing":72, "curve":"basis"}}}%%
+flowchart TB
+    active["Active"] -->|"disable"| disabled["Disabled"]
+    classDef active fill:#dcfce7,stroke:#15803d,color:#111827;
+    classDef disabled fill:#fff3e0,stroke:#ef6c00,color:#111827;
+    class active active;
+    class disabled disabled;

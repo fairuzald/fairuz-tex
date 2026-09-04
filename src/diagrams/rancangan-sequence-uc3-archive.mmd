@@ -1,0 +1,41 @@
+%% Sequence diagram UC3: datasource and datasource document archiving.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"16px"},"sequence":{"actorMargin":24,"messageMargin":18,"boxMargin":6,"boxTextMargin":4,"noteMargin":6,"useMaxWidth":true}}}%%
+sequenceDiagram
+    actor Admin as User
+    participant UI as Admin UI
+    participant API as HTTP API
+    participant Source as Datasource Service
+    participant Profile as Profile Service
+    participant Store as Vector and Graph Store
+    Admin->>UI: Open datasource page
+    UI->>API: GET /api/v1/datasources
+    API-->>UI: Datasource list
+    alt Archive datasource
+        Admin->>UI: Confirm datasource archive
+        UI->>API: POST /api/v1/datasources/{id}/archive
+        API->>Source: Check active profile subscribers
+        alt Active subscribers exist
+            Source-->>API: Conflict with subscriber count
+            API-->>UI: Archive rejected
+        else No active subscriber
+            Source->>Profile: Remove subscribed projections
+            Profile->>Store: Delete vector and graph data
+            Source-->>API: Datasource archived
+            API-->>UI: Archive success
+        end
+    else Archive datasource document
+        Admin->>UI: Open datasource detail
+        UI->>API: GET /api/v1/datasources/{id}/documents
+        API-->>UI: Document list
+        Admin->>UI: Confirm document archive
+        UI->>API: POST /api/v1/datasources/{id}/documents/{doc}/archive
+        API->>Profile: Remove document projections
+        Profile->>Store: Delete vector and graph data
+        API-->>UI: Document archived
+    end
+    opt Unarchive
+        UI->>API: POST .../unarchive
+        API->>Source: Restore active status
+        Source->>Profile: Fan out document to subscribers
+        API-->>UI: Unarchive success
+    end

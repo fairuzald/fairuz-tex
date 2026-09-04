@@ -1,0 +1,2297 @@
+\chapter{Analisis Masalah dan Rancangan Solusi}
+\label{chapter:analisis-rancangan}
+
+\section{Analisis Masalah}
+\label{sec:analisis-masalah}
+
+\autoref{sec:latar-belakang} menyatakan bahwa akuisisi dokumen, penentuan cara ekstraksi, pemulihan hierarki, dan kemampuan menerima domain baru merupakan empat syarat yang harus dipenuhi pada satu jalur ingesti yang sama.
+Subbab ini menelusuri kondisi yang membuat keempat syarat tersebut sulit dipenuhi, dengan bertumpu pada keadaan sumber data dan dokumen yang benar-benar dihadapi.
+Setiap analisis ditutup dengan konsekuensi rancangan yang ditimbulkannya, sehingga kebutuhan yang dirumuskan pada akhir subbab ini dapat ditelusuri kembali ke kondisi yang melatarbelakanginya.
+
+\subsection{Posisi Komponen Akuisisi dan Ekstraksi}
+\label{sec:posisi-komponen}
+
+Sebagaimana ditetapkan pada \autoref{sec:batasan-masalah}, tugas akhir ini mencakup tahap akuisisi dan ekstraksi dokumen, sedangkan \textit{chunking}, \textit{indexing}, \textit{retrieval}, dan \textit{generation} dikerjakan oleh anggota tim lain.
+Kedudukan kedua tahap tersebut di dalam \textit{pipeline} sistem OMNI-RAG secara keseluruhan digambarkan pada \autoref{fig:posisi-komponen}.
+
+\begin{figure}[H]
+  \vspace{0.6\baselineskip}
+  \centering
+  \includegraphics[width=\textwidth]{pipeline-ingesti.png}
+  \caption{Kedudukan tahap akuisisi dan ekstraksi dokumen di dalam alur sistem OMNI-RAG}
+  \label{fig:posisi-komponen}
+\end{figure}
+
+Kotak biru pada gambar tersebut menandai tahap yang berjalan secara \textit{background} atas setiap dokumen yang masuk, sedangkan kotak jingga menandai tahap yang baru berjalan ketika pengguna mengajukan \textit{query}.
+Kotak putus-putus menandai kedua tahap yang menjadi lingkup tugas akhir ini.
+Tahap \textit{chunking} memicu \textit{indexing} dan pembangunan \textit{knowledge graph} secara paralel, dan keduanya harus selesai sebelum sebuah dokumen dinyatakan selesai diproses.
+
+Komponen yang dibangun karena itu berada sepenuhnya di hulu, dan seluruh hubungannya dengan tahap-tahap sesudahnya menyempit menjadi satu titik penyerahan: representasi hierarkis yang dihasilkan tahap ekstraksi dan diterima tahap \textit{chunking}.
+Segala perbedaan antarsumber dan antardomain harus sudah terselesaikan sebelum representasi itu diserahkan, karena tanggung jawabnya berhenti di titik itu.
+
+Pembagian ini tidak dapat digeser ke hilir, sebab tahap \textit{chunking} berada di luar kendali penulis.
+Kalau tahap tersebut dibuat mengenali asal dokumen, ia jadi terikat pada rincian sumber dan domain, dan setiap penambahan sumber atau domain baru akan menuntut perubahan di sana pula.
+Keluaran ekstraksi karena itu wajib berbentuk satu representasi yang sama untuk sumber dan domain apa pun. Keseragaman ini menjadi syarat pertama yang membatasi seluruh pilihan rancangan pada subbab-subbab berikutnya.
+
+\subsection{Analisis Sumber Data}
+\label{sec:analisis-sumber-data}
+
+Dua sumber data yang menjadi lingkup tugas akhir ini, yaitu portal peraturan perundang-undangan \href{https://peraturan.bpk.go.id}{\texttt{peraturan.\allowbreak bpk.\allowbreak go.\allowbreak id}} dan layanan penyimpanan Google Drive, memiliki karakter yang sangat berbeda.
+Keduanya dianalisis satu per satu terlebih dahulu, lalu dibandingkan pada akhir subbab ini.
+
+\subsubsection{Portal Peraturan BPK}
+\label{sec:analisis-bpk}
+
+Portal peraturan BPK menerapkan \textit{server-side rendering}.
+Seluruh isi hasil pencarian sudah tersusun di dalam HTML pada \textit{response} \texttt{GET} yang pertama, sebagaimana terlihat pada \autoref{fig:bpk-web-ssr}.
+Panel \textit{network} pada gambar tersebut mencatat satu \textit{request} dokumen HTML, dan \textit{response body}-nya sudah memuat judul peraturan, penanda subjek, nama berkas unduhan, hingga abstraknya.
+Pengumpulan karena itu cukup dilakukan dengan \textit{request} HTTP biasa yang diikuti \textit{parsing} HTML, tanpa perlu menjalankan JavaScript maupun mencari \textit{endpoint} data di baliknya.
+Yang diambil dengan cara itu adalah tampilan halamannya, sehingga setiap perubahan struktur HTML dapat mengubah cara pengambilan tanpa pemberitahuan apa pun.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \includegraphics[width=\textwidth]{bpk-web-ssr.png}
+  \caption{\textit{Response} HTML pertama halaman hasil pencarian sudah memuat seluruh isi yang ditampilkan}
+  \label{fig:bpk-web-ssr}
+\end{figure}
+
+Penelusuran koleksinya berlangsung melalui satu \textit{endpoint}, yaitu \texttt{/Search}, dengan seluruh \textit{filter} dan nomor halaman dinyatakan sebagai parameter \textit{query} pada \textit{request} \texttt{GET}.
+\textit{Pagination}-nya berbasis nomor halaman melalui parameter \texttt{p}, dan parameter tersebut dihilangkan pada halaman pertama.
+\textit{Filter} yang menerima banyak nilai dinyatakan dengan mengulang parameter yang sama, sehingga \textit{request} yang memilih dua tahun, dua entitas, dua jenis, dan dua tema berbentuk seperti berikut.
+
+\par\vspace{0.85\baselineskip}
+\begingroup
+\setlength{\parskip}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\singlespacing
+\small
+\begin{verbatim}
+curl --location \
+     --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X
+                10_15_7) AppleWebKit/537.36 Chrome/124 Safari/537.36" \
+     "https://peraturan.bpk.go.id/Search?keywords=&tentang=&nomor=1\
+&tahun=2026&tahun=2025&entitas=474&entitas=284\
+&jenis=39&jenis=6&tema=2&tema=3&p=2"
+\end{verbatim}
+\endgroup
+\vspace{0.15\baselineskip}
+
+Parameter yang digunakan beserta sifatnya dirangkum pada \autoref{tab:parameter-pencarian-bpk}.
+Nilai untuk \texttt{entitas}, \texttt{jenis}, dan \texttt{tema} bukan teks bebas melainkan pengenal numerik yang ditetapkan portal.
+
+\begin{singlespace}
+\footnotesize
+\setlength{\LTpre}{0.9\baselineskip}
+\setlength{\LTpost}{1.0\baselineskip}
+\begin{longtable}{@{}p{2.0cm}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{5.4cm}@{}}
+  \caption{Parameter \textit{query} penelusuran pada \texttt{/Search}}
+  \label{tab:parameter-pencarian-bpk} \\
+  \toprule
+  \textbf{Parameter} & \textbf{Isi} & \textbf{Sifat nilai} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Parameter} & \textbf{Isi} & \textbf{Sifat nilai} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \texttt{keywords} & Pencarian teks bebas & Teks, satu nilai \\*
+  \texttt{tentang} & Perihal peraturan & Teks, satu nilai \\*
+  \texttt{nomor} & Nomor peraturan & Teks, satu nilai \\*
+  \texttt{tahun} & Tahun peraturan & Bilangan, boleh berulang \\*
+  \texttt{entitas} & Instansi penerbit & Pengenal numerik dari portal, boleh berulang \\*
+  \texttt{jenis} & Jenis peraturan & Pengenal numerik dari portal, boleh berulang \\*
+  \texttt{tema} & Tema atau subjek peraturan & Pengenal numerik dari portal, boleh berulang \\*
+  \texttt{p} & Nomor halaman hasil & Bilangan, dihilangkan pada halaman pertama \\
+\end{longtable}
+\end{singlespace}
+
+Satu halaman hasil memuat sepuluh peraturan beserta kendali \textit{pagination} di bawahnya, sebagaimana terlihat pada \autoref{fig:bpk-daftar-hasil}.
+Tidak ada penanda jumlah halaman yang dapat diandalkan sebagai batas penelusuran, sehingga akhir daftar hanya dapat dikenali dari halaman yang tidak lagi memuat hasil.
+Yang pasti tersedia pada setiap entri hanyalah tautan halaman rinciannya, berbentuk \texttt{/Details/\allowbreak\{id\}\allowbreak/\{slug\}}, sedangkan judul, penanda subjek, ringkasan relasi, dan tautan unduh hanya muncul pada sebagian entri.
+Tautan rincian itulah yang dipakai sebagai \textit{source identifier}, karena hanya bagian itu yang selalu ada dan tidak berubah antar-\textit{run}.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \includegraphics[width=\textwidth]{bpk-daftar-hasil.png}
+  \caption{Satu entri pada halaman hasil pencarian portal peraturan BPK beserta kendali \textit{pagination} di bawahnya}
+  \label{fig:bpk-daftar-hasil}
+\end{figure}
+
+Metadata peraturan sama sekali tidak muncul pada halaman hasil pencarian.
+Portal mencetak tujuh belas label metadata pada setiap halaman rincian, sebagaimana terlihat pada \autoref{fig:bpk-metadata-status} dan dirangkum pada \autoref{tab:metadata-peraturan-bpk}, dan hanya di sanalah nilai-nilai tersebut dapat dibaca.
+Ketujuh belas label itu selalu dicetak, tetapi nilainya kerap kosong dan label mana yang kosong berbeda-beda menurut jenis peraturannya, sehingga sel kosong harus dibaca sebagai ``tidak dicatat oleh sumber'' dan bukan sebagai kegagalan \textit{parsing}.
+Relasi antardokumen seperti mencabut, dicabut, atau mengubah ditampilkan pada kartu status, dan kartu itu muncul baik pada halaman hasil pencarian maupun pada halaman rincian.
+Sebagian butir relasinya berupa tautan ke halaman rincian peraturan yang dirujuk, sebagian lagi hanya berupa judul tanpa tautan karena peraturan tersebut tidak tersedia di portal, dan sebagian dokumen tidak memiliki butir relasi sama sekali sehingga kartunya hanya menyatakan ``Belum Tersedia''.
+Karena metadatanya hanya ada di halaman rincian, setiap dokumen menuntut dua \textit{request} lanjutan setelah entrinya ditemukan pada daftar, yaitu untuk halaman rincian dan untuk berkasnya.
+Bentuk kedua \textit{request} itu adalah sebagai berikut.
+
+\par\vspace{0.85\baselineskip}
+\begingroup
+\setlength{\parskip}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\singlespacing
+\small
+\begin{verbatim}
+curl --location \
+     "https://peraturan.bpk.go.id/Details/218816/uu-no-23-tahun-2022"
+
+curl --location --remote-name \
+     "https://peraturan.bpk.go.id/Download/213209/\
+UU%20Nomor%2023%20Tahun%202022.pdf"
+\end{verbatim}
+\endgroup
+\vspace{0.15\baselineskip}
+
+Berkas itu dikembalikan dengan \texttt{Content-Type:} \texttt{application/\allowbreak octet-\allowbreak stream}, sehingga jenis berkas tidak dinyatakan oleh \textit{server} dan hanya dapat dibaca dari nama berkas pada tautan unduhnya.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \includegraphics[width=\textwidth]{bpk-metadata-status.png}
+  \caption{Kartu metadata dan kartu status pada halaman rincian Perbup Kabupaten Magetan Nomor 27 Tahun 2020 \href{https://peraturan.bpk.go.id/Details/249238/perbup-kab-magetan-no-27-tahun-2020}{(\texttt{peraturan.\allowbreak bpk.\allowbreak go.\allowbreak id/\allowbreak Details/\allowbreak 249238})}}
+  \label{fig:bpk-metadata-status}
+\end{figure}
+
+\begin{singlespace}
+\footnotesize
+\setlength{\LTpre}{0.9\baselineskip}
+\setlength{\LTpost}{1.0\baselineskip}
+\begin{longtable}{@{}p{3.6cm}>{\raggedright\arraybackslash}p{9.5cm}@{}}
+  \caption{Label metadata pada halaman rincian peraturan}
+  \label{tab:metadata-peraturan-bpk} \\
+  \toprule
+  \textbf{Label} & \textbf{Isi} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Label} & \textbf{Isi} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  Tipe Dokumen & Golongan dokumen, misalnya peraturan perundang-undangan \\*
+  Judul & Judul lengkap peraturan \\*
+  T.E.U. & Tajuk entri utama, yaitu pihak yang bertanggung jawab atas peraturan \\*
+  Nomor & Nomor peraturan \\*
+  Bentuk & Bentuk peraturan secara lengkap \\*
+  Bentuk Singkat & Singkatan bentuk peraturan \\*
+  Tahun & Tahun peraturan \\*
+  Tempat Penetapan & Kota tempat peraturan ditetapkan \\*
+  Tanggal Penetapan & Tanggal peraturan ditetapkan \\*
+  Tanggal Pengundangan & Tanggal peraturan diundangkan \\*
+  Tanggal Berlaku & Tanggal peraturan mulai berlaku \\*
+  Sumber & Lembaran atau berita resmi tempat peraturan dimuat \\*
+  Subjek & Satu atau lebih subjek peraturan \\*
+  Status & Status keberlakuan, misalnya berlaku atau tidak berlaku \\*
+  Bahasa & Bahasa naskah peraturan \\*
+  Lokasi & Instansi yang menyimpan naskah \\*
+  Bidang & Bidang peraturan, kerap dibiarkan kosong oleh sumber \\
+\end{longtable}
+\end{singlespace}
+
+Ketersediaan berkas pada halaman rincian ternyata menghadirkan empat keadaan yang berbeda, dan keempatnya diperlihatkan pada \autoref{fig:bpk-file-peraturan}.
+Keadaan pertama adalah keadaan yang diharapkan, yaitu kartu berkas yang menyediakan satu berkas PDF.
+Keadaan kedua menyajikan berkas dalam format yang berada di luar cakupan tugas akhir ini, misalnya \texttt{.doc}, sehingga dokumennya tetap harus diabaikan.
+Keadaan ketiga tidak menyediakan berkas sama sekali dan hanya menampilkan keterangan bahwa berkasnya belum tersedia, sehingga entri yang terdaftar pada hasil pencarian tidak selalu menghasilkan dokumen.
+Keadaan keempat paling menyesatkan. Kartunya menampilkan nama berkas PDF beserta tombol unduh seperti keadaan pertama, tetapi tautannya mengembalikan \textit{error} HTTP 404 ketika benar-benar diakses.
+Keempat keadaan itu bersama-sama berarti keberhasilan pengambilan satu dokumen baru dapat dipastikan setelah unduhan dicoba, bukan pada saat entrinya ditemukan.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \subfloat[Berkas PDF tersedia]{\includegraphics[width=0.47\textwidth]{bpk-file-pdf.png}}
+  \hfill
+  \subfloat[Berkas berformat lain]{\includegraphics[width=0.47\textwidth]{bpk-file-nonpdf.png}}
+
+  \vspace{0.8\baselineskip}
+  \subfloat[Berkas belum tersedia]{\includegraphics[width=0.47\textwidth]{bpk-file-kosong.png}}
+  \hfill
+  \subfloat[Tautan ada, tetapi mengembalikan \textit{error} 404]{\includegraphics[width=0.47\textwidth]{bpk-file-404.png}}
+  \caption{Empat keadaan ketersediaan berkas pada halaman rincian peraturan}
+  \label{fig:bpk-file-peraturan}
+\end{figure}
+
+\textit{Source identifier} pada portal ini juga tidak menentukan isinya.
+Dua peraturan dengan tautan rincian yang berbeda dapat merujuk pada berkas yang isinya sama persis.
+Contohnya adalah \href{https://peraturan.bpk.go.id/Details/156250/perda-kab-magetan-no-27-tahun-2020}{\texttt{/Details/\allowbreak 156250}} dan \href{https://peraturan.bpk.go.id/Details/249238/perbup-kab-magetan-no-27-tahun-2020}{\texttt{/Details/\allowbreak 249238}}: portal menamai yang pertama Perda Kabupaten Magetan Nomor 27 Tahun 2020 dan yang kedua Perbup Kabupaten Magetan Nomor 27 Tahun 2020, tetapi keduanya menyajikan berkas dengan nama yang sama dan isi yang identik.
+Perbedaan \textit{source identifier} pada kedua entri bahkan menyentuh jenis peraturan, sehingga tidak ada aturan berdasarkan \textit{source identifier} maupun \textit{metadata} yang dapat mengenali pasangan itu sebagai satu berkas yang sama.
+Kesamaan isi karena itu hanya dapat dipastikan dengan membandingkan nilai \textit{hash} atas seluruh isi berkasnya sebagaimana diuraikan pada \autoref{sec:penyimpanan-deduplikasi}.
+Urutan hasil enumerasi pun tidak dijamin tetap antar-\textit{run}, sehingga halaman ke-$n$ pada satu \textit{run} belum tentu memuat entri yang sama pada \textit{run} berikutnya.
+Kedua keadaan itu menuntut hal yang sama, yaitu penilaian ``sudah pernah dilihat'' harus bersandar pada \textit{source identifier} dan isi berkas, tidak pernah pada posisi entri di dalam daftar.
+
+Kebijakan penelusuran portal ini dinyatakan melalui berkas \texttt{robots.txt}.
+Isinya dibuka dengan penjelasan panjang tentang arti \textit{content signal}, lalu diikuti sepuluh kelompok arahan yang dikutip berikut ini.
+
+\par\vspace{0.85\baselineskip}
+\begingroup
+\setlength{\parskip}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\singlespacing
+\small
+\begin{verbatim}
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+Allow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CloudflareBrowserRenderingCrawler
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+\end{verbatim}
+\endgroup
+\vspace{0.15\baselineskip}
+
+Kelompok pertama berlaku bagi \textit{user agent} umum, termasuk \textit{crawler} yang dibangun pada tugas akhir ini, dan mengizinkan seluruh jalur, sedangkan sembilan kelompok sesudahnya melarang \textit{crawler} bernama yang mengumpulkan data untuk melatih model bahasa.
+Arahan \texttt{Content-Signal} pada kelompok pertama menyatakan bahwa \textit{indexing} untuk pencarian diizinkan, pelatihan model tidak diizinkan, dan pemanfaatan isinya dibatasi sebagai rujukan.
+Portal tidak mencantumkan satu pun arahan jeda antar-\textit{request}, baik \texttt{crawl-delay} maupun \texttt{request-rate}, sejalan dengan catatan pada \autoref{sec:robots-exclusion} bahwa kedua arahan itu memang bukan bagian baku protokol pengecualian robot.
+Portal juga tidak mencantumkan batas laju \textit{request} pada dokumentasi mana pun.
+Kebijakan laju karena itu sepenuhnya menjadi tanggung jawab perancang \textit{crawler}, dan titik operasi yang aman hanya dapat ditemukan melalui percobaan: menebak terlalu rendah memperlambat pengumpulan, sedangkan menebak terlalu tinggi berisiko membebani sumbernya \parencites{olston2010webcrawling}{kolobov2019politeness}.
+Penghormatan atas kebijakan sumber, termasuk pembatasan laju yang tidak dinyatakan secara eksplisit, merupakan bagian dari praktik pengumpulan data web yang bertanggung jawab \parencites{krotov2020webscraping}{brown2024webscraping}.
+
+\subsubsection{Google Drive}
+\label{sec:analisis-drive}
+
+Berbeda dengan portal peraturan, Google Drive menyediakan kontrak yang terdokumentasi dan diberi nomor versi, sehingga bentuk data yang diterima tidak berubah tanpa pemberitahuan.
+Aksesnya dilakukan melalui Google Drive API v3 dengan kredensial \textit{service account} yang \textit{scope}-nya dibatasi pada pembacaan berkas \parencite{google2025driveapi}.
+Penelusuran satu folder dilakukan melalui metode \texttt{files.list}, sedangkan pengunduhan berkasnya melalui \texttt{files.get\_media}, dengan parameter berikut.
+
+\par\vspace{0.85\baselineskip}
+\begingroup
+\setlength{\parskip}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\singlespacing
+\small
+\begin{verbatim}
+files.list(
+    q         = "'{folder_id}' in parents and trashed=false",
+    fields    = "nextPageToken, files(id, name, mimeType,
+                 modifiedTime, size, webViewLink)",
+    pageSize  = {n},
+    pageToken = {token},
+    supportsAllDrives         = True,
+    includeItemsFromAllDrives = True,
+)
+
+files.get_media(
+    fileId            = "{file_id}",
+    supportsAllDrives = True,
+)
+\end{verbatim}
+\endgroup
+\vspace{0.15\baselineskip}
+
+Parameter \texttt{q} berisi \textit{query} dalam \textit{query language} milik Drive.
+Klausa \texttt{'\{folder\_id\}' in parents} memilih berkas yang induknya adalah folder yang dituju, sedangkan \texttt{trashed=false} menyingkirkan berkas yang sudah dipindahkan ke tempat sampah.
+Penelusuran dengan demikian hanya menjangkau satu tingkat folder dan tidak menurun ke subfolder di dalamnya.
+Parameter \texttt{supports\allowbreak AllDrives} dan \texttt{include\allowbreak Items\allowbreak From\allowbreak AllDrives} harus diaktifkan bersama-sama, sebab tanpa keduanya folder yang berada pada \textit{shared drive} akan terbaca kosong meskipun berisi.
+
+Parameter \texttt{fields} menyatakan secara eksplisit atribut apa saja yang diminta.
+ID berkas Google Drive menjadi \textit{source identifier} dokumen dan tetap sama meskipun berkasnya dinamai ulang atau dipindahkan.
+Nama berkas, \textit{MIME type}, ukuran, dan waktu perubahan terakhir menyertai setiap entri pada daftar yang sama.
+\textit{Pagination} dinyatakan melalui \texttt{nextPageToken} pada \textit{response}: selama \textit{token} itu dikembalikan, penelusuran berlanjut dengan mengirimkannya kembali sebagai \texttt{pageToken}, dan penelusuran berhenti ketika \textit{token} itu tidak lagi ada.
+Mode kegagalannya juga jelas, karena layanan mengembalikan kode \textit{error} HTTP yang terdokumentasi, sehingga \textit{error} yang layak diulang seperti 429 dan 5xx dapat dibedakan dari \textit{error} permanen tanpa menebak.
+
+Batas lajunya pun dinyatakan secara terbuka.
+Google menetapkan kuota dalam satuan \textit{quota unit}, dengan batas 1.000.000 satuan per menit per proyek dan 325.000 satuan per menit per pengguna pada satu proyek \parencite{google2026drivelimits}.
+Biaya setiap pemanggilan juga dicantumkan menurut kategorinya: pendaftaran isi folder seperti \texttt{files.list} bernilai 100 satuan, sedangkan pengunduhan isi berkas, yaitu kategori tempat \texttt{files.get\_media} berada, bernilai 200 satuan.
+Batas per pengguna itu dengan demikian setara dengan sekitar 1.600 pengunduhan berkas per menit, jauh di atas laju yang dibutuhkan tugas akhir ini, sehingga pengaturan laju pada sumber ini menjadi persoalan yang sudah terjawab sejak awal.
+
+\subsubsection{Perbandingan dan Konsekuensi Rancangan}
+\label{sec:perbandingan-sumber}
+
+Perbandingan kedua sumber pada aspek yang menyentuh rancangan akuisisi disajikan pada \autoref{tab:perbandingan-sumber-data}.
+
+\begin{singlespace}
+\footnotesize
+\setlength{\LTpre}{0.9\baselineskip}
+\setlength{\LTpost}{1.0\baselineskip}
+\begin{longtable}{@{}p{3.0cm}>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{5.2cm}@{}}
+  \caption{Perbandingan portal peraturan BPK dan Google Drive pada aspek yang menyentuh rancangan akuisisi}
+  \label{tab:perbandingan-sumber-data} \\
+  \toprule
+  \textbf{Aspek} & \textbf{Portal peraturan BPK} & \textbf{Google Drive} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Aspek} & \textbf{Portal peraturan BPK} & \textbf{Google Drive} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  Mekanisme enumerasi & Halaman hasil pencarian HTML (\textit{server-side rendering}) & Metode \texttt{files.list} pada API v3 \\*
+  Penanda halaman & Nomor halaman pada parameter \textit{query} \texttt{p} & \texttt{nextPageToken} \\*
+  Penanda akhir daftar & Halaman tanpa hasil & Tidak ada \texttt{nextPageToken} \\*
+  \textit{Source identifier} & Tautan rincian \texttt{/Details/\allowbreak\{id\}\allowbreak/\{slug\}} & \texttt{id} berkas Google Drive \\*
+  Cara mengenali jenis berkas & Dari nama berkas pada halaman rincian; \textit{server} mengembalikan \texttt{application/\allowbreak octet-\allowbreak stream} & Dari \texttt{mimeType} yang menyertai entri pada daftar \\*
+  Letak metadata & Hanya pada halaman rincian, menuntut satu \textit{request} tambahan & Menyertai entri pada daftar \\*
+  Batas laju & Tidak dinyatakan & Kuota terdokumentasi dalam satuan \textit{quota unit} \\*
+  Mode kegagalan & Struktur HTML berubah, berkas belum tersedia, tautan mengembalikan \textit{error} 404 & Kode \textit{error} HTTP yang terdokumentasi \\
+\end{longtable}
+\end{singlespace}
+
+Tabel tersebut memperlihatkan bahwa kedua sumber hanya berbagi satu hal, yaitu polanya: menghasilkan aliran entri dokumen, lalu mengambil berkas dari setiap entri.
+Cara melakukannya berbeda pada setiap baris tabel.
+Pengetahuan tentang bentuk sumber, dengan demikian, harus ditempatkan pada komponen yang dapat ditukar, sementara penyimpanan, pemeriksaan duplikasi, pengaturan laju, kebijakan penghentian, dan pembukuan \textit{run} harus dimiliki oleh inti agar berlaku sama bagi sumber mana pun.
+Pemeriksaan duplikasi tidak dapat hanya mengandalkan \textit{source identifier}; pemeriksaan isi berkas juga diperlukan karena portal peraturan dapat menghadirkan berkas identik dengan \textit{source identifier} berbeda.
+Laju \textit{request} dan tingkat \textit{concurrency} harus menjadi parameter yang dapat dikonfigurasi dan diuji, bukan tetapan yang tertanam di dalam kode, karena hanya salah satu sumber yang menyatakan batasnya.
+
+\subsection{Analisis Dokumen Peraturan Perundang-undangan}
+\label{sec:analisis-dokumen-peraturan}
+
+Seluruh dokumen peraturan pada tugas akhir ini diambil dari satu portal yang sama, tetapi cara pembuatan, tata penulisan, dan kualitas berkasnya berbeda-beda.
+Perbedaan itu tidak terlihat dari daftar hasil pencarian maupun dari metadatanya, dan baru muncul setelah berkasnya dibuka satu per satu.
+Tiga persoalan lahir dari keadaan tersebut, yaitu keterbacaan halamannya, pemulihan hierarkinya, dan keragaman korpusnya.
+
+Persoalan pertama adalah keterbacaan halamannya.
+Berkas PDF peraturan memuat tiga tipe halaman, dan ketiganya diperlihatkan pada \autoref{fig:tiga-tipe-halaman} dengan kotak merah yang menandai setiap \textit{text span} yang dapat diekstraksi langsung dari berkas.
+Tipe pertama adalah halaman \textit{native}, yaitu halaman yang dihasilkan langsung oleh perangkat lunak pengolah dokumen sebagaimana diuraikan pada \autoref{sec:borndigital-vs-scan}.
+Seluruh isinya tertutup kotak, dan teks yang keluar sama persis dengan yang tercetak.
+Tipe kedua adalah halaman hasil pindai yang sudah diberi \textit{text layer} oleh perangkat lunak pemindainya.
+Halaman ini tetap berupa satu citra utuh, tetapi kotaknya sama penuhnya dengan tipe pertama.
+Tipe ketiga adalah halaman hasil pindai tanpa \textit{text layer}, yang tidak menghasilkan satu kotak pun.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \subfloat[\textit{Native}]{\includegraphics[width=0.31\textwidth]{panel-native.png}}
+  \hfill
+  \subfloat[Pindai, ada \textit{text layer}]{\includegraphics[width=0.31\textwidth]{panel-ocrlayer.png}}
+  \hfill
+  \subfloat[Pindai, tanpa \textit{text layer}]{\includegraphics[width=0.31\textwidth]{panel-noteks.png}}
+  \caption{Tiga tipe halaman; kotak merah menandai \textit{text span} yang dapat diekstraksi langsung}
+  \label{fig:tiga-tipe-halaman}
+\end{figure}
+
+Tipe-tipe itu dapat bercampur di dalam satu berkas.
+Panel (a) dan (c) berasal dari dokumen yang sama, yaitu Peraturan Menteri Agama Nomor 13 Tahun 2024 \href{https://peraturan.bpk.go.id/Details/298032/peraturan-menag-no-13-tahun-2024}{(\texttt{peraturan.\allowbreak bpk.\allowbreak go.\allowbreak id/\allowbreak Details/\allowbreak 298032})}.
+Panel (a) adalah halaman batang tubuhnya, sedangkan panel (c) adalah halaman penutupnya, satu-satunya halaman yang dipindai di dokumen itu.
+
+Panel (b) diambil dari Undang-undang Nomor 11 Tahun 2020 \href{https://peraturan.bpk.go.id/Details/149750/uu-no-11-tahun-2020}{(\texttt{peraturan.\allowbreak bpk.\allowbreak go.\allowbreak id/\allowbreak Details/\allowbreak 149750})}, yang seluruh halamannya berupa citra hasil pindai dan seluruhnya menyertakan \textit{text layer}.
+Isi \textit{text layer} itu berasal dari OCR perangkat lunak pemindai, dan mutunya tidak dijamin.
+Teks yang diekstraksi dari panel (b) memperlihatkan hal itu.
+
+\par\vspace{0.85\baselineskip}
+\begingroup
+\setlength{\parskip}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\singlespacing
+\small
+\begin{verbatim}
+FRESIDEN
+REPUBUK INDONESIA
+-51 -
+16. Ketentuan Pasal i9 diubah sehingga berbunyi sebagai
+berikut:
+    ...
+    a. produksi gararn;
+\end{verbatim}
+\endgroup
+\vspace{0.15\baselineskip}
+
+Kerusakan pada kata seperti \texttt{REPUBUK} dan \texttt{gararn} masih dapat ditoleransi, karena maknanya tetap terbaca dan pemulihan hierarki tidak bergantung padanya.
+Kerusakan pada penanda struktur jauh lebih berbahaya.
+Penanda seperti bab, bagian, dan pasal itulah satu-satunya sumber hierarki bagi dokumen peraturan, sehingga penanda yang rusak tidak akan cocok dengan pola apa pun dan hierarki yang dihasilkan menjadi salah.
+Halaman bertipe kedua dengan demikian menyediakan teks yang tampak lengkap tetapi bisa menyesatkan.
+
+Halaman pindaian juga tidak selalu serapi ketiga panel tersebut.
+\autoref{fig:halaman-dokumen-pindai} menampilkan halaman pertama sebuah peraturan bupati yang seluruh halamannya merupakan hasil pindai, lengkap dengan kemiringan pindaian, bintik-bintik, bekas lubang penjilidan, serta tanda tangan yang ditulis tangan.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \includegraphics[width=0.5\textwidth]{halaman-dokumen-pindai.png}
+  \caption{Halaman pertama Peraturan Bupati Langkat Nomor 37 Tahun 2017 \href{https://peraturan.bpk.go.id/Details/100120/perbup-kab-langkat-no-37-tahun-2017}{(\texttt{peraturan.\allowbreak bpk.\allowbreak go.\allowbreak id/\allowbreak Details/\allowbreak 100120})}}
+  \label{fig:halaman-dokumen-pindai}
+\end{figure}
+
+Konsekuensi rancangannya ada dua.
+Pertama, penentuan jalur ekstraksi harus diambil per halaman, karena satu berkas dapat memuat lebih dari satu tipe halaman.
+Inilah celah yang tertinggal pada \autoref{sec:routing-ocr}, karena heuristik yang dilaporkan di sana menilai satu berkas PDF secara utuh.
+Kedua, penentuan itu tidak boleh bersandar pada ada atau tidaknya \textit{text span}, karena kriteria tersebut menggolongkan tipe kedua sebagai halaman \textit{native}.
+Sinyal yang memisahkan keduanya adalah luas halaman yang tertutup citra, dan sinyal itu dapat dibaca dari struktur berkas tanpa menjalankan OCR terlebih dahulu.
+
+Persoalan kedua adalah pemulihan hierarkinya.
+Berkas PDF peraturan tidak menyimpan susunan bagiannya di mana pun, karena tidak ada penanda semantik maupun \textit{document outline} yang menyatakan bahwa sebuah baris merupakan judul bab atau awal pasal.
+Satu-satunya sumber hierarki adalah penanda yang tercetak di dalam teksnya, seperti \texttt{BAB III}, \texttt{Bagian Kesatu}, dan \texttt{Pasal 5}, yang bentuknya sudah dibakukan sebagaimana diuraikan pada \autoref{sec:struktur-peraturan-indonesia}.
+Mengenali bentuk penanda seperti itu mudah, sedangkan menentukan kedudukannya tidak.
+Baris yang bentuknya persis sama dapat muncul sebagai pembuka bagian baru, sebagai kutipan atas peraturan lain, atau sebagai materi yang sedang diubah di dalam bagian lain, dan ketiganya hanya dapat dibedakan dari letak kemunculannya di dalam dokumen.
+
+Konsekuensi rancangannya, pengenalan bentuk penanda dan penetapan peran hierarkisnya harus dipisahkan.
+Pengenalan bentuk dapat diselesaikan dengan \textit{pattern matching} sebagaimana diuraikan pada \autoref{sec:analisis-leksikal}, sedangkan penetapan peran menuntut mekanisme yang menyimpan konteks, yaitu urutan bagian dokumen pada \autoref{sec:fsm-bagian-dokumen} dan kedalaman bagian yang belum tertutup pada \autoref{sec:parsing-berbasis-stack}.
+
+Persoalan ketiga adalah keragaman korpusnya.
+Dokumen yang terkumpul mulai dari peraturan tingkat pusat sampai peraturan bupati dan wali kota, terbit lintas puluhan tahun, dan panjangnya bervariasi dari beberapa halaman sampai ratusan halaman.
+Pada rentang seluas itu terdapat dokumen yang menyimpang dari tata penulisan baku, misalnya penomoran yang melompat atau bagian yang tidak lengkap, dan penyimpangan itu ada pada dokumen sumbernya sehingga tidak dapat diperbaiki oleh sistem yang membacanya.
+Konsekuensi rancangannya, aturan ekstraksi harus berlaku umum bagi seluruh korpus, dan temuan atas keutuhan struktur harus dilaporkan sebagai peringatan yang tetap menyertakan hasil ekstraksinya, bukan sebagai kegagalan yang membuang dokumennya.
+
+\subsection{Analisis Dokumen Manual Produk}
+\label{sec:analisis-dokumen-manual}
+
+Manual produk tidak memiliki penomoran baku seperti peraturan.
+Susunan bagiannya ditentukan oleh penulisnya dan berbeda antarproduk sebagaimana dicatat pada \autoref{sec:struktur-manual-netgear}, sehingga tidak ada penanda di dalam teksnya yang dapat dibaca untuk memulihkan hierarkinya.
+Hierarki manual karena itu hanya dapat diambil dari \textit{document outline} berkas, yang sudah memuat judul setiap bagian beserta kedalamannya sebagaimana diuraikan pada \autoref{sec:document-outline-pdf}.
+Manual yang tidak menyediakan \textit{outline} tidak memiliki sumber hierarki sama sekali, sehingga lebih tepat ditolak daripada diratakan menjadi teks tanpa struktur.
+
+\textit{Outline} memberi judul dan kedalaman setiap bagian, tetapi tidak menyatakan di mana isi bagian itu dimulai pada halaman.
+Setiap \textit{outline item} karena itu masih harus ditautkan ke baris judulnya di halaman.
+Destinasi sebuah \textit{outline item} berupa titik pada halaman, dan titik itu belum tentu jatuh pada baris judul yang dimaksud.
+\autoref{fig:outline-anchor} memperlihatkan keadaan tersebut pada awal sebuah bab dalam manual NETGEAR R7000 \parencite{netgear2019r7000}.
+Titik destinasinya jatuh jauh di atas judul bab, sehingga baris pertama di bawahnya justru angka penanda bab.
+
+\begin{figure}[htb]
+  \vspace{0.6\baselineskip}
+  \centering
+  \includegraphics[width=\textwidth]{outline-anchor-manual.png}
+  \caption{Kedudukan destinasi sebuah \textit{outline item} terhadap baris judul pada awal bab manual NETGEAR R7000}
+  \label{fig:outline-anchor}
+\end{figure}
+
+Konsekuensi rancangannya, pemulihan hierarki manual bersandar sepenuhnya pada \textit{outline}, dan langkah yang menentukan keberhasilannya adalah penautan setiap \textit{outline item} ke baris judulnya.
+
+\subsection{Analisis Kebutuhan Ekstensibilitas}
+\label{sec:analisis-keragaman}
+
+Dua sumber data dan dua domain dokumen yang dibahas di atas masih akan bertambah.
+Sistem RAG multidomain memang dibangun untuk menerima domain baru, dan setiap penambahan membawa portal, format, serta aturan strukturnya sendiri.
+Bila penambahan itu harus dikerjakan dengan mengubah kode yang sudah ada, biaya perluasannya menumpuk dan \textit{pipeline} yang sudah berjalan ikut berisiko rusak, sebagaimana diperingatkan pada \autoref{sec:arsitektur-plugin}.
+Konsekuensi rancangannya, komponen yang berbeda-beda isinya harus mengikuti kontrak yang sama, agar penambahan sumber maupun domain tidak menyentuh kode inti.
+
+\subsection{Kebutuhan Fungsional dan Non-Fungsional}
+\label{sec:kebutuhan}
+
+Analisis pada subbab-subbab sebelumnya dirangkum menjadi kebutuhan yang harus dipenuhi komponen akuisisi dan ekstraksi.
+Kebutuhan fungsional menyatakan apa yang harus dilakukan sistem, sedangkan kebutuhan non-fungsional menyatakan mutu yang harus dipenuhi ketika sistem melakukannya.
+Sebagian kebutuhan berlaku bagi seluruh sumber maupun domain, sedangkan sebagian lain hanya berlaku pada sumber atau domain tertentu karena lahir dari sifat khas sumber atau dokumennya.
+
+Kebutuhan fungsional akuisisi dokumen disajikan pada \autoref{tab:kebutuhan-fungsional-akuisisi}.
+
+\begin{singlespace}
+\footnotesize
+\setlength{\LTpre}{0.9\baselineskip}
+\setlength{\LTpost}{1.0\baselineskip}
+\begin{longtable}{@{}p{1.2cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-1.2cm-2\tabcolsep\relax}@{}}
+  \caption{Kebutuhan fungsional akuisisi dokumen}
+  \label{tab:kebutuhan-fungsional-akuisisi} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kebutuhan} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kebutuhan} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  KF-01 & Sistem menelusuri daftar dokumen yang disediakan sumber melalui \textit{pagination} dan menghasilkan entri dokumen beserta \textit{source identifier} yang tetap sama antar-\textit{run}. \\*
+  KF-02 & Sistem mengunduh berkas setiap entri yang lolos \textit{filter} jenis berkas, lalu menyimpannya beserta metadata yang menyertainya dari sumber. \\*
+  KF-03 & Sistem mengenali dokumen yang sudah tersimpan, baik melalui \textit{source identifier} maupun melalui isi berkasnya, dan tidak menyimpannya lebih dari satu kali. \\*
+  KF-04 & Sistem menjalankan akuisisi secara terjadwal maupun atas permintaan. \\*
+  KF-05 & Sistem mencatat riwayat setiap \textit{run} beserta status dan penyebab kegagalan setiap entrinya. \\*
+  KF-06 & Sistem menghentikan penelusuran menurut kebijakan penghentian yang dikonfigurasi, tanpa harus menelusuri seluruh daftar pada setiap \textit{run}. \\*
+  KF-07 & Sistem menyediakan jeda antar-\textit{request} dan batas \textit{concurrency} yang dapat dikonfigurasi pada setiap sumber. \\*
+\end{longtable}
+\end{singlespace}
+
+Kebutuhan fungsional ekstraksi dokumen disajikan pada \autoref{tab:kebutuhan-fungsional-ekstraksi}.
+
+\begin{singlespace}
+\footnotesize
+\setlength{\LTpre}{0.9\baselineskip}
+\setlength{\LTpost}{1.0\baselineskip}
+\begin{longtable}{@{}p{1.2cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-1.2cm-2\tabcolsep\relax}@{}}
+  \caption{Kebutuhan fungsional ekstraksi dokumen}
+  \label{tab:kebutuhan-fungsional-ekstraksi} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kebutuhan} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kebutuhan} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  KF-08 & Sistem menentukan jalur ekstraksi setiap halaman dokumen peraturan, yaitu pembacaan teks \textit{native} atau OCR, pada tingkat halaman. \\*
+  KF-09 & Sistem mengekstraksi halaman \textit{native} dokumen peraturan langsung dari berkas dan halaman hasil pindainya melalui layanan OCR. \\*
+  KF-10 & Sistem memulihkan hierarki dokumen peraturan dari tata penomorannya, termasuk menetapkan peran struktural penanda yang bentuknya sama menurut konteks kemunculannya. \\*
+  KF-11 & Sistem memulihkan hierarki manual produk dari \textit{outline} berkas dengan menautkan setiap \textit{outline item} ke baris judul yang dimaksud. \\*
+  KF-12 & Sistem menolak manual produk yang tidak menyediakan \textit{outline}, alih-alih meratakannya menjadi teks tanpa struktur. \\*
+  KF-13 & Sistem mencatat temuan atas keutuhan struktur sebagai peringatan yang tetap menyertakan hasil ekstraksinya. \\*
+  KF-14 & Sistem menghasilkan satu bentuk representasi hierarkis yang sama untuk seluruh dokumen. \\*
+\end{longtable}
+\end{singlespace}
+
+Kebutuhan non-fungsional disajikan pada \autoref{tab:kebutuhan-non-fungsional}.
+
+\begin{singlespace}
+\footnotesize
+\setlength{\LTpre}{0.9\baselineskip}
+\setlength{\LTpost}{1.0\baselineskip}
+\begin{longtable}{@{}p{1.4cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-1.4cm-2\tabcolsep\relax}@{}}
+  \caption{Kebutuhan non-fungsional}
+  \label{tab:kebutuhan-non-fungsional} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kebutuhan} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kebutuhan} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  KNF-01 & \textit{Throughput} akuisisi, yaitu jumlah dokumen baru yang berhasil disimpan per satuan waktu, setinggi mungkin selama tidak mengorbankan keandalan. \\*
+  KNF-02 & Keandalan \textit{run}, yaitu kegagalan pada satu entri tidak menghentikan \textit{run} secara keseluruhan. \\*
+  KNF-03 & Kesantunan terhadap portal peraturan BPK, yaitu laju \textit{request} yang sampai ke portal dapat ditahan pada tingkat yang tidak membebaninya. \\*
+  KNF-04 & Ekstensibilitas, yaitu penambahan sumber maupun domain baru tidak menuntut perubahan pada kode inti. \\*
+  KNF-05 & Determinisme hasil, yaitu keluaran dan rekapitulasi \textit{run} tidak bergantung pada urutan selesainya operasi yang dijalankan secara \textit{concurrent}. \\*
+\end{longtable}
+\end{singlespace}
+
+Kebutuhan yang dirumuskan di atas menjadi dasar penilaian atas pilihan solusi yang dibahas pada subbab berikutnya.
+
+\section{Analisis Solusi}
+\label{sec:analisis-solusi}
+
+Analisis solusi ini berfokus pada hubungan antara arsitektur berbasis \textit{plugin}, \textit{pipeline} akuisisi dokumen, dan \textit{pipeline} ekstraksi dokumen.
+Uraian mengenai pembagian kelas, struktur penyimpanan, dan urutan pemanggilan komponen secara lebih rinci disajikan pada bagian rancangan solusi.
+
+\subsection{Arsitektur}
+\label{sec:solusi-arsitektur}
+
+\subsubsection{Arsitektur \textit{Plugin}}
+\label{sec:solusi-arsitektur-plugin}
+
+Sistem RAG multidomain menghadapi variasi pada cara sumber eksternal menyediakan dokumen dan pada cara setiap domain menyatakan struktur dokumennya.
+Variasi tersebut tidak seharusnya ditangani oleh komponen inti melalui percabangan khusus untuk setiap sumber atau domain.
+
+Dalam solusi ini, \textit{plugin} adalah komponen yang memuat aturan khusus sumber atau domain dan dijalankan oleh komponen inti melalui kontrak yang sama.
+Variasi sumber eksternal ditempatkan pada \textit{scraper plugin}, sedangkan variasi struktur dokumen ditempatkan pada \textit{parser plugin}.
+Komponen inti bertugas mengorkestrasikan pemuatan dan eksekusi \textit{plugin} serta menjalankan alur umum yang tidak bergantung pada sumber atau domain.
+
+Setiap \textit{plugin} dikenali oleh nama, versi, dan tipe komponennya pada registri.
+Registri digunakan untuk menemukan implementasi \textit{plugin} dan skema konfigurasi yang sesuai sebelum proses dijalankan.
+Skema konfigurasi menyatakan atribut, tipe data, nilai dihold, dan batasan nilai yang diperlukan oleh \textit{plugin}.
+Konfigurasi yang dikirim dari antarmuka maupun yang tersimpan pada basis data divalidasi menggunakan skema tersebut.
+
+Pemisahan ini membuat penambahan sumber baru cukup dilakukan dengan mengimplementasikan \textit{scraper plugin} yang memenuhi kontrak tanpa mengubah komponen inti.
+Penambahan domain baru cukup dilakukan dengan mengimplementasikan \textit{parser plugin} yang memenuhi kontrak tanpa mengubah komponen inti maupun tahap hilir.
+
+\subsubsection{Arsitektur \textit{Pipeline}}
+\label{sec:solusi-arsitektur-pipeline}
+
+Profil RAG merupakan konfigurasi yang menentukan keseluruhan \textit{pipeline} RAG.
+Profil memilih \textit{datasource} sebagai sumber dokumen dan mengonfigurasi setiap \textit{node} yang menyusun \textit{pipeline} tersebut.
+Jenis \textit{node} yang tersedia mencakup \textit{parser}, \textit{chunker}, \textit{indexer}, \textit{retrieval orchestrator}, serta \textit{knowledge graph} apabila digunakan.
+Setiap node menyimpan referensi \textit{plugin} dan konfigurasi yang digunakan oleh komponen tersebut.
+
+Dalam lingkup tugas akhir ini, pembahasan pipeline dibatasi sampai node \textit{parser}.
+Node \textit{parser} menerima dokumen mentah dari \textit{datasource} dan menghasilkan representasi dokumen kanonik.
+Tahap setelah parser, termasuk \textit{chunking}, \textit{indexing}, \textit{retrieval}, \textit{generation}, dan pembangunan \textit{knowledge graph}, berada di luar lingkup implementasi dan hanya menjadi konsumen keluaran parser.
+
+\subsection{Solusi \textit{Datasource} dan \textit{Scraper Plugin}}
+\label{sec:solusi-scraper-plugin}
+
+\subsubsection{\textit{Datasource} dan Kontrak \textit{Scraper}}
+\label{sec:solusi-scraper-adapter}
+
+\textit{Datasource} diperlakukan sebagai penyimpanan dokumen yang berdiri sendiri dari profil RAG.
+\textit{Datasource} memiliki identitas, nama, deskripsi, status, daftar ekstensi yang diterima, konfigurasi \textit{scraper} bila tersedia, serta riwayat proses \textit{scraping}.
+\textit{Datasource} tanpa \textit{scraper} tetap dapat digunakan sebagai tempat unggah manual, sedangkan \textit{datasource} dengan \textit{scraper} dapat menerima dokumen dari sumber eksternal secara manual maupun terjadwal.
+
+Kontrak \textit{scraper} menyamakan bentuk interaksi dengan sumber data.
+\textit{Plugin} melakukan enumerasi secara \textit{lazy} per halaman, sehingga inti sistem dapat berhenti berdasarkan kebijakan yang dikonfigurasi pada \textit{datasource}.
+Setiap entri membawa \textit{source identifier} yang stabil, URL sumber bila tersedia, nama file, dan \textit{metadata} sumber.
+Ketika entri diproses, \textit{plugin} mengembalikan isi berkas serta dapat memberikan nama file atau \textit{metadata} tambahan yang diperoleh saat pengunduhan.
+
+Implementasi BPK dan Google Drive menunjukkan bagaimana kontrak yang sama mengisolasi perbedaan sumber.
+\textit{Scraper} BPK mengubah halaman hasil pencarian menjadi entri berdasarkan tautan rincian peraturan. Pada saat pengunduhan, \textit{scraper} membaca halaman rincian untuk memperoleh \textit{metadata} dan tautan berkas, kemudian mengambil isi berkas tersebut.
+\textit{Scraper} Google Drive mengubah hasil \textit{listing} berkas melalui API menjadi entri dengan ID berkas Google Drive, nama file, tipe MIME, waktu perubahan, dan tautan tampilan, kemudian mengambil isi berkas melalui API pengunduhan media.
+Keduanya mengembalikan hasil dalam bentuk kontrak \textit{scraper} yang sama kepada inti akuisisi.
+
+\subsubsection{Pemisahan Enumerasi, Pengunduhan, dan \textit{Ingestion}}
+\label{sec:solusi-pemisahan-akuisisi}
+
+Proses akuisisi dibagi menjadi enumerasi, pengunduhan, validasi, deduplikasi, penyimpanan, dan pengiriman ke profil.
+Enumerasi bertugas menghasilkan halaman dan entri dari sumber.
+Pengunduhan mengambil isi berkas untuk satu entri serta, bila diperlukan, memperoleh nama berkas atau \textit{metadata} tambahan.
+\textit{Ingestion} memvalidasi dan mematerialisasikan isi berkas menjadi dokumen \textit{datasource}.
+
+Pemisahan ini memastikan aturan untuk berinteraksi dengan setiap sumber tetap ditangani oleh \textit{plugin} yang bersangkutan.
+\textit{Scraper} tidak perlu mengetahui cara menyimpan berkas pada MinIO atau cara membuat proses \textit{pipeline} untuk setiap profil.
+Sebaliknya, layanan \textit{ingestion} tidak perlu mengetahui apakah \textit{byte} dokumen berasal dari halaman HTML, API, atau unggahan manual.
+
+Unggah manual dan pengunduhan \textit{scraper} diteruskan melalui jalur \textit{ingestion} yang sama setelah isi berkas tersedia.
+Keduanya menghasilkan kandidat dokumen yang memuat isi, nama berkas, asal, tipe isi, serta, bila tersedia, \textit{source identifier}, URL sumber, dan \textit{metadata}.
+Jalur bersama tersebut menempatkan validasi tipe dan isi berkas, perhitungan \textit{hash}, penyimpanan, dan \textit{fan-out} pada layanan yang sama, sehingga aturan inti akuisisi diterapkan secara konsisten pada dokumen unggahan maupun dokumen hasil \textit{scraping}.
+
+\subsubsection{Validasi, Deduplikasi, dan Penyimpanan}
+\label{sec:solusi-validasi-deduplikasi}
+
+Pada dokumen hasil \textit{scraping}, validasi dilakukan pada dua tahap, yaitu sebelum dan sesudah pengunduhan.
+Sebelum pengunduhan, sistem membandingkan \textit{source identifier} eksternal dengan dokumen yang sudah diketahui oleh \textit{datasource}.
+Jika \textit{source identifier} tersebut sudah tersimpan, entri langsung dilewati tanpa mengunduh ulang berkasnya.
+Jika belum ditemukan, nama berkas dibandingkan dengan daftar ekstensi yang diterima \textit{datasource} agar berkas yang jelas tidak didukung tidak perlu diambil.
+Setelah isi berkas tersedia, sistem memeriksa kesesuaian antara nama dan \textit{byte} berkas.
+Pemeriksaan berbasis \textit{signature} pada bagian awal isi digunakan untuk mendeteksi keadaan seperti berkas yang bernama PDF tetapi sebenarnya berisi HTML atau format lain.
+
+Setelah lolos validasi, nilai \textit{hash} \textit{SHA-256} dihitung dari isi berkas.
+Nilai \textit{hash} digunakan untuk memeriksa kesamaan isi berkas, termasuk pada unggahan manual yang tidak memiliki \textit{source identifier} eksternal.
+Pemeriksaan ini juga menangani entri dengan \textit{source identifier} berbeda tetapi isi berkas yang sama.
+Dokumen yang telah ada tidak dibuat ulang dan entri \textit{scraping} dicatat sebagai \textit{skipped}, bukan sebagai kegagalan.
+
+Penyimpanan isi dan \textit{metadata} dipisahkan sesuai tanggung jawab infrastrukturnya.
+\textit{Byte} dokumen disimpan pada penyimpanan objek, sedangkan informasi dokumen, \textit{hash}, \textit{metadata}, asal dokumen, ukuran, dan status disimpan pada basis data.
+
+\subsubsection{Penjadwalan, \textit{Concurrency}, Pembatalan, dan Status \textit{Run}}
+\label{sec:solusi-pengendalian-run}
+
+Akuisisi dapat dimulai melalui dua jalur, yaitu pemicu manual dari antarmuka atau pemicu terjadwal.
+Baik pemicu manual maupun pemicu terjadwal menjalankan alur akuisisi yang sama, yaitu memastikan \textit{datasource} aktif, membuat \textit{scrape run}, menjaga hanya satu \textit{run} aktif, dan menerbitkan pesan ke \textit{worker queue}.
+
+\textit{Scheduler} menyusun jadwal berdasarkan \textit{datasource} yang mengaktifkan \textit{scraper} dan memiliki jadwal \textit{cron} yang valid.
+Perubahan \textit{cron}, zona waktu, pengaktifan, penonaktifan, atau pengarsipan \textit{datasource} diselaraskan kembali oleh \textit{scheduler} tanpa mengharuskan proses \textit{scheduler} dimulai ulang.
+Jika sebuah \textit{datasource} sudah memiliki \textit{run} aktif atau sedang dibatalkan, pemicu terjadwal tidak membuat \textit{run} kedua.
+
+\textit{Scraper worker} menjalankan enumerasi secara \textit{serial} pada batas halaman, tetapi dapat mengunduh beberapa entri dalam satu halaman secara konkuren sesuai konfigurasi \textit{datasource}.
+Jeda enumerasi dan pengunduhan diatur melalui konfigurasi \textit{pacing} pada \textit{datasource}, sehingga \textit{plugin} dapat menerapkan jeda pada \textit{request} yang sesuai.
+Kebijakan penghentian dapat meniadakan batas, membatasi jumlah halaman, atau menghentikan enumerasi setelah sejumlah halaman berturut-turut yang seluruh entrinya telah diketahui oleh \textit{datasource}.
+
+Setiap \textit{run} memiliki status dan penghitung total entri, entri baru, entri yang dilewati, serta entri yang gagal.
+Setiap entri juga memiliki status dan riwayat transisi sendiri, mulai dari \textit{pending}, \textit{downloading}, dan \textit{downloaded} hingga \textit{completed}, \textit{skipped}, atau \textit{failed}.
+Kegagalan pengunduhan satu entri dicatat pada entri tersebut dan tidak menghentikan entri lain pada halaman yang sama.
+Sebaliknya, kegagalan enumerasi yang membuat halaman sumber tidak dapat dibaca dicatat sebagai kegagalan tingkat \textit{run}.
+Pembatalan dilakukan secara kooperatif: entri pada halaman yang sedang diproses dapat diselesaikan, lalu \textit{worker} menghentikan enumerasi sebelum mengambil halaman berikutnya.
+
+\subsubsection{Fan-out ke Profil dan Sinkronisasi Dokumen}
+\label{sec:solusi-fanout-profil}
+
+Setelah dokumen tersimpan, layanan \textit{fan-out} mencari profil aktif yang berlangganan \textit{datasource} tersebut.
+Untuk setiap profil yang konfigurasi node \textit{parser}-nya sesuai dengan dokumen, sistem menyertakan rujukan lokasi berkas mentah pada \textit{object storage} agar \textit{parser} dapat membacanya, kemudian menerbitkan permintaan \textit{parsing} ke \textit{parser queue}.
+Profil yang konfigurasi \textit{parser}-nya tidak dapat diterapkan atau tidak mendukung ekstensi dokumen dilewati tanpa menghambat pemrosesan profil lain.
+Setiap profil memproses dokumen dengan konfigurasi node \textit{parser}-nya sendiri.
+Jika suatu dokumen sudah memiliki \textit{run} pada profil tertentu, sistem tidak membuat \textit{pipeline run} kedua untuk pasangan profil dan dokumen tersebut.
+Sebaliknya, profil yang baru berlangganan dapat meminta sinkronisasi dokumen yang telah tersimpan pada \textit{datasource}.
+
+\subsection{Solusi \textit{Parser Plugin}}
+\label{sec:solusi-parser-plugin}
+
+\subsubsection{Kontrak \textit{Parser Plugin} dan Dokumen Kanonik}
+\label{sec:solusi-kontrak-parser}
+
+Setiap \textit{parser plugin} menerima dokumen mentah, konfigurasi node \textit{parser} pada profil, dan konteks layanan.
+Kontrak tersebut menetapkan bentuk \textit{input} dan \textit{output} tanpa memaksakan cara ekstraksi yang sama.
+Dengan demikian, \textit{legal parser} dan \textit{generic outline parser} dapat menggunakan strategi berbeda tetapi tetap dijalankan melalui alur \textit{parser} yang sama.
+
+Keluaran setiap \textit{parser} adalah dokumen kanonik berbentuk pohon blok.
+Setiap blok memiliki pengenal, tipe, teks, \textit{metadata}, dan daftar anak, sedangkan dokumen kanonik menyimpan identitas dokumen, blok, dan \textit{metadata} dokumen.
+Bentuk bersama ini menjadi batas antara \textit{parser} dan tahap \textit{chunking}; tahap hilir tidak perlu mengetahui sumber atau strategi yang digunakan untuk membentuk blok.
+
+Konfigurasi dan konteks layanan memiliki tanggung jawab yang berbeda.
+Konfigurasi mengatur kebutuhan yang bergantung pada jenis \textit{parser}, seperti pembacaan sumber, OCR, deteksi \textit{layout}, atau pembacaan \textit{outline}.
+Konteks layanan menyediakan kemampuan eksternal yang diperlukan, seperti pemeriksaan ketersediaan, pengenalan teks, deteksi \textit{region}, dan penyimpanan artefak \textit{debug}.
+Pada \textit{generic outline parser}, konteks tersebut tidak digunakan karena \textit{parser} ini tidak menggunakan OCR atau deteksi \textit{layout}.
+
+\subsubsection{Ekstraksi \textit{Legal Parser} per Halaman}
+\label{sec:solusi-routing-halaman}
+
+\textit{Routing} per halaman hanya digunakan oleh \textit{legal parser}.
+PDF dibuka oleh komponen pembaca sumber yang menyediakan geometri halaman, kotak citra, fragmen teks \textit{native}, dan kemampuan untuk mengubah halaman menjadi citra piksel.
+Setiap halaman kemudian diklasifikasikan secara terpisah.
+Halaman ditandai sebagai \textit{SCAN} apabila cakupan citranya melewati ambang yang dikonfigurasi atau apabila halaman memiliki citra tetapi jumlah teks \textit{native}-nya berada di bawah ambang.
+Halaman lain masuk ke jalur \textit{VECTOR}.
+Pemisahan per halaman ini memungkinkan satu PDF yang memuat halaman teks dan halaman pindai untuk menggunakan jalur ekstraksi yang berbeda.
+
+Pada jalur \textit{VECTOR}, fragmen teks dikelompokkan berdasarkan kedekatan posisi vertikal untuk membentuk baris.
+Fragmen dalam setiap baris diurutkan berdasarkan posisi horizontal, lalu spasi disisipkan apabila jarak antarfragmen menunjukkan adanya pemisah kata.
+Hasilnya berupa baris teks yang tetap membawa posisi halaman dan jenis jalur ekstraksinya.
+
+\subsubsection{OCR dan Deteksi \textit{Layout} pada \textit{Legal Parser}}
+\label{sec:solusi-batas-ocr}
+
+Halaman \textit{SCAN} diubah menjadi citra piksel pada resolusi yang dikonfigurasi sebelum dikirim ke jalur OCR.
+Sebelum ekstraksi dimulai, ketersediaan layanan diperiksa apabila dokumen memiliki halaman \textit{SCAN}.
+Jika deteksi \textit{layout} tidak diaktifkan, seluruh citra halaman dikirim sebagai satu permintaan OCR.
+Jika deteksi \textit{layout} diaktifkan, layanan mengembalikan \textit{region} beserta label, skor, kotak, dan urutan baca.
+\textit{Region} yang \textit{label}-nya termasuk dalam daftar pengecualian dibuang, sedangkan \textit{region} lainnya diurutkan menurut urutan baca, dipotong dari citra halaman, dan dikirim sebagai permintaan OCR terpisah.
+
+OCR dan deteksi \textit{layout} ditempatkan di luar \textit{parser} melalui konteks layanan.
+Konfigurasi \textit{legal parser} mendukung dua model pengenalan teks, yaitu GLM-OCR dan PaddleOCR-VL 1.6, yang dipilih melalui konfigurasi \textit{parser}.
+Kedua model tersebut dijalankan oleh server oMLX yang dihubungi langsung oleh \textit{parser}.
+Klien layanan pada sisi \textit{parser} memilih model dan parameter pengenalan teks, memeriksa ketersediaan model, serta menangani batas waktu dan percobaan ulang.
+
+Deteksi \textit{layout} bersifat opsional dan mendukung model PP-DocLayoutV3.
+Berbeda dari model OCR yang dilayani oleh oMLX, model ini dimuat dan dijalankan oleh layanan \textit{layout} yang dibangun pada penelitian ini.
+Layanan tersebut menangani pemuatan model, perangkat komputasi, \textit{concurrency}, validasi citra, serta penyaringan hasil deteksi sebelum \textit{region} dikembalikan.
+Urutan baca berasal dari prediksi model; layanan hanya menomorinya ulang secara rapat atas \textit{region} yang lolos penyaringan.
+Pemisahan ini membuat \textit{parser} tidak bergantung langsung pada proses inferensi atau implementasi model tertentu.
+Hasil OCR dibersihkan dari penanda format yang dikeluarkan model dan dinormalisasi untuk memperbaiki penanda yang menempel pada teks.
+Setiap baris hasil OCR tetap menyimpan posisi halaman dan kotak \textit{region} apabila ekstraksi dilakukan melalui deteksi \textit{layout}.
+
+\subsubsection{Pemrosesan \textit{Legal Parser} Berbasis Penanda}
+\label{sec:solusi-parser-legal}
+
+Setelah baris dari jalur \textit{native} dan OCR tersedia, \textit{legal parser} memprosesnya melalui analisis leksikal, segmentasi, \textit{parsing} bagian, pembentukan blok, dan verifikasi.
+Analisis leksikal mengenali pola penanda hukum dan memberikan anotasi pada baris.
+Segmentasi mengelompokkan baris menjadi bagian seperti pembukaan, batang tubuh, penutup, penjelasan, dan lampiran.
+\textit{Parser} bagian kemudian membentuk blok berdasarkan jenis bagian dan keadaan struktur yang sedang dibaca.
+
+Pengenalan pola penanda dipisahkan dari pemulihan hierarki.
+Analisis leksikal hanya menentukan apakah sebuah baris memiliki pola penanda tertentu, sedangkan \textit{parser} bagian menentukan peran penanda berdasarkan urutan penanda dan struktur yang masih terbuka.
+Pemisahan ini diperlukan karena bentuk penanda yang sama dapat berperan sebagai pembuka struktur, bagian dari ketentuan perubahan, atau kutipan terhadap struktur lain.
+
+Blok yang dihasilkan menyimpan tipe penanda, nilai penomoran, operasi perubahan bila ada, dan lokasi halaman.
+Informasi tersebut disimpan sebagai \textit{metadata} blok agar dokumen kanonik tetap menyediakan konteks yang diperlukan oleh tahap pemrosesan berikutnya.
+
+\subsubsection{\textit{Generic Outline Parser} Berbasis \textit{Bookmark}}
+\label{sec:solusi-parser-generic}
+
+\textit{Generic outline parser} menggunakan asumsi yang berbeda dari \textit{legal parser}.
+\textit{Parser} ini membaca PDF yang memiliki teks digital dan pohon \textit{bookmark} sebagai sumber hierarki.
+\textit{Parser} ini tidak menggunakan OCR, deteksi \textit{layout}, atau penebakan hierarki dari isi teks.
+Teks halaman dibaca sebagai baris berposisi, sementara setiap \textit{bookmark} membawa judul, tingkat kedalaman, halaman tujuan, dan posisi tujuan bila tersedia.
+
+Karena posisi tujuan \textit{bookmark} tidak selalu tepat berada pada baris judul, judul dicari pada jendela baris di sekitar dan setelah posisi tujuan.
+Hasil pencarian tersebut dihubungkan dengan \textit{bookmark}, kemudian disusun menjadi pohon bagian berdasarkan tingkat \textit{bookmark}.
+Isi setiap bagian dikumpulkan dari baris yang berada di antara judulnya dan judul bagian berikutnya.
+Judul bagian yang dikecualikan oleh konfigurasi, seperti bagian daftar isi, dibuang bersama turunannya sebelum pohon kanonik dibentuk.
+
+PDF tanpa \textit{bookmark outline} ditolak karena \textit{parser} ini tidak memiliki sumber hierarki.
+PDF yang memiliki \textit{outline} tetapi tidak menghasilkan teks isi juga ditolak karena \textit{parser} ini tidak ditujukan untuk dokumen hasil pindai.
+Ketidaktepatan pencocokan judul, lompatan tingkat \textit{bookmark}, bagian kosong, dan rentang halaman yang tidak valid tetap dikumpulkan sebagai peringatan apabila dokumen masih dapat dibentuk.
+
+\subsubsection{Verifikasi, Peringatan, dan Kegagalan Parser}
+\label{sec:solusi-verifikasi-ekstraksi}
+
+Penanganan hasil \textit{parser} membedakan ketidakteraturan struktur dari kegagalan memproses dokumen.
+Peringatan digunakan untuk temuan yang masih memungkinkan dokumen kanonik dibentuk, seperti ketidakteraturan penanda dan rentang halaman pada \textit{legal parser} atau masalah pencocokan \textit{bookmark} dan struktur blok pada \textit{generic outline parser}.
+Peringatan tidak mengubah isi sumber dan tidak membatalkan dokumen yang berhasil dibentuk.
+
+Diagnostik digunakan untuk mencatat kondisi sumber, halaman, layanan, dan tahapan pemrosesan, termasuk lokasi temuan bila tersedia.
+Kegagalan membuka PDF, layanan OCR atau \textit{layout} yang tidak tersedia, konfigurasi \textit{plugin} yang tidak valid, dan keluaran yang melanggar kontrak \textit{parser} diperlakukan sebagai kegagalan pemrosesan.
+Kegagalan tersebut dicatat bersama tahap, sumber, pesan, dan sifat dapat-diulangnya sehingga dapat dibedakan dari dokumen yang hanya memerlukan peninjauan struktur.
+
+Kode peringatan pada \textit{legal parser} menyatakan kondisi struktur yang ditemukan setelah dokumen kanonik dibentuk.
+Kode tersebut menjelaskan jenis temuan, tetapi belum menentukan klasifikasi \textit{advisory} atau \textit{severe} yang digunakan pada analisis eksperimen.
+Makna setiap kode peringatan dirangkum pada \autoref{tab:kode-peringatan-legal-parser}.
+
+\begin{longtable}{@{}p{4.2cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.2cm-2\tabcolsep\relax}@{}}
+  \caption{Kode peringatan dan kondisi yang ditandai oleh \textit{legal parser}}
+  \label{tab:kode-peringatan-legal-parser} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kondisi yang ditandai} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kondisi yang ditandai} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{sequence_gap} & Urutan penanda hukum melewati nilai yang diharapkan, misalnya nomor pasal atau ayat tidak berurutan. \\
+  \path{BODY_STRUCTURAL_MARKER_IN_REVISION} & Penanda struktur muncul di dalam konteks perubahan dan diperlakukan sebagai isi perubahan, bukan sebagai struktur utama dokumen. \\
+  \path{pembukaan_incomplete} & Bagian pembukaan tidak memuat salah satu unsur yang diperiksa, seperti konsiderans, dasar hukum, atau perintah menetapkan. \\
+  \path{empty_leaf} & Blok daun tidak memiliki teks maupun anak sehingga bagian struktur yang dihasilkan tidak memiliki isi. \\
+  \path{revise_pasal_no_children} & Blok pasal perubahan tidak memiliki anak perubahan yang diharapkan, seperti angka perubahan atau pasal. \\
+  \path{revise_pasal_count} & Jumlah blok pasal perubahan pada batang tubuh melebihi batas yang ditetapkan parser. \\
+  \path{location_invalid} & Rentang halaman suatu blok tidak valid karena halaman awal lebih besar daripada halaman akhir. \\
+  \path{empty_batang_tubuh} & Bagian batang tubuh tidak berhasil dibentuk atau tidak memiliki isi yang dapat diproses. \\
+\end{longtable}
+
+Pada \textit{generic outline parser}, PDF tanpa \textit{bookmark outline} atau tanpa teks yang dapat diekstraksi ditolak sebagai kegagalan sumber, bukan dicatat sebagai peringatan.
+Bagian yang dikecualikan secara sengaja oleh konfigurasi, seperti \textit{Contents}, juga dicatat sebagai \textit{metadata} dan bukan sebagai peringatan.
+Kode peringatan \textit{generic outline parser} dirangkum pada \autoref{tab:kode-peringatan-generic-outline}.
+
+\begin{singlespace}
+\footnotesize
+\begin{longtable}{@{}p{4.4cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.4cm-2\tabcolsep\relax}@{}}
+  \caption{Kode peringatan dan kondisi yang ditandai oleh \textit{generic outline parser}}
+  \label{tab:kode-peringatan-generic-outline} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kondisi yang ditandai} \\
+  \midrule
+  \endfirsthead
+  \multicolumn{2}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textbf{Kode} & \textbf{Kondisi yang ditandai} \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{2}{r@{}}{\footnotesize\textit{Bersambung ke halaman berikutnya}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{empty_leaf} & \textit{Heading} tidak memiliki isi maupun subseksi, atau \textit{text block} tidak memiliki teks. \\
+  \path{location_invalid} & Rentang halaman suatu blok terbalik karena halaman awal lebih besar daripada halaman akhir. \\
+  \path{location_out_of_range} & Rentang halaman suatu blok berada di luar jumlah halaman dokumen. \\
+  \path{location_not_nested} & Rentang halaman suatu bagian anak tidak berada di dalam rentang halaman bagian induknya. \\
+  \path{outline.empty_section} & Suatu bagian hasil \textit{bookmark} tidak memiliki teks maupun subseksi setelah proses perakitan. \\
+  \path{outline.anchor_not_found} & Tidak ditemukan baris yang dapat digunakan pada atau setelah tujuan \textit{bookmark}, sehingga bagian tersebut menjadi kosong. \\
+  \path{outline.anchor_out_of_order} & Baris judul yang cocok berada pada atau sebelum bagian sebelumnya sehingga hasil pencocokan dibuang untuk menjaga urutan bagian. \\
+  \path{outline.page_out_of_range} & Tujuan \textit{bookmark} menunjuk halaman di luar dokumen sehingga \textit{bookmark} dibuang. \\
+  \path{outline.anchor_unmatched_title} & Judul \textit{bookmark} tidak cocok dengan baris pada jendela pencarian sehingga baris pertama setelah tujuan digunakan sebagai \textit{fallback}. \\
+  \path{outline.destination_missing} & \textit{Bookmark} tidak memiliki tujuan yang dapat digunakan sehingga awal bagiannya ditempatkan pada bagian atas halaman. \\
+  \path{outline.level_skipped} & Tingkat \textit{bookmark} melompat lebih dari satu tingkat sehingga kedalamannya dirapatkan ke tingkat berikutnya yang valid. \\
+  \path{outline.page_rotated} & Halaman memiliki rotasi sehingga konversi koordinat tujuan dapat menghasilkan posisi judul yang tidak tepat. \\
+\end{longtable}
+\end{singlespace}
+
+\subsubsection{Materialisasi Dokumen Kanonik dan \textit{Handoff}}
+\label{sec:solusi-penyerahan-parser}
+
+Pada saat pesan pemrosesan diterima, \textit{parser worker} mengambil nama \textit{plugin} dan konfigurasi \textit{parser} dari profil, bukan mempercayainya dari pesan.
+Konfigurasi tersebut divalidasi terhadap skema \textit{plugin} sebelum \textit{parser} dijalankan.
+Berkas mentah dibaca dari penyimpanan objek berdasarkan rujukan lokasinya, kemudian \textit{hash} aktualnya dibandingkan dengan nilai yang dikirim pada pesan.
+Pemeriksaan ini memastikan \textit{parser} memproses berkas yang sama dengan berkas yang diterima pada tahap akuisisi.
+
+Setelah \textit{parser} menghasilkan keluaran, dokumen tersebut divalidasi sebagai dokumen kanonik, digabungkan dengan \textit{metadata} sumber, dan disimpan sebagai artefak dokumen kanonik.
+Artefak tersebut menyimpan identitas dokumen, profil, proses, pembuat, \textit{hash}, dan jumlah blok.
+
+Dalam alur \textit{pipeline} penuh, setelah artefak berhasil disimpan, \textit{parser worker} menerbitkan pesan ke \textit{chunker queue} agar \textit{chunker} dapat melanjutkan pemrosesan dokumen.
+Dengan demikian, tahap hilir hanya bergantung pada dokumen kanonik dan tidak perlu mengetahui apakah isi dokumen berasal dari teks \textit{native}, OCR, penanda hukum, atau \textit{bookmark outline}.
+
+\section{Rancangan Solusi}
+\label{sec:rancangan-solusi}
+
+Bab ini menerjemahkan solusi konseptual pada bagian sebelumnya menjadi rancangan implementasi yang digunakan pada sistem OMNI-RAG.
+Rancangan yang dibahas mencakup \textit{service}, modul, penyimpanan, kontrak data, \textit{lifecycle}, alur pesan, dan antarmuka administrasi yang berkaitan dengan \textit{datasource}, \textit{scraper}, \textit{parser}, dan OCR.
+Nama komponen, tabel, \textit{queue}, serta \textit{field} kontrak ditampilkan untuk menjelaskan bentuk konkret sistem tanpa menampilkan \textit{source code} implementasi.
+
+\subsection{Rancangan Arsitektur Implementasi}
+\label{sec:rancangan-arsitektur-implementasi}
+
+\subsubsection{Arsitektur \textit{Deployment} dan \textit{Service}}
+\label{sec:rancangan-deployment}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth,height=0.84\textheight,keepaspectratio]{architecture-deployment.png}
+  \caption{Arsitektur \textit{deployment} dan \textit{service} pada alur \textit{datasource} sampai \textit{parser}}
+  \label{fig:rancangan-deployment}
+\end{figure}
+
+Gambar \ref{fig:rancangan-deployment} memperlihatkan pembagian komponen implementasi ke dalam tiga kelompok.
+Kelompok \textit{Frontend} berisi \textit{Admin UI} untuk mengelola konfigurasi dan proses.
+Kelompok \textit{Backend} berisi \textit{Admin HTTP Server}, \textit{Scraper Scheduler}, \textit{Scraper Worker}, \textit{Parser Worker}, serta konteks \textit{Downstream Workers} yang mencakup \textit{chunker}, \textit{indexer}, dan \textit{KG worker}.
+Kelompok \textit{Infrastructure} berisi PostgreSQL, RabbitMQ, MinIO, \textit{oMLX OCR Model HTTP Server}, dan \textit{Layout Model HTTP Server}.
+
+\textit{Admin UI} berkomunikasi dengan \textit{Admin HTTP Server} untuk mengelola konfigurasi dan proses.
+\textit{Admin HTTP Server} menggunakan PostgreSQL sebagai basis data, MinIO sebagai penyimpanan berkas dan artefak, serta RabbitMQ sebagai perantara pesan.
+Untuk membuka atau mengunduh dokumen, \textit{Admin UI} meminta URL akses kepada \textit{Admin HTTP Server}, kemudian membaca berkas secara langsung dari MinIO menggunakan \textit{presigned URL}.
+
+\textit{Scraper Scheduler} membaca jadwal dari PostgreSQL dan mengirimkan permintaan akuisisi ke RabbitMQ.
+RabbitMQ kemudian mengirimkan permintaan tersebut kepada \textit{Scraper Worker}.
+\textit{Scraper Worker} menjalankan \textit{scraper plugin}, menyimpan informasi \textit{run} dan \textit{entry} pada PostgreSQL, serta menyimpan berkas mentah pada MinIO.
+Setelah dokumen melewati \textit{ingestion} dan \textit{fan-out}, permintaan parsing dikirimkan melalui RabbitMQ kepada \textit{Parser Worker}.
+\textit{Parser Worker} mencatat proses \textit{pipeline} pada PostgreSQL, membaca berkas mentah dari MinIO, menjalankan \textit{parser plugin}, lalu menyimpan artefak dokumen kanonik pada MinIO.
+Hasil tersebut kemudian diteruskan ke tahap \textit{downstream} melalui RabbitMQ.
+
+Jalur OCR hanya digunakan apabila dibutuhkan oleh \textit{parser plugin}.
+\textit{Legal parser} menghubungi \textit{oMLX OCR Model HTTP Server} apabila dokumen memiliki halaman pindai, sedangkan deteksi \textit{layout} dilakukan melalui \textit{Layout Model HTTP Server} jika diaktifkan pada konfigurasi.
+\textit{Generic outline parser} tidak menggunakan kedua layanan tersebut karena memanfaatkan teks digital dan \textit{bookmark outline}.
+\textit{oMLX OCR Model HTTP Server} menjalankan model OCR, sedangkan \textit{Layout Model HTTP Server} menjalankan PP-DocLayoutV3.
+Arah panah pada gambar menunjukkan alur komunikasi tingkat layanan, sedangkan detail struktur pesan dan urutan konsumsi setiap \textit{queue} dibahas pada diagram \textit{sequence}.
+
+\subsubsection{Arsitektur Modul dan Komponen}
+\label{sec:rancangan-komponen}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{architecture-components.png}
+  \caption{Komponen modul dan kontrak pada \textit{datasource}, \textit{profile}, dan \textit{parser}}
+  \label{fig:rancangan-komponen}
+\end{figure}
+
+Gambar \ref{fig:rancangan-komponen} memetakan komponen yang membentuk alur akuisisi dan ekstraksi.
+Komponen inti dibagi menjadi \textit{Datasource Module}, \textit{Profile Module}, dan \textit{Parser Module}.
+\textit{Datasource Module} terdiri atas \textit{Datasource Orchestration}, \textit{Document Ingestion}, dan \textit{Profile Fan-out}.
+\textit{Datasource Orchestration} mengatur penggunaan \textit{scraper plugin}, \textit{Document Ingestion} memvalidasi serta menyimpan dokumen mentah, sedangkan \textit{Profile Fan-out} meneruskan dokumen yang berhasil disimpan kepada \textit{profile} yang berlangganan.
+
+\textit{Profile Module} menyimpan \textit{RAG Profile} beserta konfigurasi \textit{pipeline node}-nya.
+Konfigurasi tersebut mencakup \textit{datasource} dan \textit{node} untuk \textit{parser}, \textit{chunker}, \textit{indexer}, \textit{retrieval orchestrator}, serta \textit{knowledge graph} apabila digunakan.
+\textit{Pipeline Specification Resolver} membaca konfigurasi tersebut, memeriksa kecocokan antar-\textit{node}, dan meminta \textit{Plugin Registry} untuk me-\textit{resolve} \textit{plugin} yang dipilih beserta konfigurasi dan \textit{schema}-nya.
+
+\textit{Plugin Registry} berfungsi sebagai katalog implementasi, bukan tempat kode \textit{plugin} dijalankan.
+\textit{Plugin Registry} menyimpan identitas \textit{plugin}, versi, \textit{manifest}, \textit{schema} konfigurasi, dan referensi implementasinya.
+Implementasi BPK dan Google Drive ditempatkan sebagai \textit{scraper plugin}, sedangkan \textit{legal parser} dan \textit{generic outline parser} ditempatkan sebagai \textit{parser plugin}.
+\textit{Downstream Plugins} ditampilkan secara agregat karena implementasinya berada di luar fokus pembahasan, tetapi tetap menggunakan katalog yang sama.
+
+\textit{Parser Module} terdiri atas \textit{Parser Worker}, \textit{Parser Service Context}, dan \textit{Canonical Artifact Writer}.
+\textit{Parser Worker} menerima \textit{Parse Message}, meminta spesifikasi \textit{pipeline} dari \textit{resolver}, lalu menjalankan \textit{parser plugin} yang sesuai.
+\textit{Parser Service Context} menyediakan akses ke kemampuan OCR dan deteksi \textit{layout} tanpa menempatkan implementasi layanan tersebut di dalam \textit{plugin}.
+\textit{Canonical Artifact Writer} menyimpan keluaran \textit{plugin} sebagai \textit{Canonical Document Artifact} yang dapat digunakan oleh tahap berikutnya.
+
+Kelompok \textit{Contracts and Handoff} memperlihatkan bentuk pertukaran antarkomponen.
+\textit{Raw Document Artifact} menjadi masukan bagi \textit{Parse Message}, sedangkan \textit{Canonical Document Artifact} menjadi masukan bagi \textit{Chunk Message}.
+\textit{OCR Module} menghubungi dua layanan terpisah; pengenalan teks dijalankan oleh \textit{oMLX OCR Model HTTP Server}, sedangkan PP-DocLayoutV3 dijalankan oleh \textit{Layout Model HTTP Server} untuk deteksi \textit{layout}.
+
+\subsection{Rancangan Data, \textit{Schema}, dan Kontrak}
+\label{sec:rancangan-data-kontrak}
+
+\subsubsection{ERD Basis Data}
+\label{sec:rancangan-erd}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth,height=0.90\textheight,keepaspectratio]{data-erd.png}
+  \caption{ERD entitas \textit{datasource}, \textit{profile}, \textit{plugin}, dan \textit{monitoring pipeline}}
+  \label{fig:rancangan-erd}
+\end{figure}
+
+Gambar \ref{fig:rancangan-erd} menunjukkan struktur fisik sembilan tabel yang digunakan untuk menyimpan \textit{datasource}, konfigurasi \textit{profile}, \textit{plugin registry}, serta riwayat pemrosesan.
+Warna biru digunakan untuk kelompok \textit{datasource}, warna ungu untuk kelompok \textit{profile}, warna jingga untuk \textit{plugin registry}, dan warna hijau untuk \textit{monitoring pipeline}.
+
+\textit{Datasource} menjadi induk bagi dokumen yang tersimpan dan riwayat \textit{scrape run}.
+Satu \textit{scrape run} memiliki banyak \textit{scrape entry}, sedangkan \textit{entry} dapat menunjuk pada dokumen yang berhasil disimpan atau dokumen yang sudah ada karena deduplikasi.
+\textit{Datasource} dapat menggunakan satu \textit{scraper plugin}; hubungan ini bersifat opsional karena \textit{datasource} yang hanya menerima unggahan tidak memiliki \textit{scraper plugin}.
+
+\textit{Profile} dapat memilih satu \textit{datasource} dan memiliki banyak \textit{pipeline node}.
+Setiap \textit{node} memilih satu baris pada \textit{plugin registry}.
+\textit{RAG pipeline run} dapat merujuk pada satu \textit{profile} dan memiliki banyak \textit{node run}.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{datasources}} \label{tab:schema-datasources} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas \textit{datasource}. \\
+  \path{name} & \path{text} & UNIQUE, NOT NULL & Nama \textit{datasource}. \\
+  \path{description} & \path{text} & NULL & Deskripsi \textit{datasource}. \\
+  \path{status} & \path{datasource_status} & NOT NULL & Status \path{active} atau \path{archived}. \\
+  \path{file_extensions} & \path{jsonb} & NOT NULL & Daftar ekstensi berkas yang diterima. \\
+  \path{scraper_plugin_id} & \path{uuid} & FK ke \path{plugin_registry.id}, NULL & \textit{Scraper plugin} yang digunakan; kosong untuk \textit{upload-only datasource}. \\
+  \path{scraper_config_json} & \path{jsonb} & NULL & Konfigurasi \textit{scraper plugin}. \\
+  \path{schedule_cron} & \path{text} & NULL & Ekspresi jadwal \textit{cron}. \\
+  \path{schedule_timezone} & \path{text} & NULL & Zona waktu jadwal. \\
+  \path{scraper_enabled} & \path{boolean} & NULL & Penanda apakah jadwal \textit{scraper} dijalankan. \\
+  \path{scraper_stop_mode} & \path{datasource_scrape_stop_mode} & NULL & Kebijakan penghentian: \path{none}, \path{max_pages}, atau \path{known_pages}. \\
+  \path{scraper_stop_value} & \path{integer} & NULL & Nilai batas halaman untuk mode penghentian selain \path{none}. \\
+  \path{scraper_enumerate_delay_min_seconds} & \path{double precision} & NULL & Jeda minimum antarpermintaan enumerasi. \\
+  \path{scraper_enumerate_delay_max_seconds} & \path{double precision} & NULL & Jeda maksimum antarpermintaan enumerasi. \\
+  \path{scraper_download_delay_min_seconds} & \path{double precision} & NULL & Jeda minimum antarpermintaan pengunduhan. \\
+  \path{scraper_download_delay_max_seconds} & \path{double precision} & NULL & Jeda maksimum antarpermintaan pengunduhan. \\
+  \path{scraper_download_concurrency} & \path{integer} & NULL & Jumlah pengunduhan konkuren yang diizinkan. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu pembuatan baris. \\
+  \path{updated_at} & \path{timestamptz} & NOT NULL & Waktu perubahan terakhir. \\
+  \path{archived_at} & \path{timestamptz} & NULL & Waktu pengarsipan \textit{datasource}. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} tabel ini memastikan nama \textit{datasource} unik, daftar ekstensi \textit{non-empty}, serta konfigurasi \path{scraper_config_json}, \path{schedule_timezone}, \path{scraper_enabled}, \path{scraper_stop_mode}, \textit{pacing}, dan \textit{download concurrency} diisi atau dikosongkan bersama \path{scraper_plugin_id}.
+Kebijakan penghentian \textit{scraper} dengan mode \path{none} tidak menetapkan batas halaman, sedangkan mode lain memerlukan nilai minimal satu.
+Rentang \textit{pacing} harus bernilai nonnegatif dan urut, sedangkan \textit{download concurrency} minimal bernilai satu.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{datasource\_documents}} \label{tab:schema-datasource-documents} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas dokumen di dalam \textit{datasource}. \\
+  \path{datasource_id} & \path{uuid} & FK ke \path{datasources.id}, NOT NULL & \textit{Datasource} pemilik dokumen. \\
+  \path{source_identifier} & \path{text} & NULL & \textit{Source identifier} dokumen pada sumber eksternal; kosong untuk unggahan manual. \\
+  \path{source_url} & \path{text} & NULL & URL asal dokumen jika tersedia. \\
+  \path{content_sha256} & \path{text} & NOT NULL & \textit{Hash} SHA-256 isi berkas dalam bentuk heksadesimal. \\
+  \path{filename} & \path{text} & NOT NULL & Nama berkas yang disimpan sebagai \textit{metadata}. \\
+  \path{extension} & \path{text} & NOT NULL & Ekstensi berkas yang telah dinormalisasi. \\
+  \path{object_key} & \path{text} & NOT NULL & Lokasi berkas pada \textit{object storage}. \\
+  \path{byte_size} & \path{bigint} & NOT NULL & Ukuran isi berkas dalam \textit{byte}. \\
+  \path{content_type} & \path{text} & NOT NULL & Tipe media berkas. \\
+  \path{metadata_json} & \path{jsonb} & NOT NULL & \textit{Metadata} tambahan dari sumber atau proses \textit{ingestion}. \\
+  \path{origin} & \path{datasource_document_origin} & NOT NULL & Asal dokumen: \path{scraper} atau \path{upload}. \\
+  \path{status} & \path{datasource_document_status} & NOT NULL & Status dokumen: \path{active} atau \path{archived}. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu dokumen disimpan. \\
+  \path{updated_at} & \path{timestamptz} & NOT NULL & Waktu perubahan terakhir. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada pasangan \path{datasource_id} dan \path{source_identifier} mencegah pengulangan dokumen dari sumber yang sama.
+Pasangan \path{datasource_id} dan \path{content_sha256} mencegah penyimpanan ulang isi yang sama.
+Nilai \path{source_identifier} yang \texttt{NULL} tetap diperbolehkan untuk banyak unggahan manual, sedangkan \path{content_sha256} harus berupa 64 karakter heksadesimal huruf kecil.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{datasource\_scrape\_runs}} \label{tab:schema-datasource-scrape-runs} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas satu proses \textit{scrape}. \\
+  \path{datasource_id} & \path{uuid} & FK ke \path{datasources.id}, NOT NULL & \textit{Datasource} yang diproses. \\
+  \path{plugin_name} & \path{text} & NOT NULL & Nama \textit{scraper plugin} yang digunakan. \\
+  \path{plugin_version} & \path{text} & NOT NULL & Versi \textit{scraper plugin} yang digunakan. \\
+  \path{status} & \path{datasource_scrape_run_status} & NOT NULL & Status: \path{queued}, \path{running}, \path{cancelling}, \path{completed}, \path{failed}, atau \path{cancelled}. \\
+  \path{triggered_by} & \path{datasource_scrape_trigger} & NOT NULL & Pemicu proses: \path{manual} atau \path{schedule}. \\
+  \path{total_entries} & \path{integer} & NOT NULL & Jumlah seluruh entri yang ditemukan. \\
+  \path{new_entries} & \path{integer} & NOT NULL & Jumlah entri yang menghasilkan dokumen baru. \\
+  \path{skipped_entries} & \path{integer} & NOT NULL & Jumlah entri yang dilewati. \\
+  \path{failed_entries} & \path{integer} & NOT NULL & Jumlah entri yang gagal. \\
+  \path{error_json} & \path{jsonb} & NULL & Informasi kegagalan pada tingkat \textit{run}. \\
+  \path{timeline_json} & \path{jsonb} & NOT NULL & Riwayat perubahan status \textit{run}. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu \textit{run} dibuat. \\
+  \path{started_at} & \path{timestamptz} & NULL & Waktu \textit{worker} mulai menjalankan \textit{run}. \\
+  \path{finished_at} & \path{timestamptz} & NULL & Waktu \textit{run} mencapai status terminal. \\
+  \path{updated_at} & \path{timestamptz} & NOT NULL & Waktu perubahan terakhir. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+Indeks unik parsial pada \path{datasource_id} membatasi satu \textit{run} berstatus aktif, yaitu \path{queued}, \path{running}, atau \path{cancelling}, untuk setiap \textit{datasource}.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{datasource\_scrape\_run\_entries}} \label{tab:schema-datasource-scrape-entries} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas satu entri hasil enumerasi. \\
+  \path{run_id} & \path{uuid} & FK ke \path{datasource_scrape_runs.id}, NOT NULL & \textit{Scrape run} yang menghasilkan entri. \\
+  \path{source_identifier} & \path{text} & NOT NULL & \textit{Source identifier} entri pada sumber eksternal. \\
+  \path{source_url} & \path{text} & NULL & URL sumber entri jika tersedia. \\
+  \path{filename} & \path{text} & NOT NULL & Nama berkas yang ditemukan atau diunduh. \\
+  \path{status} & \path{datasource_scrape_entry_status} & NOT NULL & Status: \path{pending}, \path{downloading}, \path{downloaded}, \path{completed}, \path{skipped}, atau \path{failed}. \\
+  \path{metadata_json} & \path{jsonb} & NOT NULL & \textit{Metadata} yang dibawa dari sumber eksternal. \\
+  \path{document_id} & \path{uuid} & FK ke \path{datasource_documents.id}, NULL & Dokumen yang menjadi hasil resolusi entri. \\
+  \path{timeline_json} & \path{jsonb} & NOT NULL & Riwayat perubahan status entri. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu entri dibuat. \\
+  \path{updated_at} & \path{timestamptz} & NOT NULL & Waktu perubahan terakhir. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada pasangan \path{run_id} dan \path{source_identifier} mencegah satu sumber tercatat dua kali pada \textit{run} yang sama.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{pipeline\_profiles}} \label{tab:schema-pipeline-profiles} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas \textit{profile}. \\
+  \path{name} & \path{text} & NOT NULL & Nama \textit{profile}. \\
+  \path{description} & \path{text} & NULL & Deskripsi \textit{profile}. \\
+  \path{version} & \path{text} & NOT NULL & Versi konfigurasi \textit{profile} yang disimpan oleh implementasi. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu \textit{profile} dibuat. \\
+  \path{status} & \path{pipeline_profile_status} & NOT NULL & Status: \path{draft}, \path{active}, atau \path{disabled}. \\
+  \path{xai_config_json} & \path{json} & NOT NULL & Konfigurasi kemampuan \textit{explainability}. \\
+  \path{intent_configs_json} & \path{json} & NOT NULL & Konfigurasi aksi dan strategi \textit{intent}. \\
+  \path{domain_config_json} & \path{json} & NOT NULL & Konfigurasi domain dan perilaku \textit{pipeline}. \\
+  \path{datasource_id} & \path{uuid} & FK ke \path{datasources.id}, NULL & \textit{Datasource} yang menjadi sumber dokumen \textit{profile}. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada pasangan \path{name} dan \path{version} mencegah dua \textit{profile} dengan identitas konfigurasi yang sama.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{pipeline\_profile\_nodes}} \label{tab:schema-pipeline-profile-nodes} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas \textit{node} pada penyimpanan. \\
+  \path{profile_id} & \path{uuid} & FK ke \path{pipeline_profiles.id}, NOT NULL & \textit{Profile} pemilik \textit{node}. \\
+  \path{node_id} & \path{text} & NOT NULL & Identitas \textit{node} dalam urutan \textit{pipeline}. \\
+  \path{component_type} & \path{component_type} & NOT NULL & Jenis komponen: \path{scraper}, \path{parser}, \path{chunker}, \path{indexer}, \path{kg}, \path{retrieval_orchestrator}, \path{xai_intent}, \path{xai_retrieval}, atau \path{xai_reranking}. \\
+  \path{plugin_id} & \path{uuid} & FK ke \path{plugin_registry.id}, NOT NULL & \textit{Plugin} yang dipilih untuk \textit{node}. \\
+  \path{sort_order} & \path{integer} & NOT NULL & Urutan eksekusi \textit{node}. \\
+  \path{config_json} & \path{json} & NOT NULL & Konfigurasi \textit{node} yang divalidasi oleh \textit{plugin schema}. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada pasangan \path{profile_id} dan \path{node_id} mencegah \textit{node} bernama sama dalam satu \textit{profile}.
+Pasangan \path{profile_id} dan \path{sort_order} juga harus unik agar satu posisi hanya ditempati satu \textit{node}.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{plugin\_registry}} \label{tab:schema-plugin-registry} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas implementasi \textit{plugin}. \\
+  \path{name} & \path{text} & NOT NULL & Nama \textit{plugin}. \\
+  \path{version} & \path{text} & NOT NULL & Versi \textit{plugin}. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu baris \textit{plugin} dibuat. \\
+  \path{description} & \path{text} & NULL & Deskripsi fungsi \textit{plugin}. \\
+  \path{component_type} & \path{component_type} & NOT NULL & Jenis komponen yang diimplementasikan: \path{scraper}, \path{parser}, \path{chunker}, \path{indexer}, \path{kg}, \path{retrieval_orchestrator}, \path{xai_intent}, \path{xai_retrieval}, atau \path{xai_reranking}. \\
+  \path{status} & \path{plugin_status} & NOT NULL & Status: \path{active} atau \path{disabled}. \\
+  \path{entrypoint} & \path{text} & NOT NULL & Referensi implementasi yang di-\textit{resolve} oleh sistem. \\
+  \path{config_schema_json} & \path{json} & NOT NULL & \textit{Schema} konfigurasi \textit{plugin}. \\
+  \path{manifest_json} & \path{json} & NOT NULL & \textit{Metadata} \textit{manifest} \textit{plugin}. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada \path{component_type}, \path{name}, dan \path{version} memastikan satu implementasi tidak terdaftar dua kali pada tipe komponen yang sama.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{rag\_pipeline\_runs}} \label{tab:schema-rag-pipeline-runs} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas satu proses \textit{RAG pipeline}. \\
+  \path{request_id} & \path{uuid} & UNIQUE, NOT NULL & Identitas permintaan pemrosesan. \\
+  \path{document_id} & \path{text} & NULL & Referensi logis ke dokumen yang diproses. \\
+  \path{filename} & \path{text} & NOT NULL & Nama berkas yang terkait dengan proses. \\
+  \path{profile_id} & \path{uuid} & FK ke \path{pipeline_profiles.id}, NULL & \textit{Profile} yang menjalankan proses. \\
+  \path{status} & \path{rag_run_status} & NOT NULL & Status: \path{queued}, \path{running}, \path{succeeded}, \path{failed}, atau \path{cancelled}. \\
+  \path{error_json} & \path{jsonb} & NULL & Informasi kegagalan proses. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu proses dibuat. \\
+  \path{started_at} & \path{timestamptz} & NULL & Waktu proses dimulai. \\
+  \path{finished_at} & \path{timestamptz} & NULL & Waktu proses selesai atau berhenti. \\
+  \path{updated_at} & \path{timestamptz} & NOT NULL & Waktu perubahan terakhir. \\
+  \path{pipeline_attempt} & \path{integer} & NOT NULL & Nomor percobaan keseluruhan \textit{pipeline}. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada pasangan \path{profile_id} dan \path{document_id} mencegah satu dokumen memiliki lebih dari satu \textit{pipeline run} pada \textit{profile} yang sama.
+Constraint tersebut menggunakan \path{NULLS NOT DISTINCT}, sehingga nilai \texttt{NULL} juga diperlakukan sebagai bagian dari keunikan.
+\endgroup
+
+  \begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.6cm-6\tabcolsep\relax}@{}}
+  \caption{\textit{Schema} tabel \texttt{rag\_node\_runs}} \label{tab:schema-rag-node-runs} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe PostgreSQL & Kunci dan \path{NULL} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{id} & \path{uuid} & PK, NOT NULL & Identitas proses satu \textit{node}. \\
+  \path{run_id} & \path{uuid} & FK ke \path{rag_pipeline_runs.id}, NOT NULL & \textit{Pipeline run} pemilik \textit{node}. \\
+  \path{component_type} & \path{rag_component_type} & NOT NULL & Jenis tahap: \path{parser}, \path{chunker}, \path{indexer}, atau \path{kg}. \\
+  \path{plugin_name} & \path{text} & NULL & Nama \textit{plugin} yang dijalankan. \\
+  \path{plugin_version} & \path{text} & NULL & Versi \textit{plugin} yang dijalankan. \\
+  \path{status} & \path{rag_run_status} & NOT NULL & Status proses \textit{node}. \\
+  \path{attempt} & \path{integer} & NOT NULL & Nomor percobaan \textit{node}. \\
+  \path{pipeline_attempt} & \path{integer} & NOT NULL & Nomor percobaan \textit{pipeline} yang menaungi \textit{node}. \\
+  \path{artifact_object_key} & \path{text} & NULL & Lokasi \textit{artifact} keluaran pada \textit{object storage}. \\
+  \path{cache_hit} & \path{boolean} & NULL & Penanda bahwa keluaran diperoleh dari \textit{cache}. \\
+  \path{cache_key} & \path{text} & NULL & Kunci pencarian \textit{cache}. \\
+  \path{error_json} & \path{jsonb} & NULL & Informasi kegagalan \textit{node}. \\
+  \path{created_at} & \path{timestamptz} & NOT NULL & Waktu proses \textit{node} dibuat. \\
+  \path{started_at} & \path{timestamptz} & NULL & Waktu proses \textit{node} dimulai. \\
+  \path{finished_at} & \path{timestamptz} & NULL & Waktu proses \textit{node} selesai. \\
+  \path{updated_at} & \path{timestamptz} & NOT NULL & Waktu perubahan terakhir. \\
+\end{longtable}
+
+\begingroup
+\normalsize
+\textit{Constraint} unik pada \path{run_id}, \path{component_type}, dan \path{attempt} menjaga agar satu tahap dan satu nomor percobaan tidak tercatat dua kali pada \textit{pipeline run}.
+\endgroup
+
+\endgroup
+
+\subsubsection{Skema \textit{Message} dan Artefak \textit{Pipeline}}
+\label{sec:rancangan-message-artifact-schema}
+
+Subsubbab ini menjelaskan kontrak yang menghubungkan permintaan pemrosesan dengan data yang diproses.
+\textit{Message} pada RabbitMQ meminta suatu \textit{stage} kepada \textit{service} yang sesuai, sedangkan \textit{artifact} menyimpan data yang dibaca atau dihasilkan oleh \textit{stage} tersebut.
+Isi berkas tidak disisipkan ke dalam \textit{message}; berkas disimpan pada MinIO dan \textit{message} hanya membawa identitas, metadata, serta rujukan lokasi.
+
+Konfigurasi \textit{plugin} juga tidak dikirim melalui RabbitMQ.
+\textit{Scraper worker} mengambil konfigurasi dari \textit{datasource}, sedangkan \textit{parser worker} mengambil konfigurasi dari \textit{profile} ketika menangani \textit{message}.
+Dengan demikian, isi \textit{message} berfokus pada identitas pekerjaan dan data yang diperlukan untuk menemukan \textit{artifact}, sementara konfigurasi yang digunakan tetap mengikuti sumber konfigurasi pada basis data.
+
+Pesan akuisisi menggunakan skema \path{ScrapeEventEnvelope} untuk mengidentifikasi satu \textit{scrape run}.
+Pesan \textit{parser} menggunakan skema \path{NodeEventEnvelope} untuk mengaitkan permintaan dengan \textit{pipeline node}, \textit{stage}, dan percobaan tertentu.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.7cm}p{3.2cm}p{\dimexpr\textwidth-3.7cm-3.2cm-4\tabcolsep\relax}@{}}
+  \caption{Skema \texttt{ScrapeEventEnvelope}}
+  \label{tab:scrape-event-envelope-schema} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{event_id} & String & Identitas unik \textit{event}. \\
+  \path{schema_version} & Literal \texttt{"2"} & Versi kontrak \textit{envelope}. \\
+  \path{run_id} & String & Identitas \textit{scrape run}. \\
+  \path{requested_at} & \textit{Datetime} & Waktu permintaan dibuat. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.7cm}p{3.2cm}p{\dimexpr\textwidth-3.7cm-3.2cm-4\tabcolsep\relax}@{}}
+  \caption{Skema \texttt{NodeEventEnvelope}}
+  \label{tab:node-event-envelope-schema} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{event_id} & String & Identitas unik \textit{event}. \\
+  \path{schema_version} & Literal \texttt{"2"} & Versi kontrak \textit{envelope}. \\
+  \path{run_id} & String & Identitas \textit{pipeline run}. \\
+  \path{requested_at} & \textit{Datetime} & Waktu permintaan dibuat. \\
+  \path{request_id} & String & Identitas permintaan tahap. \\
+  \path{node_id} & String & Identitas \textit{node} yang dituju. \\
+  \path{attempt} & Integer, minimal 1 & Nomor percobaan node. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.7cm}p{3.2cm}p{\dimexpr\textwidth-3.7cm-3.2cm-4\tabcolsep\relax}@{}}
+  \caption{Skema \texttt{RagScrapeRequestedMessage}}
+  \label{tab:scrape-request-message} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{idempotency_key} & String, dihold kosong & Kunci untuk mencegah pemrosesan permintaan yang sama. \\
+  \path{event} & \path{ScrapeEventEnvelope} & Struktur yang membawa identitas \textit{scrape run}. \\
+  \path{datasource_id} & String & Identitas \textit{datasource} yang diproses. \\
+  \path{scrape_run_id} & String & Identitas \textit{scrape run} yang telah dibuat pada basis data. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.7cm}p{3.2cm}p{\dimexpr\textwidth-3.7cm-3.2cm-4\tabcolsep\relax}@{}}
+  \caption{Skema \texttt{RagParseRequestedMessage}}
+  \label{tab:parse-request-message} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{idempotency_key} & String, dihold kosong & Kunci idempotensi untuk tahap \textit{parser}. \\
+  \path{event} & \path{NodeEventEnvelope} & Struktur yang membawa identitas \textit{pipeline run}, \textit{node}, dan percobaan. \\
+  \path{datasource_id} & String & Identitas \textit{datasource} asal dokumen. \\
+  \path{filename} & String & Nama berkas mentah. \\
+  \path{document_metadata} & Object & Metadata dokumen dari \textit{datasource}. \\
+  \path{source_artifact} & \path{ArtifactReference} & Rujukan berkas mentah yang dibaca oleh \textit{parser}. \\
+\end{longtable}
+\endgroup
+
+Pada pesan \textit{parser}, \path{source_artifact} membawa rujukan berkas mentah dan menggunakan tipe \texttt{Artifact\allowbreak Reference}, sehingga \textit{message} membawa rujukan serta metadata integritas tanpa membawa isi berkas.
+Kontrak untuk tahap setelah \textit{parser}, termasuk \textit{chunking}, tidak dirinci pada subsubbab ini karena berada di luar \textit{scope} tugas akhir dan diimplementasikan pada \textit{capstone} lain.
+
+\texttt{Artifact\allowbreak Reference} adalah struktur rujukan yang menghubungkan \textit{message} dengan \textit{artifact} pada \textit{object storage}.
+Pembahasan pada subsubbab ini berfokus pada \path{raw-document} sebagai masukan \textit{parser} dan \path{canonical-document} sebagai keluarannya.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.0cm}p{3.0cm}p{3.0cm}p{\dimexpr\textwidth-3.0cm-3.0cm-3.0cm-6\tabcolsep\relax}@{}}
+  \caption{Skema \texttt{ArtifactReference}}
+  \label{tab:artifact-reference} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & \texttt{NULL} & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & \texttt{NULL} & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{contract} & Pilihan kontrak & NOT NULL & Membedakan jenis \textit{artifact} yang dirujuk. \\
+  \path{schema_version} & Literal \texttt{"1"} & NOT NULL & Versi \textit{schema} \textit{artifact}. \\
+  \path{object_key} & String & NOT NULL & Lokasi \textit{artifact} pada \textit{object storage}. \\
+  \path{document_id} & String & NOT NULL & Identitas dokumen yang menjadi dasar \textit{artifact}. \\
+  \path{profile_id} & String & Ya & Identitas \textit{profile} pemilik hasil proses. \\
+  \path{run_id} & String & NOT NULL & Identitas \textit{pipeline run} yang menghasilkan atau menggunakan \textit{artifact}. \\
+  \path{producer} & \textit{Plugin reference} & Ya & Nama dan versi \textit{plugin} pembuat \textit{artifact}. \\
+  \path{item_count} & Integer, minimal 0 & Ya & Jumlah item yang dihasilkan tahap tersebut. \\
+  \path{sha256} & String 64 karakter & NOT NULL & \textit{Checksum} \textit{payload} \textit{artifact}. \\
+  \path{content_sha256} & String 64 karakter & Ya & \textit{Hash} isi semantik \textit{artifact} apabila tersedia. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.0cm}p{4.4cm}p{\dimexpr\textwidth-3.0cm-4.4cm-4\tabcolsep\relax}@{}}
+  \caption{Skema dokumen kanonik}
+  \label{tab:canonical-document-schema} \\
+  \toprule
+  Elemen & \textit{Field} & Deskripsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  Elemen & \textit{Field} & Deskripsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  Akar dokumen & \path{document_id} & Identitas dokumen kanonik. \\
+  Akar dokumen & \path{blocks} & Daftar \textit{block} yang membentuk representasi hierarkis. \\
+  Akar dokumen & \path{metadata} & Metadata dokumen yang digabungkan dari sumber dan \textit{parser}. \\
+  \textit{Block} & \path{block_id} & Identitas unik \textit{block}. \\
+  \textit{Block} & \path{type} & Jenis \textit{block}, misalnya \path{HEADING} atau \path{TEXT_BLOCK}. \\
+  \textit{Block} & \path{text} & Isi teks \textit{block}; dapat bernilai \texttt{NULL}. \\
+  \textit{Block} & \path{metadata} & Metadata struktur, lokasi halaman, \textit{marker}, atau operasi perubahan. \\
+  \textit{Block} & \path{children} & Daftar \textit{block} turunan untuk membentuk hierarki. \\
+\end{longtable}
+\endgroup
+
+Setelah \textit{parser plugin} menghasilkan keluaran, \textit{parser} memvalidasi struktur tersebut sebagai dokumen kanonik sebelum menyimpannya.
+Keluaran yang lolos validasi disimpan sebagai \textit{payload} \path{canonical-document} dan diberi metadata \textit{provenance} pada batas penyimpanan.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.5cm}p{4.2cm}p{\dimexpr\textwidth-3.5cm-4.2cm-4\tabcolsep\relax}@{}}
+  \caption{Metadata \textit{provenance} pada \textit{canonical document artifact}}
+  \label{tab:canonical-artifact-provenance} \\
+  \toprule
+  Bagian & \textit{Field} & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{3}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  Bagian & \textit{Field} & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{3}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \textit{Provenance} & \path{profile_id}, \path{run_id} & Menunjukkan konteks \textit{profile} dan \textit{pipeline run}. \\
+  \textit{Provenance} & \path{parser.name}, \path{parser.version}, \path{parser.output_revision} & Identitas versi \textit{parser} yang menghasilkan keluaran. \\
+  \textit{Parser cache} & \path{cache_key} & Kunci yang digunakan untuk mencari hasil \textit{parser} yang dapat digunakan kembali. \\
+  \textit{Parser cache} & \path{content_sha256} & \textit{Hash} semantik dokumen kanonik. \\
+  \textit{Parser cache} & \path{reused} & Penanda apakah keluaran diambil dari \textit{cache}. \\
+  \textit{Provenance} & \path{materialized_at} & Waktu \textit{payload} kanonik disimpan sebagai \textit{artifact}. \\
+\end{longtable}
+\endgroup
+
+\subsubsection{Skema Konfigurasi \textit{Plugin}}
+\label{sec:rancangan-plugin-schema}
+
+Setiap \textit{plugin} memiliki \textit{manifest} dan \textit{JSON Schema} konfigurasi.
+\textit{Manifest} dicatat pada \textit{plugin registry} untuk mengidentifikasi nama, versi, tipe komponen, dan implementasi \textit{plugin}, sedangkan \textit{schema} konfigurasi digunakan untuk membentuk konfigurasi dan memvalidasi nilai sebelum \textit{plugin} dijalankan.
+\textit{Schema} menggunakan \texttt{additionalProperties: false}, sehingga atribut di luar kontrak tidak diterima.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.4cm}p{3.0cm}p{3.0cm}p{\dimexpr\textwidth-3.4cm-3.0cm-3.0cm-6\tabcolsep\relax}@{}}
+  \caption{Field \textit{manifest} \textit{plugin}}
+  \label{tab:plugin-manifest-schema} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Kewajiban & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe atau nilai & Kewajiban & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{name} & String & Wajib & Nama \textit{plugin}. \\
+  \path{version} & String & Wajib & Versi \textit{plugin}. \\
+  \path{type} & \textit{Component type} & Wajib & Tipe komponen yang diimplementasikan. \\
+  \path{entrypoint} & String & Wajib & Nama implementasi yang di-\textit{resolve}. \\
+  \path{config_schema} & Nama berkas & Wajib & Lokasi \textit{JSON Schema} konfigurasi. \\
+  \path{description} & String & Wajib & Penjelasan fungsi \textit{plugin}. \\
+  \path{supported_extensions} & Array String & \textit{Parser} & Ekstensi berkas yang dapat dibaca \textit{plugin} \textit{parser}. \\
+  \path{output_revision} & String & \textit{Parser} & Revisi keluaran yang menjadi bagian dari identitas \textit{parser cache}. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.4cm}p{3.0cm}p{3.0cm}p{\dimexpr\textwidth-3.4cm-3.0cm-3.0cm-6\tabcolsep\relax}@{}}
+  \caption{Skema konfigurasi BPK \textit{scraper}}
+  \label{tab:bpk-scraper-config-schema} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{base_url} & String & Dihold URL portal BPK & Alamat dasar portal peraturan. \\
+  \path{keywords} & String & Dihold kosong & Pencarian bebas pada portal. \\
+  \path{tentang} & String & Dihold kosong & Filter berdasarkan subjek peraturan. \\
+  \path{nomor} & String & Dihold kosong & Filter berdasarkan nomor peraturan. \\
+  \path{tahun} & Array Integer & Minimal 1945; \textit{default} \path{[]} & Tahun peraturan yang disertakan. \\
+  \path{entitas} & Array pilihan & \textit{default} \path{[]} & Identitas entitas pemerintahan yang dipilih. \\
+  \path{jenis} & Array pilihan & \textit{default} \path{[]} & Jenis peraturan yang dipilih. \\
+  \path{tag} & Array pilihan & \textit{default} \path{[]} & Tema atau tag peraturan yang dipilih. \\
+\end{longtable}
+\endgroup
+
+Tidak ada \textit{field} BPK yang diwajibkan oleh \textit{schema}; nilai dihold digunakan ketika filter tidak diisi.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{3.4cm}p{3.0cm}p{3.0cm}p{\dimexpr\textwidth-3.4cm-3.0cm-3.0cm-6\tabcolsep\relax}@{}}
+  \caption{Skema konfigurasi Google Drive \textit{scraper}}
+  \label{tab:google-drive-scraper-config-schema} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{folder_id} & String & Wajib, minimal satu karakter & Identitas folder Google Drive yang diproses secara nonrekursif. \\
+  \path{service_account_json_env} & String & Wajib, minimal satu karakter & Nama \textit{environment variable} yang menyimpan kredensial \textit{service account}. \\
+  \path{filename_regex} & String & Opsional & Pola nama berkas yang harus cocok sebelum berkas diunduh. \\
+  \path{page_size} & Integer & 1--1000; dihold 1000 & Jumlah berkas dalam satu permintaan \textit{listing} ke API Google Drive. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{4.2cm}p{3.0cm}p{2.8cm}p{\dimexpr\textwidth-4.2cm-3.0cm-2.8cm-6\tabcolsep\relax}@{}}
+  \caption{Skema konfigurasi \textit{legal parser}}
+  \label{tab:legal-parser-config-schema} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{source.dpi} & Integer & \textit{default} 150; lebih besar dari 0 & Resolusi rasterisasi halaman pindai. \\
+  \path{source.scan_image_coverage_threshold} & Number & 0--1; \textit{default} 0.5 & Ambang cakupan citra untuk klasifikasi halaman pindai. \\
+  \path{source.scan_min_text_threshold} & Integer & Minimal 0; \textit{default} 100 & Batas jumlah karakter \textit{native text} sebelum halaman diperlakukan sebagai pindai. \\
+  \path{source.merge_y_tolerance} & Number & Minimal 0; \textit{default} 6.0 & Toleransi vertikal penggabungan fragmen teks menjadi baris. \\
+  \path{source.merge_x_tolerance} & Number & Minimal 0; \textit{default} 0.5 & Toleransi jarak horizontal penggabungan fragmen teks. \\
+  \path{layout.model} & Pilihan model & \path{none} atau \path{pp-doclayout-v3}; \textit{default} \path{none} & Model deteksi \textit{region} sebelum OCR. \\
+  \path{layout.score_threshold} & Number & 0--1; \textit{default} 0.3 & Skor minimum \textit{region} yang diterima. \\
+  \path{layout.excluded_region_labels} & Array String & \textit{default} \path{[]} & Label \textit{region} yang tidak dikirim ke OCR. \\
+  \path{layout.render_debug_overlays} & Boolean & \textit{default} \path{false} & Penanda untuk menyimpan \textit{overlay} \textit{region} sebagai kebutuhan \textit{debug}. \\
+  \path{ocr.model} & Pilihan model & \path{glm-ocr} atau \path{paddleocr-vl-1.6}; \textit{default} \path{glm-ocr} & Model pengenalan teks. \\
+  \path{ocr.base_prompt} & String & Dihold \texttt{Text Recognition:} & Instruksi yang dikirim bersama citra. \\
+  \path{ocr.max_tokens} & Integer & Lebih besar dari 0; \textit{default} 4096 & Batas \textit{token} keluaran satu permintaan OCR. \\
+  \path{ocr.max_concurrent_requests} & Integer & 1--32; \textit{default} 4 & Jumlah permintaan OCR atau \textit{layout} konkuren. \\
+  \path{ocr.temperature} & Number & 0--2; \textit{default} 0 & Temperatur \textit{sampling} OCR. \\
+  \path{ocr.repetition_penalty} & Number & 1--2; \textit{default} 1.1 & Penalti pengulangan \textit{token}. \\
+  \path{ocr.top_p} & Number & Lebih besar dari 0 sampai 1; \textit{default} 0.00001 & Batas \textit{nucleus sampling}. \\
+  \path{ocr.top_k} & Integer & Minimal 0; \textit{default} 1 & Batas \textit{top-k sampling}. \\
+\end{longtable}
+\endgroup
+
+\textit{Schema} \textit{legal parser} mewajibkan kelompok \path{source}, \path{layout}, dan \path{ocr}, serta seluruh \textit{field} yang ditentukan dalam kelompok tersebut.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{4.2cm}p{3.0cm}p{2.8cm}p{\dimexpr\textwidth-4.2cm-3.0cm-2.8cm-6\tabcolsep\relax}@{}}
+  \caption{Skema konfigurasi \textit{generic outline parser}}
+  \label{tab:generic-outline-parser-config-schema} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  \textit{Field} & Tipe & Nilai dihold atau batasan & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \path{outline.header_margin_ratio} & Number & 0--0.5; \textit{default} 0.075 & Proporsi tinggi halaman yang diperlakukan sebagai \textit{header}. \\
+  \path{outline.footer_margin_ratio} & Number & 0.5--1; \textit{default} 0.9 & Proporsi halaman tempat \textit{footer} dimulai. \\
+  \path{outline.anchor_search_window_points} & Number & Lebih besar dari 0; \textit{default} 150.0 & Jendela pencarian judul di sekitar tujuan \textit{bookmark}. \\
+  \path{outline.line_merge_tolerance_points} & Number & Minimal 0; \textit{default} 4.0 & Toleransi vertikal penggabungan fragmen menjadi satu baris. \\
+  \path{outline.text_decoration} & Boolean & \textit{default} \path{true} & Penanda untuk mempertahankan dekorasi teks. \\
+  \path{outline.excluded_section_titles} & Array String & Dihold \texttt{contents} dan \texttt{table of contents} & Judul \textit{bookmark} beserta turunannya dikecualikan. \\
+\end{longtable}
+\endgroup
+
+\textit{Schema} \textit{generic outline parser} mewajibkan kelompok \path{outline} dan seluruh \textit{field}-nya.
+
+\subsubsection{Kontrak API}
+\label{sec:rancangan-api-contract}
+
+\textit{Admin UI} berkomunikasi dengan \textit{Admin HTTP Server} sebagai \textit{control plane} untuk mengelola \textit{datasource}, \textit{scraper}, dan \textit{profile}, serta memantau pemrosesan dokumen.
+Subsubbab ini merangkum endpoint yang digunakan langsung pada alur akuisisi, konfigurasi \textit{parser}, pemantauan \textit{pipeline}, dan OCR/deteksi \textit{layout}.
+Endpoint di luar cakupan subsubbab ini tidak dibahas.
+
+\newcommand{\omniApiPath}[1]{\begingroup\urlstyle{tt}\url{#1}\endgroup}
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{1.2cm}p{5.4cm}p{2.0cm}p{\dimexpr\textwidth-1.2cm-5.4cm-2.0cm-6\tabcolsep\relax}@{}}
+  \caption{Kontrak API utama untuk akuisisi dan parsing}
+  \label{tab:main-api-contract} \\
+  \toprule
+  Metode & \textit{Path} & Otorisasi & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  Metode & \textit{Path} & Otorisasi & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \multicolumn{4}{@{}l}{\textit{Datasource} dan akuisisi} \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources} & Admin & Membuat \textit{datasource} dan mengikat \textit{scraper plugin} bila diberikan. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources} & Admin & Menampilkan daftar \textit{datasource} dengan filter dan \textit{pagination}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/create-options} & Admin & Menyediakan daftar \textit{scraper plugin} dan \textit{config schema} untuk formulir administrasi. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>} & Admin & Menampilkan detail \textit{datasource}, profil terkait, dan \textit{scrape run} terakhir. \\
+  \texttt{PATCH} & \omniApiPath{/api/v1/datasources/<datasource\_id>} & Admin & Memperbarui metadata, ekstensi berkas, atau binding \textit{scraper}. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/archive} & Admin & Mengarsipkan \textit{datasource}; operasi ditolak jika masih dipakai profil aktif. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/unarchive} & Admin & Mengaktifkan kembali \textit{datasource} yang diarsipkan. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/documents} & Admin & Menampilkan daftar dokumen dengan filter status, asal, ekstensi, dan pencarian. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/documents} & Admin & Menerima unggahan multipart, menyimpan dokumen, dan menjalankan \textit{fan-out}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/documents/<document\_id>} & Admin & Menampilkan detail dokumen dan statusnya pada profil yang berlangganan. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/documents/<document\_id>/download-url} & Admin & Menghasilkan \textit{presigned URL} sementara untuk membaca berkas dari MinIO. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/documents/<document\_id>/archive} & Admin & Mengarsipkan dokumen pada \textit{datasource}. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/documents/<document\_id>/unarchive} & Admin & Mengaktifkan kembali dokumen pada \textit{datasource}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/scrape-runs} & Admin & Menampilkan daftar \textit{scrape run} dengan filter. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/scrape-runs} & Admin & Membuat dan mengantrikan \textit{scrape run} manual. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/scrape-runs/<run\_id>} & Admin & Menampilkan status, penghitung, kesalahan, dan riwayat transisi \textit{run}. \\
+  \texttt{POST} & \omniApiPath{/api/v1/datasources/<datasource\_id>/scrape-runs/<run\_id>/cancel} & Admin & Meminta pembatalan \textit{scrape run} secara kooperatif. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/scrape-runs/<run\_id>/entries} & Admin & Menampilkan \textit{scrape entry} beserta statusnya. \\
+  \texttt{GET} & \omniApiPath{/api/v1/datasources/<datasource\_id>/scrape-runs/<run\_id>/entries/<entry\_id>} & Admin & Menampilkan detail satu \textit{scrape entry} dan riwayat transisinya. \\
+  \multicolumn{4}{@{}l}{\textit{Profile} dan konfigurasi \textit{pipeline}} \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles} & Admin & Menampilkan daftar ringkas \textit{profile} dengan pencarian dan \textit{pagination}. \\
+  \texttt{POST} & \omniApiPath{/api/v1/profiles} & Admin & Membuat \textit{profile} dan konfigurasi \textit{pipeline node}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles/create-options} & Admin & Menyediakan pilihan \textit{plugin}, \textit{config schema}, dan kompatibilitas untuk \textit{profile wizard}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles/<profile\_id>} & Admin & Menampilkan konfigurasi \textit{datasource} dan \textit{pipeline node}. \\
+  \texttt{PATCH} & \omniApiPath{/api/v1/profiles/<profile\_id>/ingestion-config} & Admin & Memperbarui mode ingesti dan mode komponen \textit{profile}. \\
+  \texttt{POST} & \omniApiPath{/api/v1/profiles/<profile\_id>/sync} & Admin & Mengirim dokumen \textit{datasource} yang sudah tersimpan ke \textit{profile}. \\
+  \multicolumn{4}{@{}l}{Pemantauan dan pengendalian pemrosesan} \\
+  \texttt{POST} & \omniApiPath{/api/v1/profiles/<profile\_id>/runs/cancel} & Admin & Membatalkan seluruh \textit{pipeline run} yang masih menunggu atau berjalan. \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles/<profile\_id>/documents} & Admin & Menampilkan dokumen pada \textit{profile} beserta status \textit{pipeline}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles/<profile\_id>/documents/<document\_id>} & Admin & Menampilkan status pemrosesan, \textit{pipeline run}, dan tautan artefak. \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles/<profile\_id>/documents/<document\_id>/runs} & Admin & Menampilkan riwayat \textit{pipeline run} untuk satu dokumen. \\
+  \texttt{GET} & \omniApiPath{/api/v1/profiles/<profile\_id>/documents/<document\_id>/runs/<run\_id>/events} & Admin & Mengalirkan perubahan status \textit{pipeline run} melalui SSE. \\
+  \texttt{POST} & \omniApiPath{/api/v1/profiles/<profile\_id>/documents/<document\_id>/runs/<run\_id>/retry} & Admin & Mengantrikan ulang \textit{pipeline run}, dengan pilihan tahap awal. \\
+  \texttt{POST} & \omniApiPath{/api/v1/profiles/<profile\_id>/documents/retry} & Admin & Mengantrikan ulang dokumen \textit{profile} yang dipilih atau sesuai filter. \\
+  \multicolumn{4}{@{}l}{\textit{Plugin}} \\
+  \texttt{GET} & \omniApiPath{/api/v1/plugins} & Admin & Menampilkan daftar \textit{plugin} yang tersedia. \\
+  \texttt{GET} & \omniApiPath{/api/v1/plugins/<name>/<version>} & Admin & Menampilkan manifest, \textit{config schema}, dan berkas \textit{plugin}. \\
+  \texttt{GET} & \omniApiPath{/api/v1/plugins/<name>/<version>/files?path=<relative\_path>} & Admin & Menampilkan isi satu berkas teks \textit{plugin} yang dipilih. \\
+\end{longtable}
+\endgroup
+
+Untuk halaman pindai, \textit{parser worker} menghubungi \textit{oMLX OCR Model HTTP Server} secara langsung.
+Ketersediaan oMLX diperiksa melalui endpoint \omniApiPath{/v1/models}, sedangkan pengenalan teks dilakukan melalui \omniApiPath{/v1/chat/completions}.
+Kedua endpoint tersebut dirangkum pada tabel berikut.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{1.2cm}p{5.5cm}p{2.5cm}p{\dimexpr\textwidth-1.2cm-5.5cm-2.5cm-6\tabcolsep\relax}@{}}
+  \caption{Kontrak API oMLX yang digunakan oleh \textit{parser}}
+  \label{tab:omlx-api-contract} \\
+  \toprule
+  Metode & \textit{Path} & Otorisasi & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  Metode & \textit{Path} & Otorisasi & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \texttt{GET} & \omniApiPath{/v1/models} & Bearer \textit{OCR API key} & Memeriksa ketersediaan API dan model OCR sebelum parsing. \\
+  \texttt{POST} & \omniApiPath{/v1/chat/completions} & Bearer \textit{OCR API key} & Mengirim citra halaman, instruksi, dan parameter \textit{sampling} untuk memperoleh teks OCR. \\
+\end{longtable}
+\endgroup
+
+\textit{Layout Model HTTP Server} menyediakan antarmuka HTTP pada port dihold 8083 untuk menjalankan PP-DocLayoutV3.
+Seluruh endpoint layanan ini dilindungi \textit{Bearer service API key} yang dikirim pada header \texttt{Authorization}.
+Endpoint yang digunakan oleh \textit{parser} dirangkum pada tabel berikut.
+
+\begingroup
+\scriptsize
+\begin{longtable}{@{}p{1.2cm}p{5.5cm}p{2.5cm}p{\dimexpr\textwidth-1.2cm-5.5cm-2.5cm-6\tabcolsep\relax}@{}}
+  \caption{Kontrak \textit{Layout Model HTTP Server}}
+  \label{tab:layout-api-contract} \\
+  \toprule
+  Metode & \textit{Path} & Otorisasi & Fungsi \\
+  \midrule
+  \endfirsthead
+  \multicolumn{4}{@{}l}{\footnotesize\textit{(lanjutan)}} \\
+  \toprule
+  Metode & \textit{Path} & Otorisasi & Fungsi \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{4}{r@{}}{\footnotesize Bersambung ke halaman berikutnya} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+  \texttt{GET} & \omniApiPath{/health} & Bearer \textit{service API key} & Memeriksa kesiapan layanan dan model deteksi \textit{layout}. \\
+  \texttt{GET} & \omniApiPath{/v1/layout/models} & Bearer \textit{service API key} & Mengembalikan alias model, model sumber, dan perangkat eksekusinya. \\
+  \texttt{POST} & \omniApiPath{/v1/layout/detections} & Bearer \textit{service API key} & Menerima citra dan ambang skor, lalu mengembalikan \textit{region} yang telah dinormalisasi beserta urutan baca. \\
+\end{longtable}
+\endgroup
+
+\subsection{Rancangan \textit{Lifecycle} dan \textit{State}}
+\label{sec:rancangan-lifecycle}
+
+\textit{Lifecycle} pada alur akuisisi dan ekstraksi dirancang sebagai \textit{state} yang dapat diamati oleh API dan \textit{Admin UI}.
+Subbab ini memisahkan \textit{state} \textit{datasource}, \textit{scrape run}, \textit{scrape entry}, dan \textit{pipeline run} agar setiap transisi serta kondisi terminal dapat dibaca secara terpisah.
+
+\subsubsection{\textit{Lifecycle} \textit{Datasource}}
+\label{sec:lifecycle-datasource}
+
+\textit{Datasource} dibuat dalam \textit{state} \textit{active} dan dapat diarsipkan menjadi \textit{archived}.
+Pengarsipan merupakan \textit{soft archive}: data dan riwayat proses tetap disimpan, tetapi \textit{datasource} tidak dapat menerima perubahan atau proses akuisisi baru.
+Pengarsipan hanya dapat dilakukan ketika tidak ada \textit{profile} aktif yang berlangganan, tidak ada \textit{profile} nonaktif yang masih memiliki \textit{pipeline run} terkait, dan tidak ada \textit{scrape run} aktif.
+\textit{Datasource} yang telah diarsipkan dapat dikembalikan ke \textit{active} melalui operasi \textit{unarchive}.
+Karena alasan historis, implementasi saat ini menggunakan \textit{soft archive} dan belum menyediakan operasi \textit{hard delete} melalui API \textit{datasource}.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{lifecycle-datasource.png}
+  \caption{\textit{Lifecycle} \textit{datasource}}
+  \label{fig:lifecycle-datasource}
+\end{figure}
+
+\subsubsection{\textit{Lifecycle} \textit{Scrape Run}}
+\label{sec:lifecycle-scrape-run}
+
+\textit{Scrape run} dibuat dalam \textit{state} \textit{queued} oleh \textit{manual trigger} maupun \textit{scheduled trigger}.
+\textit{Scraper worker} mengubahnya menjadi \textit{running} ketika berhasil mengambil pekerjaan.
+Kegagalan saat \textit{publish} ketika masih \textit{queued} atau \textit{run-level failure} ketika sedang berjalan mengarah ke \textit{failed}.
+\textit{Cancellation request} saat \textit{queued} langsung menghasilkan \textit{cancelled}, sedangkan saat \textit{running} melewati \textit{cancelling} agar halaman yang sedang diproses dapat diselesaikan terlebih dahulu.
+Setelah enumerasi dan pemrosesan selesai, \textit{run} berakhir sebagai \textit{completed}; setelah halaman yang sedang diproses dikuras, \textit{run} yang dibatalkan berakhir sebagai \textit{cancelled}.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{lifecycle-scrape-run.png}
+  \caption{\textit{Lifecycle} \textit{scrape run}}
+  \label{fig:lifecycle-scrape-run}
+\end{figure}
+
+\subsubsection{\textit{Lifecycle} \textit{Scrape Entry}}
+\label{sec:lifecycle-scrape-entry}
+
+Setiap \textit{entry} yang ditemukan oleh \textit{scraper plugin} dimulai dalam \textit{state} \textit{pending}.
+Entri dengan \texttt{source\_identifier} yang sudah tersimpan dapat langsung berakhir sebagai \textit{skipped} tanpa \textit{download}.
+Entri dengan tipe berkas yang tidak didukung juga berakhir sebagai \textit{skipped} tanpa disimpan.
+Entri yang akan di-\textit{download} berpindah ke \textit{downloading}, lalu ke \textit{downloaded} setelah \textit{byte} diterima.
+Hasil \textit{ingestion} yang menyimpan dokumen baru berakhir sebagai \textit{completed}, sedangkan dokumen yang memiliki \texttt{content\_sha256} yang sudah tersimpan berakhir sebagai \textit{skipped}.
+Kegagalan \textit{download} atau \textit{ingestion} berakhir sebagai \textit{failed}.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{lifecycle-scrape-entry.png}
+  \caption{\textit{Lifecycle} \textit{scrape entry}}
+  \label{fig:lifecycle-scrape-entry}
+\end{figure}
+
+\subsubsection{\textit{Lifecycle} \textit{Pipeline Run}}
+\label{sec:lifecycle-pipeline-run}
+
+\textit{Pipeline run} merupakan status agregat pemrosesan dokumen pada \textit{pipeline}, termasuk tahap \textit{parser}.
+Permintaan yang diterima dibuat dalam \textit{state} \textit{queued} dan berpindah ke \textit{running} ketika \textit{worker} mulai menjalankannya.
+\textit{Run} berakhir sebagai \textit{succeeded} setelah tahap terminal berhasil, sebagai \textit{failed} ketika terjadi kegagalan tahap, atau sebagai \textit{cancelled} ketika pekerjaan dibatalkan.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{lifecycle-pipeline-run.png}
+  \caption{\textit{Lifecycle} \textit{pipeline run}}
+  \label{fig:lifecycle-pipeline-run}
+\end{figure}
+
+\subsection{Rancangan Alur Interaksi}
+\label{sec:rancangan-interaksi}
+
+Subbab ini menjelaskan urutan interaksi antara \textit{Admin UI}, \textit{Admin HTTP Server}, \textit{Scraper Scheduler}, \textit{Scraper Worker}, \textit{Parser Worker}, dan komponen infrastruktur.
+Detail \textit{endpoint} yang digunakan dirangkum pada \autoref{tab:main-api-contract}, sedangkan perubahan \textit{state} yang menjadi hasil interaksi dirangkum pada \autoref{sec:rancangan-lifecycle}.
+
+\subsubsection{Pembuatan \textit{Datasource}}
+\label{sec:interaction-datasource-create}
+
+Pembuatan \textit{datasource} dimulai ketika administrator membuka formulir pada \textit{Admin UI}.
+\textit{Admin UI} meminta pilihan \textit{scraper plugin} dan \textit{config schema} melalui \omniApiPath{/api/v1/datasources/create-options} agar formulir dapat dibentuk dari kontrak \textit{plugin} yang tersedia.
+Setelah administrator mengisi \textit{metadata}, ekstensi berkas, dan konfigurasi \textit{scraper} opsional, \textit{Admin UI} mengirimkan \texttt{POST} ke \omniApiPath{/api/v1/datasources}.
+\textit{Admin HTTP Server} memvalidasi konfigurasi dan menyimpan \textit{datasource} baru dengan status \textit{active} pada PostgreSQL.
+\textit{Datasource} tanpa \textit{scraper binding} tetap dapat dibuat sebagai \textit{upload-only datasource}.
+Contoh formulir pembuatan \textit{datasource} \textit{upload-only} pada \textit{Admin UI} ditunjukkan pada \autoref{fig:ui-datasource-create}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.78\textwidth,height=0.48\textheight,keepaspectratio]{ui/ui-datasource-create.png}
+  \caption{Formulir pembuatan \textit{datasource} \textit{upload-only} pada \textit{Admin UI}}
+  \label{fig:ui-datasource-create}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-datasource-create.png}
+  \caption{Alur interaksi pembuatan \textit{datasource}}
+  \label{fig:interaction-datasource-create}
+\end{figure}
+
+\subsubsection{Perubahan Konfigurasi \textit{Datasource}}
+\label{sec:interaction-datasource-edit}
+
+Perubahan konfigurasi dimulai dengan pembacaan detail \textit{datasource} melalui \textit{endpoint} detail \textit{datasource}.
+Administrator dapat memperbarui konfigurasi \textit{datasource} melalui \texttt{PATCH} pada \textit{endpoint} yang sama.
+\textit{Admin HTTP Server} memvalidasi perubahan sebelum memperbarui baris \textit{datasource} pada PostgreSQL.
+Dokumen yang sudah tersimpan tidak ikut berubah karena perubahan ini hanya memengaruhi konfigurasi penerimaan dan akuisisi berikutnya.
+Jika perubahan mencakup jadwal \textit{scraper}, \textit{Scraper Scheduler} membaca perubahan tersebut pada proses \textit{reconcile} berikutnya untuk menambah, mengganti, atau menghapus \textit{cron job}.
+Tampilan detail \textit{datasource} aktif beserta kontrol perubahan dan pengarsipannya ditunjukkan pada \autoref{fig:ui-datasource-detail}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{ui/ui-datasource-detail.png}
+  \caption{Detail \textit{datasource} aktif pada \textit{Admin UI}}
+  \label{fig:ui-datasource-detail}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-datasource-edit.png}
+  \caption{Alur interaksi perubahan konfigurasi \textit{datasource}}
+  \label{fig:interaction-datasource-edit}
+\end{figure}
+
+\subsubsection{Pengarsipan \textit{Datasource}}
+\label{sec:interaction-datasource-archive}
+
+Pengarsipan dipicu administrator melalui \texttt{POST} pada \textit{endpoint} \textit{archive} \textit{datasource}.
+\textit{Admin HTTP Server} memeriksa apakah masih ada \textit{profile} aktif, pekerjaan pembersihan \textit{profile} yang belum selesai, atau \textit{scrape run} aktif yang bergantung pada \textit{datasource} tersebut.
+Jika salah satu prasyarat masih terpenuhi, operasi ditolak dan tidak ada perubahan data.
+Jika tidak ada dependensi aktif, status \textit{datasource} diubah menjadi \textit{archived} sebagai \textit{soft archive}, sehingga dokumen dan riwayat proses tetap tersimpan.
+Pada proses \textit{reconcile} berikutnya, \textit{Scraper Scheduler} menghapus jadwal yang terkait dengan \textit{datasource} terarsip.
+Daftar \textit{datasource} pada \textit{Admin UI} memperlihatkan perbedaan status \textit{active} dan \textit{archived} beserta aksi yang tersedia pada masing-masing status, seperti ditunjukkan pada \autoref{fig:ui-datasource-list}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{ui/ui-datasource-list.png}
+  \caption{Daftar \textit{datasource} dengan status \textit{active} dan \textit{archived} pada \textit{Admin UI}}
+  \label{fig:ui-datasource-list}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-datasource-archive.png}
+  \caption{Alur interaksi pengarsipan \textit{datasource}}
+  \label{fig:interaction-datasource-archive}
+\end{figure}
+
+\subsubsection{Pengaktifan Kembali \textit{Datasource}}
+\label{sec:interaction-datasource-unarchive}
+
+Pengaktifan kembali dilakukan melalui \texttt{POST} pada \textit{endpoint} \textit{unarchive} \textit{datasource}.
+\textit{Admin HTTP Server} memastikan bahwa baris \textit{datasource} berada pada status yang dapat diaktifkan, lalu menyimpannya kembali dengan status \textit{active} pada PostgreSQL.
+Operasi ini tidak membuat dokumen baru dan tidak mengulang riwayat akuisisi secara otomatis.
+Jika konfigurasi \textit{scraper} memiliki jadwal aktif, \textit{Scraper Scheduler} menambahkan kembali \textit{cron job} pada proses \textit{reconcile} berikutnya.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-datasource-unarchive.png}
+  \caption{Alur interaksi pengaktifan kembali \textit{datasource}}
+  \label{fig:interaction-datasource-unarchive}
+\end{figure}
+
+\subsubsection{Pembuatan \textit{Profile} dan Pemilihan \textit{Parser}}
+\label{sec:interaction-profile-create}
+
+Pembuatan \textit{profile} dimulai dari \textit{profile wizard} pada \textit{Admin UI}.
+\textit{Admin UI} mengambil pilihan \textit{plugin}, \textit{config schema}, dan informasi kompatibilitas melalui \omniApiPath{/api/v1/profiles/create-options}.
+Administrator kemudian memilih \textit{datasource}, satu \textit{parser node}, dan \textit{pipeline node} lain yang diperlukan sebelum mengirimkan \texttt{POST} ke \omniApiPath{/api/v1/profiles}.
+\textit{Admin HTTP Server} memvalidasi keberadaan tepat satu \textit{parser}, kompatibilitas antarnode, serta konfigurasi setiap \textit{node} sebelum menyimpan \textit{profile} dan \textit{pipeline nodes} pada PostgreSQL.
+Pembuatan \textit{profile} tidak langsung memproses dokumen lama; pemrosesan dokumen yang sudah ada dilakukan melalui \textit{flow} sinkronisasi pada \autoref{sec:interaction-profile-sync}.
+\textit{Profile wizard} menampilkan pemilihan \textit{datasource} dan \textit{parser} secara bertahap, seperti ditunjukkan pada \autoref{fig:ui-profile-create}.
+
+\begin{figure}[H]
+  \centering
+  \subfloat[Pemilihan \textit{datasource}]{%
+    \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{ui/ui-profile-datasource.png}}
+  \\
+  \vspace{0.25\baselineskip}
+  \subfloat[Pemilihan \textit{parser}]{%
+    \includegraphics[width=\textwidth,height=0.16\textheight,keepaspectratio]{ui/ui-profile-parser.png}}
+  \caption{Pemilihan \textit{datasource} dan \textit{parser} pada \textit{profile wizard}}
+  \label{fig:ui-profile-create}
+\end{figure}
+
+Konfigurasi \textit{generic outline parser}, termasuk batas pencarian judul, penggabungan baris, dekorasi teks, dan judul bagian yang dikecualikan, ditampilkan pada \autoref{fig:ui-generic-outline-config}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth,height=0.46\textheight,keepaspectratio]{ui/ui-generic-outline-config.png}
+  \caption{Konfigurasi \textit{generic outline parser} pada \textit{profile wizard}}
+  \label{fig:ui-generic-outline-config}
+\end{figure}
+
+Konfigurasi khusus \textit{legal parser}, termasuk deteksi halaman pindai, \textit{layout}, dan OCR, dapat diatur melalui dialog konfigurasi \textit{plugin} sebagaimana ditunjukkan pada \autoref{fig:ui-legal-parser-config}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\textwidth,height=0.46\textheight,keepaspectratio]{ui/ui-legal-parser-config.png}
+  \caption{Konfigurasi \textit{legal parser} pada \textit{profile wizard}}
+  \label{fig:ui-legal-parser-config}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-profile-create.png}
+  \caption{Alur interaksi pembuatan \textit{profile} dan pemilihan \textit{parser}}
+  \label{fig:interaction-profile-create}
+\end{figure}
+
+\subsubsection{Unggah Dokumen Manual}
+\label{sec:interaction-document-upload}
+
+Unggah manual dimulai ketika administrator mengirim satu atau lebih berkas melalui \textit{Admin UI}.
+\textit{Admin UI} mengirimkan \textit{multipart request} ke \textit{endpoint} unggah dokumen \textit{datasource}, dan \textit{Admin HTTP Server} memproses setiap berkas secara terpisah.
+Untuk setiap berkas, sistem memeriksa ekstensi, menghitung \textit{SHA-256}, dan mencari dokumen yang telah disimpan berdasarkan \textit{source identifier} atau \textit{content hash}.
+Berkas baru disimpan pada MinIO dan \textit{metadata} dokumennya ditulis pada PostgreSQL, sedangkan berkas duplikat menggunakan dokumen yang sudah ada.
+Setelah dokumen tersedia, \textit{profile fan-out} dibuat secara internal oleh \textit{Admin HTTP Server} untuk setiap \textit{profile} aktif yang sesuai.
+\textit{Fan-out} membuat \textit{pipeline run} dan \textit{parser node} pada PostgreSQL, lalu menerbitkan \texttt{rag.parse.requested} ke RabbitMQ.
+Respons unggah mengembalikan hasil setiap berkas, termasuk dokumen baru, duplikat, berkas yang ditolak, dan kegagalan individual.
+Tab \textit{Documents} menampilkan dokumen yang tersimpan, asal dokumen, status pemrosesan, dan tombol untuk memulai unggah manual, seperti ditunjukkan pada \autoref{fig:ui-datasource-documents}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{ui/ui-datasource-documents.png}
+  \caption{Tab \textit{Documents} pada detail \textit{datasource}}
+  \label{fig:ui-datasource-documents}
+\end{figure}
+
+Dialog unggah pada \textit{Admin UI} menyatakan tipe berkas yang diterima serta bahwa setiap dokumen diproses oleh seluruh \textit{profile} yang berlangganan, seperti ditunjukkan pada \autoref{fig:ui-document-upload}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.86\textwidth,height=0.34\textheight,keepaspectratio]{ui/ui-document-upload.png}
+  \caption{Dialog unggah dokumen pada \textit{Admin UI}}
+  \label{fig:ui-document-upload}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-document-upload.png}
+  \caption{Alur interaksi unggah dokumen manual sampai \textit{fan-out}}
+  \label{fig:interaction-document-upload}
+\end{figure}
+
+\subsubsection{Pemicu \textit{Scraper} Manual}
+\label{sec:interaction-scrape-manual}
+
+Pemicu manual dimulai dari aksi administrator pada \textit{Admin UI} dan dikirim melalui \texttt{POST} pada \textit{trigger endpoint} \textit{scrape run}.
+\textit{Admin HTTP Server} membuat \textit{scrape run} berstatus \textit{queued}, menerbitkan \texttt{rag.scrape.requested} ke RabbitMQ, dan segera mengembalikan identitas \textit{run} kepada antarmuka.
+RabbitMQ mengantarkan pesan tersebut kepada \textit{Scraper Worker}, yang mengambil konfigurasi terbaru dari PostgreSQL sebelum menjalankan \textit{scrape session}.
+\textit{Scrape session} memproses hasil enumerasi per halaman, menjalankan validasi dan deduplikasi untuk setiap \textit{entry}, lalu menyimpan dokumen baru pada MinIO dan PostgreSQL.
+Pada batas setiap halaman, \textit{scrape session} mengevaluasi \textit{stop policy}: \textit{none} melanjutkan hingga \textit{plugin} selesai, \textit{max pages} berhenti setelah batas halaman, dan \textit{known pages} berhenti setelah jumlah halaman berturut-turut yang seluruh \textit{entry}-nya telah dikenal tercapai.
+Dokumen baru diteruskan melalui \textit{profile fan-out}, yang membuat \textit{parser node} dan menerbitkan \texttt{rag.parse.requested} ke RabbitMQ.
+Tab \textit{Scraper} menampilkan tombol pemicu manual dan riwayat \textit{scrape run}, seperti ditunjukkan pada \autoref{fig:ui-scraper-runs}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{ui/ui-scraper-runs.png}
+  \caption{Tab \textit{Scraper} dengan pemicu manual dan riwayat \textit{scrape run}}
+  \label{fig:ui-scraper-runs}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.50\textheight,keepaspectratio]{sequence-scrape-manual.png}
+  \caption{Alur interaksi pemicu \textit{scraper} manual sampai \textit{fan-out}}
+  \label{fig:interaction-scrape-manual}
+\end{figure}
+
+\subsubsection{Pemicu \textit{Scraper} Terjadwal}
+\label{sec:interaction-scrape-scheduled}
+
+Pemicu terjadwal dikelola oleh \textit{Scraper Scheduler}, bukan oleh \textit{request} langsung dari \textit{Admin UI}.
+\textit{Scraper Scheduler} melakukan \textit{reconcile} terhadap konfigurasi jadwal pada PostgreSQL, memasang \textit{cron job}, lalu pada waktu yang ditentukan memanggil jalur \textit{trigger} yang sama dengan pemicu manual.
+Perbedaannya hanya terdapat pada sumber pemicu dan nilai \texttt{triggered\_by=schedule} ketika \textit{scrape run} dibuat.
+Setelah pesan \texttt{rag.scrape.requested} diterbitkan, \textit{Scraper Worker} menjalankan enumerasi, pemrosesan \textit{entry}, evaluasi \textit{stop policy}, penyimpanan dokumen, dan \textit{fan-out} dengan mekanisme yang sama seperti pada \autoref{sec:interaction-scrape-manual}.
+Konfigurasi jadwal dan \textit{stop condition} pada \textit{scraper} ditampilkan pada \autoref{fig:ui-scraper-schedule}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.78\textwidth,height=0.46\textheight,keepaspectratio]{ui/ui-scraper-schedule.png}
+  \caption{Konfigurasi jadwal dan \textit{stop condition} \textit{scraper} pada \textit{Admin UI}}
+  \label{fig:ui-scraper-schedule}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{sequence-scrape-scheduled.png}
+  \caption{Alur interaksi pemicu \textit{scraper} terjadwal sampai \textit{fan-out}}
+  \label{fig:interaction-scrape-scheduled}
+\end{figure}
+
+\subsubsection{Eksekusi \textit{BPK Peraturan Scraper}}
+\label{sec:interaction-scraper-bpk}
+
+\textit{BPK Peraturan Scraper} mengimplementasikan kontrak \textit{scraper} untuk portal peraturan BPK yang dianalisis pada \autoref{sec:analisis-bpk}.
+Pada tahap enumerasi, \textit{plugin} membangun URL \texttt{/Search} dari \textit{filter} \textit{datasource} dan nomor halaman \texttt{p}, mengambil HTML \textit{server-side rendered}, lalu mengekstrak tautan detail berbentuk \texttt{/Details/<id>/<slug>} sebagai \textit{source identifier}.
+Pengecekan apakah \textit{source identifier} sudah tersimpan dilakukan oleh \textit{scrape session} sebelum \textit{plugin} melakukan pengunduhan.
+Untuk \textit{entry} baru, \textit{plugin} membaca halaman detail, mem-parsing tujuh belas \textit{metadata fields} dan kartu relasi status, menemukan tautan \texttt{/Download}, mengunduh \textit{byte}, serta menurunkan nama berkas dan ekstensi yang akan diperiksa oleh \textit{datasource}.
+\textit{Plugin} hanya mengembalikan \textit{ScrapedPage} dan \textit{DownloadedDocument}; validasi ekstensi, \textit{hashing}, deduplikasi, penyimpanan, dan \textit{fan-out} tetap dilakukan oleh komponen inti.
+\textit{stop policy} dievaluasi oleh \textit{scrape session} pada batas halaman, sehingga \textit{plugin} tidak mengambil keputusan penghentian berdasarkan jumlah halaman yang disimpan.
+Konfigurasi khusus \textit{BPK Peraturan Scraper}, seperti URL dasar dan filter penelusuran, ditampilkan pada \autoref{fig:ui-bpk-plugin-config}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.84\textwidth,height=0.45\textheight,keepaspectratio]{ui/ui-bpk-plugin-config.png}
+  \caption{Konfigurasi \textit{BPK Peraturan Scraper} pada \textit{Admin UI}}
+  \label{fig:ui-bpk-plugin-config}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{sequence-scraper-bpk-plugin.png}
+  \caption{Alur internal \textit{BPK Peraturan Scraper} pada \textit{Scraper Worker}}
+  \label{fig:interaction-scraper-bpk}
+\end{figure}
+
+\subsubsection{Eksekusi \textit{Google Drive Scraper}}
+\label{sec:interaction-scraper-google-drive}
+
+\textit{Google Drive Scraper} mengakses satu folder Google Drive dengan kredensial \textit{service account} untuk akses baca.
+Sebelum enumerasi, \textit{plugin} memverifikasi bahwa \texttt{folder\_id} dapat diakses dan benar-benar menunjuk pada folder, termasuk folder pada \textit{shared drive}.
+Enumerasi dilakukan melalui \texttt{files.list} dengan \textit{query} induk folder, \textit{filter} \texttt{trashed=false}, parameter \texttt{pageToken}, serta \textit{flag} \textit{shared drive}.
+Setiap hasil \textit{listing} menghasilkan \textit{entry} dengan \textit{source identifier} berupa \textit{file ID} dan \textit{metadata} seperti nama, \textit{MIME type}, waktu perubahan, ukuran, dan tautan tampilan.
+Setelah \textit{scrape session} menyingkirkan \textit{file ID} yang sudah tersimpan, \textit{plugin} mengunduh \textit{entry} baru melalui \texttt{files.get\_media} dan mengembalikan \textit{byte} beserta \textit{metadata} tersebut sebagai \textit{DownloadedDocument}.
+Berbeda dari BPK, \textit{metadata} Google Drive sudah tersedia sejak enumerasi dan tidak memerlukan halaman detail tambahan.
+\textit{stop policy} tetap diputuskan oleh \textit{scrape session} pada batas halaman, sedangkan \textit{plugin} berhenti sendiri ketika Google Drive tidak lagi mengembalikan \texttt{nextPageToken}.
+Konfigurasi \textit{Google Drive Scraper} memuat folder tujuan, jadwal, dan kebijakan penelusuran, seperti ditunjukkan pada \autoref{fig:ui-scraper-google-drive-config}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.78\textwidth,height=0.45\textheight,keepaspectratio]{ui/ui-scraper-google-drive-config.png}
+  \caption{Konfigurasi \textit{Google Drive Scraper} pada \textit{Admin UI}}
+  \label{fig:ui-scraper-google-drive-config}
+\end{figure}
+
+Parameter khusus plugin Google Drive ditampilkan melalui dialog konfigurasi berikut.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.84\textwidth,height=0.45\textheight,keepaspectratio]{ui/ui-google-drive-plugin-config.png}
+  \caption{Konfigurasi plugin \textit{Google Drive Scraper} pada \textit{Admin UI}}
+  \label{fig:ui-google-drive-plugin-config}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{sequence-scraper-google-drive-plugin.png}
+  \caption{Alur internal \textit{Google Drive Scraper} pada \textit{Scraper Worker}}
+  \label{fig:interaction-scraper-google-drive}
+\end{figure}
+
+\subsubsection{\textit{Parsing} dan \textit{Handoff} ke \textit{Chunker}}
+\label{sec:interaction-parser-handoff}
+
+\textit{Parser Worker} menerima \texttt{rag.parse.requested} dari RabbitMQ dan memeriksa identitas \textit{run}, \textit{profile}, serta dokumen pada PostgreSQL.
+\textit{Parser Worker} mengambil konfigurasi \textit{parser} dari \textit{profile}, membaca \textit{raw document} dari MinIO, dan memverifikasi nilai \textit{SHA-256} sebelum \textit{plugin} dijalankan.
+Pada \textit{legal parser}, halaman diklasifikasikan menjadi halaman \textit{vector/native} dan \textit{scanned}; halaman \textit{vector/native} diekstraksi menjadi \textit{positioned lines}, sedangkan halaman \textit{scanned} dapat melewati deteksi \textit{layout} dan OCR melalui \textit{Layout Model HTTP Server} serta \textit{oMLX OCR Model HTTP Server}.
+Baris yang dihasilkan kemudian diberi anotasi \textit{marker}, disegmentasi menjadi bagian-bagian hukum, diproses oleh \textit{section parser}, dan dirangkai menjadi \textit{canonical document} berbentuk \textit{block tree}.
+\textit{Legal parser} juga menyelesaikan \textit{document ID} serta mengumpulkan hasil verifikasi struktural, \textit{warning}, \textit{diagnostic}, dan \textit{timing}.
+Pada \textit{generic outline parser}, \textit{Parser Worker} membaca teks dan \textit{bookmark}, menautkan \textit{bookmark} ke baris judul, membangun \textit{nested section tree}, mengisi isi setiap bagian menjadi \textit{canonical block}, serta menambahkan \textit{provenance metadata}.
+\textit{Generic parser} memverifikasi \textit{block tree} dan mengembalikan \textit{warning} serta \textit{timing} tanpa memanggil OCR atau layanan \textit{layout}.
+Setelah kedua \textit{plugin} menghasilkan \textit{canonical document}, \textit{Parser Worker} menyimpan \textit{canonical artifact} pada MinIO, mencatat hasil \textit{parser} pada PostgreSQL, dan menerbitkan \texttt{rag.chunk.requested} ke RabbitMQ.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{sequence-parser-handoff.png}
+  \caption{Alur interaksi \textit{Parser Worker}, \textit{plugin parser}, OCR/\textit{layout}, dan \textit{handoff} ke \textit{chunker}}
+  \label{fig:interaction-parser-handoff}
+\end{figure}
+
+\subsubsection{Sinkronisasi Dokumen Lama ke \textit{Profile}}
+\label{sec:interaction-profile-sync}
+
+Sinkronisasi digunakan ketika sebuah \textit{profile} baru perlu memproses dokumen yang sudah tersimpan sebelum \textit{profile} tersebut dibuat.
+Administrator memicu \texttt{POST} pada \omniApiPath{/api/v1/profiles/<profile\_id>/sync} melalui \textit{Admin UI}.
+\textit{Admin HTTP Server} memvalidasi bahwa \textit{profile} terhubung dengan \textit{datasource} aktif dan masih menjadi \textit{subscriber} aktif, kemudian membaca seluruh dokumen aktif dari PostgreSQL.
+Untuk setiap dokumen, komponen internal \textit{profile fan-out} membuat \textit{pipeline run} dan \textit{parser node} jika belum ada, lalu menerbitkan \texttt{rag.parse.requested} ke RabbitMQ.
+Tidak ada penyalinan ulang \textit{raw document} karena pesan menunjuk pada \textit{artifact} yang sudah disimpan di MinIO.
+Respons sinkronisasi mengembalikan jumlah dokumen yang diminta, dikirim, sudah tersedia, dilewati, dan gagal.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-profile-sync.png}
+  \caption{Alur interaksi sinkronisasi dokumen lama ke \textit{profile}}
+  \label{fig:interaction-profile-sync}
+\end{figure}
+
+\subsubsection{Pengulangan \textit{Parsing}}
+\label{sec:interaction-parser-retry}
+
+Pengulangan parsing digunakan untuk menjalankan kembali tahap \textit{parser} pada \textit{pipeline run} yang sudah berada pada status terminal dan memenuhi kebijakan \textit{retry}.
+Administrator mengirimkan \texttt{POST} pada \textit{retry endpoint} dokumen \textit{profile} dengan parameter \texttt{from\_stage=parser}.
+\textit{Admin HTTP Server} membaca riwayat \textit{run} dan \textit{node} terakhir dari PostgreSQL, mereset status \textit{run}, membuat \textit{parser node} dengan nomor \textit{attempt} berikutnya, dan mengambil kembali referensi \textit{raw document}.
+Jika pengulangan dapat dilakukan, \textit{Admin HTTP Server} menerbitkan \texttt{rag.parse.requested} ke RabbitMQ dan mengembalikan status bahwa \textit{retry} telah diantrikan.
+Jika \textit{run} belum terminal atau \textit{error} tersimpan tidak dapat diulang, \textit{request} ditolak tanpa membuat \textit{attempt} baru.
+Detail dokumen pada \textit{profile} menampilkan status parser, riwayat \textit{attempt}, pesan kegagalan, dan kontrol \textit{retry}, seperti ditunjukkan pada \autoref{fig:ui-profile-document-retry}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{ui/ui-profile-document-retry.png}
+  \caption{Detail dokumen pada \textit{profile} dengan kontrol \textit{retry} parser}
+  \label{fig:ui-profile-document-retry}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{sequence-parser-retry.png}
+  \caption{Alur interaksi pengulangan tahap \textit{parser}}
+  \label{fig:interaction-parser-retry}
+\end{figure}
+
+\subsubsection{Pembatalan \textit{Scrape Run}}
+\label{sec:interaction-scrape-cancel}
+
+Pembatalan \textit{scrape run} dimulai ketika administrator mengirimkan \texttt{POST} pada \textit{cancel endpoint} \textit{scrape run} \textit{datasource}.
+Jika pesan masih berada pada status \textit{queued}, PostgreSQL langsung mengubahnya menjadi \textit{cancelled}; ketika pesan kemudian diambil \textit{worker}, \textit{worker} membaca status tersebut dan membuang pekerjaan tanpa menjalankan \textit{plugin}.
+Jika \textit{run} sudah \textit{running}, \textit{request} mengubah status menjadi \textit{cancelling} dan mengembalikan informasi bahwa pembatalan sedang berlangsung.
+\textit{Scraper Worker} menyelesaikan halaman yang sedang diproses, mengevaluasi status pada batas halaman, lalu mengubah \textit{run} menjadi \textit{cancelled} sebelum berhenti.
+\textit{Admin UI} dapat membaca status terbaru melalui \textit{endpoint} detail \textit{scrape run}.
+Transisi ini menerapkan \textit{cooperative cancellation}; detail statusnya telah dirangkum pada \autoref{sec:lifecycle-scrape-run}.
+Detail \textit{scrape run} menampilkan status akhir, jumlah \textit{entry}, dan urutan transisi \textit{queued}--\textit{running}--\textit{cancelling}--\textit{cancelled}, seperti ditunjukkan pada \autoref{fig:ui-scrape-run-detail}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{ui/ui-scrape-run-detail.png}
+  \caption{Detail \textit{scrape run} dan riwayat perubahan \textit{state} pada \textit{Admin UI}}
+  \label{fig:ui-scrape-run-detail}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.50\textheight,keepaspectratio]{sequence-scrape-cancel.png}
+  \caption{Alur interaksi pembatalan \textit{scrape run}}
+  \label{fig:interaction-scrape-cancel}
+\end{figure}

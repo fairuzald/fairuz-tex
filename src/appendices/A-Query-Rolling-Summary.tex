@@ -1,0 +1,47 @@
+\clearpage
+\chapter*{LAMPIRAN A. \emph{QUERY ROLLING SUMMARY}}
+\addcontentsline{loa}{appendix}{Lampiran A. \emph{Query rolling summary}}
+
+Lampiran ini memuat kueri yang digunakan oleh komponen \emph{rolling summary} untuk
+meringkas percakapan. \emph{Query} dipilih berdasarkan ada atau tidaknya ringkasan
+sebelumnya. Placeholder seperti \texttt{previous\_summary} dan
+\texttt{msg\_text} diisi oleh sistem pada saat kueri dikirim ke model.
+
+\subsubsection*{A.1 \emph{Query} ketika sudah ada ringkasan sebelumnya}
+\begin{quote}\small\ttfamily\raggedright
+You are a session conversation memory summarizer.\par
+\par
+EXISTING SUMMARY:\par
+\{previous\_summary\}\par
+\par
+NEW MESSAGES:\par
+\{msg\_text\}\par
+\par
+Update the existing summary with the new messages.\par
+Preserve important constraints, decisions, current goal,\par
+unresolved questions, technical requirements, and corrections.\par
+Do not invent facts. Keep concise.
+\end{quote}
+
+\emph{Query} ini mempertahankan ringkasan yang masih relevan, kemudian memperbaruinya
+dengan pesan baru. Sistem meminta model menjaga keputusan, batasan, tujuan,
+pertanyaan yang belum selesai, kebutuhan teknis, dan koreksi tanpa menambahkan
+fakta yang tidak ada di percakapan.
+
+\subsubsection*{A.2 \emph{Query} ketika belum ada ringkasan sebelumnya}
+\begin{quote}\small\ttfamily\raggedright
+You are a session conversation memory summarizer.\par
+\par
+MESSAGES:\par
+\{msg\_text\}\par
+\par
+Summarize the conversation above.\par
+Preserve important constraints, decisions, current goal,\par
+unresolved questions, technical requirements, and corrections.\par
+Do not invent facts. Keep concise.
+\end{quote}
+
+Pada kondisi awal, seluruh pesan yang dipilih dari konteks percakapan diringkas
+menjadi ringkasan pertama. Jika \emph{model service} tidak digunakan, implementasi
+menyediakan \emph{fallback} yang menggabungkan ringkasan lama dan potongan pesan
+terbaru secara langsung.

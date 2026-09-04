@@ -1,0 +1,8 @@
+%%{init: {"theme":"base", "themeVariables": {"fontFamily":"Arial, sans-serif", "fontSize":"24px", "primaryTextColor":"#111827", "lineColor":"#475569"}, "flowchart": {"htmlLabels":true, "nodeSpacing":48, "rankSpacing":72, "curve":"basis"}}}%%
+flowchart TB
+    active["Active"] -->|"archive"| archived["Archived"]
+    archived -->|"unarchive"| active
+    classDef active fill:#dcfce7,stroke:#15803d,color:#111827;
+    classDef archived fill:#f8fafc,stroke:#64748b,color:#111827;
+    class active active;
+    class archived archived;

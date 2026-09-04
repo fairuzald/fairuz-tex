@@ -1,0 +1,70 @@
+\documentclass[12pt,oneside]{report}
+
+\input{config/packages}
+\input{config/metadata}
+\input{config/bibliography}
+\input{config/layout}
+
+\begin{document}
+
+\frontmatter
+\input{frontmatter/titlepage}
+\input{frontmatter/approvalsheet}
+\input{frontmatter/identitysheet}
+% The title, approval, and identity sheets are unnumbered.  The remaining
+% preliminary pages follow the same roman-numbered sequence as the benchmark.
+\pagenumbering{roman}
+\setcounter{page}{4}
+\input{frontmatter/ai-declaration}
+\input{frontmatter/declaration}
+\input{frontmatter/abstract}
+\input{frontmatter/preface}
+\input{frontmatter/glossary}
+\clearpage
+\addcontentsline{toc}{chapter}{DAFTAR ISI}
+{\begingroup
+\titlespacing*{\chapter}{0pt}{7pt}{1.2em}
+\begin{spacing}{1.5}
+\tableofcontents
+\end{spacing}
+\endgroup}
+\cleardoublepage
+\input{frontmatter/listofappendices}
+\addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
+{\begingroup
+\titlespacing*{\chapter}{0pt}{7pt}{0.6em}
+\begin{spacing}{1.5}
+\listoffigures
+\end{spacing}
+\endgroup}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{DAFTAR TABEL}
+{\begingroup
+\titlespacing*{\chapter}{0pt}{7pt}{0.6em}
+\begin{spacing}{1.5}
+\listoftables
+\end{spacing}
+\endgroup}
+\cleardoublepage
+
+\pagestyle{plain}
+\mainmatter
+\include{chapters/01-Pendahuluan}
+\include{chapters/02-Kajian-Pustaka}
+\include{chapters/03-Analisis-dan-Rancangan}
+\include{chapters/04-Rencana-Pelaksanaan}
+\include{chapters/05-Kesimpulan-dan-Saran}
+
+\backmatter
+\printbibliography
+
+% Lampiran ditempatkan setelah daftar pustaka agar menjadi bagian paling akhir
+% dari dokumen. Isinya mendokumentasikan query/prompt yang benar-benar dipakai
+% oleh implementasi memori percakapan dan guardrail.
+\input{appendices/A-Query-Rolling-Summary}
+\input{appendices/B-Query-Memory-Items}
+\input{appendices/C-Query-Guardrail}
+\input{appendices/D-Pertanyaan-Customer-Service}
+\input{appendices/E-Pertanyaan-Legal}
+
+\end{document}

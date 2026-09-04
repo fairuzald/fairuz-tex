@@ -1,0 +1,19 @@
+{
+  "condition_id": "chunker-generic-sliding-window",
+  "profile_id": "ca7a6f31-08b7-4674-8a41-757a81631fbc",
+  "profile_name": "customer-service-e2e-chunker-generic-sliding-window-ting-k60",
+  "question_count": 200,
+  "valid_trace_count": 200,
+  "failed_question_count": 0,
+  "document_count": 9,
+  "metric_mode": "single-block",
+  "use_reranker": false,
+  "intent_provider": "passthrough",
+  "answer_generation_provider": "deterministic",
+  "kg_mode": "none",
+  "chunk_precision@10": 0.077,
+  "chunk_success@10": 0.535,
+  "gold_block_recall@10": 0.535,
+  "chunk_ndcg@10": 0.25322064130689836,
+  "median_latency_ms": 5855.023499999999
+}

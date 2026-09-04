@@ -1,0 +1,30 @@
+%% Sequence diagram UC5: guardrail interaction from the chat UI.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"16px"},"sequence":{"actorMargin":24,"messageMargin":18,"boxMargin":6,"boxTextMargin":4,"noteMargin":6,"useMaxWidth":true}}}%%
+sequenceDiagram
+    actor User as User
+    participant UI as Chat UI
+    participant API as Chat Stream API
+    participant Guard as Guardrail Module
+    participant Config as Profile Config
+    User->>UI: Send message
+    UI->>API: POST /api/v1/chat/stream
+    API->>Guard: Validate input message
+    Guard->>Config: Read guardrail policy
+    Config-->>Guard: Rules and safe reply
+    alt Input is unsafe
+        Guard-->>API: deny + safe response
+        API-->>UI: SSE denied event
+        UI-->>User: Show safe reply
+    else Input is allowed
+        Guard-->>API: allow
+        API->>Guard: Validate generated output
+        alt Output is unsafe
+            Guard-->>API: deny + safe response
+            API-->>UI: SSE denied event
+            UI-->>User: Show safe reply
+        else Output is allowed
+            Guard-->>API: allow
+            API-->>UI: SSE token and done events
+            UI-->>User: Stream answer
+        end
+    end

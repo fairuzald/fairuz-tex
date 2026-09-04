@@ -1,0 +1,48 @@
+%% ERD Conversation: percakapan, pesan, ringkasan, dan memory item.
+%%{init: {"theme":"base", "themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"10px","primaryTextColor":"#111827","lineColor":"#475569"},"er":{"layoutDirection":"TB"}}}%%
+erDiagram
+    direction TB
+    conversations {
+        uuid id PK
+        uuid user_id FK
+        text title
+        text profile_id "NULL, logical reference"
+        timestamptz deleted_at "NULL"
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    messages {
+        uuid id PK
+        uuid conversation_id FK "CASCADE"
+        bigint seq_no
+        text role
+        text content
+        bigint token_count
+        boolean memory_eligible
+        jsonb metadata
+        timestamptz created_at
+    }
+    conversation_summaries {
+        uuid id PK
+        uuid conversation_id FK "CASCADE"
+        bigint level
+        bigint batch_seq_no
+        text summary
+        bigint covered_from_seq_no
+        bigint covered_until_seq_no
+        bigint token_count
+        jsonb metadata
+        timestamptz created_at
+    }
+    conversation_memory_items {
+        uuid id PK
+        uuid conversation_id FK "CASCADE"
+        bigint batch_seq_no
+        smallint seq_order
+        text text
+        jsonb metadata
+        timestamptz created_at
+    }
+    conversations ||--o{ messages : "conversation_id -> id"
+    conversations ||--o{ conversation_summaries : "conversation_id -> id"
+    conversations ||--o{ conversation_memory_items : "conversation_id -> id"

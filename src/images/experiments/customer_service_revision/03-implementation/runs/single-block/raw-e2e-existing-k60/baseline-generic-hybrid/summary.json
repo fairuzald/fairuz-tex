@@ -1,0 +1,19 @@
+{
+  "condition_id": "baseline-generic-hybrid",
+  "profile_id": "0d686771-6d7e-489d-a702-fc0c713f3b77",
+  "profile_name": "customer-service-e2e-baseline-generic-hybrid-ting-k60",
+  "question_count": 200,
+  "valid_trace_count": 200,
+  "failed_question_count": 0,
+  "document_count": 9,
+  "metric_mode": "single-block",
+  "use_reranker": false,
+  "intent_provider": "passthrough",
+  "answer_generation_provider": "deterministic",
+  "kg_mode": "none",
+  "chunk_precision@10": 0.083,
+  "chunk_success@10": 0.575,
+  "gold_block_recall@10": 0.575,
+  "chunk_ndcg@10": 0.248107273142034,
+  "median_latency_ms": 11237.8195
+}

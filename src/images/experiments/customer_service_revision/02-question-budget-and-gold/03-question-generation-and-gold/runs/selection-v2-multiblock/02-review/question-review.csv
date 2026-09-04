@@ -1,0 +1,201 @@
+question_id,question_pair_id,language,evidence_count,review_status,review_basis
+Q-001,Q-001,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-002,Q-002,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-003,Q-003,en,5,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-004,Q-004,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-005,Q-005,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-006,Q-006,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-007,Q-007,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-008,Q-008,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-009,Q-009,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-010,Q-010,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-011,Q-011,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-012,Q-012,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-013,Q-013,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-014,Q-014,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-015,Q-015,en,4,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-016,Q-016,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-017,Q-017,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-018,Q-018,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-019,Q-019,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-020,Q-020,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-021,Q-021,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-022,Q-022,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-023,Q-023,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-024,Q-024,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-025,Q-025,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-026,Q-026,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-027,Q-027,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-028,Q-028,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-029,Q-029,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-030,Q-030,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-031,Q-031,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-032,Q-032,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-033,Q-033,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-034,Q-034,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-035,Q-035,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-036,Q-036,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-037,Q-037,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-038,Q-038,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-039,Q-039,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-040,Q-040,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-041,Q-041,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-042,Q-042,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-043,Q-043,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-044,Q-044,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-045,Q-045,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-046,Q-046,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-047,Q-047,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-048,Q-048,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-049,Q-049,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-050,Q-050,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-051,Q-051,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-052,Q-052,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-053,Q-053,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-054,Q-054,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-055,Q-055,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-056,Q-056,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-057,Q-057,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-058,Q-058,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-059,Q-059,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-060,Q-060,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-061,Q-061,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-062,Q-062,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-063,Q-063,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-064,Q-064,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-065,Q-065,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-066,Q-066,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-067,Q-067,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-068,Q-068,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-069,Q-069,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-070,Q-070,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-071,Q-071,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-072,Q-072,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-073,Q-073,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-074,Q-074,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-075,Q-075,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-076,Q-076,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-077,Q-077,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-078,Q-078,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-079,Q-079,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-080,Q-080,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-081,Q-081,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-082,Q-082,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-083,Q-083,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-084,Q-084,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-085,Q-085,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-086,Q-086,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-087,Q-087,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-088,Q-088,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-089,Q-089,en,1,codex_selected_provenance_checked,The selected anchor block fully answers this single intent; all other packet blocks were reviewed as context and not unioned.
+Q-090,Q-090,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-091,Q-091,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-092,Q-092,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-093,Q-093,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-094,Q-094,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-095,Q-095,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-096,Q-096,en,4,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-097,Q-097,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-098,Q-098,en,2,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-099,Q-099,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-100,Q-100,en,3,codex_selected_provenance_checked,These selected blocks are jointly required for one workflow after reviewing the complete packet; unrelated candidates were excluded.
+Q-101,Q-001,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-102,Q-002,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-103,Q-003,id,5,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-104,Q-004,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-105,Q-005,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-106,Q-006,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-107,Q-007,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-108,Q-008,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-109,Q-009,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-110,Q-010,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-111,Q-011,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-112,Q-012,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-113,Q-013,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-114,Q-014,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-115,Q-015,id,4,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-116,Q-016,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-117,Q-017,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-118,Q-018,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-119,Q-019,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-120,Q-020,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-121,Q-021,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-122,Q-022,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-123,Q-023,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-124,Q-024,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-125,Q-025,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-126,Q-026,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-127,Q-027,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-128,Q-028,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-129,Q-029,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-130,Q-030,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-131,Q-031,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-132,Q-032,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-133,Q-033,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-134,Q-034,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-135,Q-035,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-136,Q-036,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-137,Q-037,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-138,Q-038,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-139,Q-039,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-140,Q-040,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-141,Q-041,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-142,Q-042,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-143,Q-043,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-144,Q-044,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-145,Q-045,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-146,Q-046,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-147,Q-047,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-148,Q-048,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-149,Q-049,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-150,Q-050,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-151,Q-051,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-152,Q-052,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-153,Q-053,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-154,Q-054,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-155,Q-055,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-156,Q-056,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-157,Q-057,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-158,Q-058,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-159,Q-059,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-160,Q-060,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-161,Q-061,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-162,Q-062,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-163,Q-063,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-164,Q-064,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-165,Q-065,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-166,Q-066,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-167,Q-067,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-168,Q-068,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-169,Q-069,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-170,Q-070,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-171,Q-071,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-172,Q-072,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-173,Q-073,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-174,Q-074,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-175,Q-075,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-176,Q-076,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-177,Q-077,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-178,Q-078,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-179,Q-079,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-180,Q-080,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-181,Q-081,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-182,Q-082,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-183,Q-083,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-184,Q-084,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-185,Q-085,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-186,Q-086,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-187,Q-087,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-188,Q-088,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-189,Q-089,id,1,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-190,Q-090,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-191,Q-091,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-192,Q-092,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-193,Q-093,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-194,Q-094,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-195,Q-095,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-196,Q-096,id,4,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-197,Q-097,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-198,Q-098,id,2,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-199,Q-099,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.
+Q-200,Q-100,id,3,codex_selected_provenance_checked,Same variable evidence set as English pair; exact provenance checked.

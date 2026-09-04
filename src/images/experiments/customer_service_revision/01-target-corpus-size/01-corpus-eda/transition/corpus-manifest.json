@@ -1,0 +1,224 @@
+{
+  "datasource": {
+    "description": "netgrear google drive",
+    "file_extensions": [
+      ".pdf"
+    ],
+    "id": "077b19c1-b65c-4447-8394-d96a91d07337",
+    "name": "netgear-customer-service",
+    "scraper_config_json": {
+      "filename_regex": "",
+      "folder_id": "1nLeU0E2zen6QR6YuXmuXpfwQwNtKYA5P",
+      "page_size": 1000,
+      "service_account_json_env": "GDRIVE_SERVICE_ACCOUNT"
+    },
+    "scraper_enabled": false,
+    "scraper_plugin_id": "041f72d7-de34-4e33-81a2-5a9794090f85",
+    "status": "active"
+  },
+  "document_count": 9,
+  "documents": [
+    {
+      "byte_size": 2586464,
+      "content_sha256": "d183473b117fddf5edd6ff99bc0d51dd4a105f9e9dee02a6545a84d6d08d8cad",
+      "document_id": "7b2e79c5-ed95-43f3-bb4b-e882e3bfeefa",
+      "document_index": 1,
+      "filename": "netgear-cm2000.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/7b2e79c5-ed95-43f3-bb4b-e882e3bfeefa/netgear-cm2000.pdf",
+      "page_count": 26,
+      "parser_artifact": {
+        "artifact_sha256": "4499797abe48643e0f3bae163511e548fa0099bde2805a2cdb21abce094cc9ef",
+        "cache_object_key": "rag/cache/v2/parser/982c27fa6857393d6b2d23b5db02d448c6230928093d9e08033c12a547d1b7dd/de2ab36a-a307-460e-8a97-2cbe5d527795/4499797abe48643e0f3bae163511e548fa0099bde2805a2cdb21abce094cc9ef.json",
+        "content_sha256": "9fc6f5e67aae696bf1f24fb453d88f07a8753d3d56155629ff4440eed725f374",
+        "document_id": "7b2e79c5-ed95-43f3-bb4b-e882e3bfeefa",
+        "output_contract": "canonical-document",
+        "size_bytes": 45593,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:05.419747+00"
+      },
+      "parser_artifact_checksum": "4499797abe48643e0f3bae163511e548fa0099bde2805a2cdb21abce094cc9ef",
+      "source_identifier": "1wWXQixDhgbt66sS3YPlprwu0obsDPIWm"
+    },
+    {
+      "byte_size": 3987338,
+      "content_sha256": "ac21f43a7bf4298fefc68f615226cde51177e1d12a2b1fe26768fd6b3e8b5d96",
+      "document_id": "398c0bb9-3253-4629-a5ed-18f51d9fb36b",
+      "document_index": 2,
+      "filename": "netgear-lm1200.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/398c0bb9-3253-4629-a5ed-18f51d9fb36b/netgear-lm1200.pdf",
+      "page_count": 105,
+      "parser_artifact": {
+        "artifact_sha256": "a224d1c786009fd5ed9b04d4fad942a2e947efed1f7c8b7b9d7f805cb2e61cf3",
+        "cache_object_key": "rag/cache/v2/parser/27e936c816b3d55977f68cf84479e37564565c33654d37827604897048e652eb/c648202b-d911-40af-acf8-5e2aebf2f0cb/a224d1c786009fd5ed9b04d4fad942a2e947efed1f7c8b7b9d7f805cb2e61cf3.json",
+        "content_sha256": "bcbc12b0bd810941866c4305373e0db60843c510caff7177960957bac5182801",
+        "document_id": "398c0bb9-3253-4629-a5ed-18f51d9fb36b",
+        "output_contract": "canonical-document",
+        "size_bytes": 207597,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:06.277669+00"
+      },
+      "parser_artifact_checksum": "a224d1c786009fd5ed9b04d4fad942a2e947efed1f7c8b7b9d7f805cb2e61cf3",
+      "source_identifier": "13oc8CO6yYzmDTBF6qXJNawTeiNHwoH7V"
+    },
+    {
+      "byte_size": 1820508,
+      "content_sha256": "9b3e3b95e58e5ed10692bba077aefabb21a57ea30e6af70d889e82430cf4ab7f",
+      "document_id": "d363d52d-99b4-4258-9e83-eca4fbdf4722",
+      "document_index": 3,
+      "filename": "netgear-r6350.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/d363d52d-99b4-4258-9e83-eca4fbdf4722/netgear-r6350.pdf",
+      "page_count": 204,
+      "parser_artifact": {
+        "artifact_sha256": "04e9d527154e2564399b54a344cd9b42bb8d4245c6003fa14e96c3f153f32dd0",
+        "cache_object_key": "rag/cache/v2/parser/b0e561cb14e0e0820a60b310747096c0bdba642eca15d40d3974dae11dacc12c/d3148164-084a-4297-8927-829829abb425/04e9d527154e2564399b54a344cd9b42bb8d4245c6003fa14e96c3f153f32dd0.json",
+        "content_sha256": "b07ebd402ea4004cd2f107049d7ad5872e1325b8e98caf306563489c86b662af",
+        "document_id": "d363d52d-99b4-4258-9e83-eca4fbdf4722",
+        "output_contract": "canonical-document",
+        "size_bytes": 480137,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:03.952553+00"
+      },
+      "parser_artifact_checksum": "04e9d527154e2564399b54a344cd9b42bb8d4245c6003fa14e96c3f153f32dd0",
+      "source_identifier": "1i0TsUxtnI3YC06ln3rOWfA27exvEH4h2"
+    },
+    {
+      "byte_size": 4464523,
+      "content_sha256": "11c4944106002c0f8b2c871f231e1f209362565abb935f386ce132b24ec42f88",
+      "document_id": "8a56b2bf-5d68-4806-abb7-de39894bb404",
+      "document_index": 4,
+      "filename": "netgear-r7000.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/8a56b2bf-5d68-4806-abb7-de39894bb404/netgear-r7000.pdf",
+      "page_count": 186,
+      "parser_artifact": {
+        "artifact_sha256": "d58514766acffd7056e5c89627723b3796fa4541b1bbb4b5c83ba8e5ae4f0f37",
+        "cache_object_key": "rag/cache/v2/parser/1ea1143151e52ad747cb69af02119e974de36d98d784aaed85d06bd0fe0fa001/923531ff-db4b-4ce4-bec9-f1769400900e/d58514766acffd7056e5c89627723b3796fa4541b1bbb4b5c83ba8e5ae4f0f37.json",
+        "content_sha256": "0f63e4ec8da3314a6eb771482c8f2f42af41d719e23390e716ddb55b897048ec",
+        "document_id": "8a56b2bf-5d68-4806-abb7-de39894bb404",
+        "output_contract": "canonical-document",
+        "size_bytes": 422147,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:06.652352+00"
+      },
+      "parser_artifact_checksum": "d58514766acffd7056e5c89627723b3796fa4541b1bbb4b5c83ba8e5ae4f0f37",
+      "source_identifier": "1U-owvKcY1g1EPmgGur0iqtps4ozFRlXc"
+    },
+    {
+      "byte_size": 2353363,
+      "content_sha256": "2a2f3920544d2d53f28fd189c2371495c269ad11213c4eb5ad8173add9ebfde1",
+      "document_id": "d69381d0-06ed-49bf-9fe1-6050d9374432",
+      "document_index": 5,
+      "filename": "netgear-rax120.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/d69381d0-06ed-49bf-9fe1-6050d9374432/netgear-rax120.pdf",
+      "page_count": 175,
+      "parser_artifact": {
+        "artifact_sha256": "24479a9bc0e8e49969f2ce8bbcee825c9b1095a6c9581e501e822fdec7c48d3a",
+        "cache_object_key": "rag/cache/v2/parser/5d7aadacd21288a3776ec0a52aeab7ad352baabcedd4c2fba41b8246012e3bad/c3da43c7-51d7-43ae-95f5-f562e27409b5/24479a9bc0e8e49969f2ce8bbcee825c9b1095a6c9581e501e822fdec7c48d3a.json",
+        "content_sha256": "713781d4da31343bf9df72236eafb9282af297b509fa25dc3fa61be3cdc83990",
+        "document_id": "d69381d0-06ed-49bf-9fe1-6050d9374432",
+        "output_contract": "canonical-document",
+        "size_bytes": 424195,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:05.053203+00"
+      },
+      "parser_artifact_checksum": "24479a9bc0e8e49969f2ce8bbcee825c9b1095a6c9581e501e822fdec7c48d3a",
+      "source_identifier": "1OOINVNUyvB_LRi9FCGiINpM6iX9GOqWm"
+    },
+    {
+      "byte_size": 1329644,
+      "content_sha256": "0fc53209b2d4e533883c1b28b06f30fabd1b90d42ec20e91fa112135f2f1acdf",
+      "document_id": "e65eaa31-8579-448d-a22c-88a8fde64409",
+      "document_index": 6,
+      "filename": "netgear-rax50.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/e65eaa31-8579-448d-a22c-88a8fde64409/netgear-rax50.pdf",
+      "page_count": 160,
+      "parser_artifact": {
+        "artifact_sha256": "2432d59a8b11d538c28aaf374264c611824505d14c529c69543dfff4e072b78d",
+        "cache_object_key": "rag/cache/v2/parser/cf5dbb16544ff6cf0cfff352072beef91c07d55e72764d7d2870b40da60b41c6/1b7178b6-82f4-4893-a0ae-a60de691b506/2432d59a8b11d538c28aaf374264c611824505d14c529c69543dfff4e072b78d.json",
+        "content_sha256": "644d8b221edcf457c060868f48af08ca4ec5eef2340e555905431450ed581f11",
+        "document_id": "e65eaa31-8579-448d-a22c-88a8fde64409",
+        "output_contract": "canonical-document",
+        "size_bytes": 385328,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:03.177081+00"
+      },
+      "parser_artifact_checksum": "2432d59a8b11d538c28aaf374264c611824505d14c529c69543dfff4e072b78d",
+      "source_identifier": "1fQPTq3WwrUUH3am0vq2dO7KdOvla1cdG"
+    },
+    {
+      "byte_size": 3437401,
+      "content_sha256": "6fd7be178a370fd3eecc285f24200a707650b529d8ab239e72080aef59e6755f",
+      "document_id": "57d18421-8c71-47bc-992e-0d0dfdcdbbea",
+      "document_index": 7,
+      "filename": "netgear-raxe500.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/57d18421-8c71-47bc-992e-0d0dfdcdbbea/netgear-raxe500.pdf",
+      "page_count": 169,
+      "parser_artifact": {
+        "artifact_sha256": "b31e136bf32411a201f54224780cc33825e8ff4e74496e8893a2e969129b314d",
+        "cache_object_key": "rag/cache/v2/parser/68d463a9312df66511f867daa80c859e3c76cf105aed74a44d62b8f9863ed3fb/4cf9683c-7ad2-43be-9e90-9ba620e2eea0/b31e136bf32411a201f54224780cc33825e8ff4e74496e8893a2e969129b314d.json",
+        "content_sha256": "fdfc6bb53c9e81a77013ddb281ba08318a1e96f7dd975f97bcd3cad6e42141d8",
+        "document_id": "57d18421-8c71-47bc-992e-0d0dfdcdbbea",
+        "output_contract": "canonical-document",
+        "size_bytes": 398486,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:05.918792+00"
+      },
+      "parser_artifact_checksum": "b31e136bf32411a201f54224780cc33825e8ff4e74496e8893a2e969129b314d",
+      "source_identifier": "1xQTWJ0KFM7HkwW1HngUhMnRdLSSoZke3"
+    },
+    {
+      "byte_size": 1527721,
+      "content_sha256": "bfdbc66cc3239602f3ee3d85c4de773c18f9436b89b14b321acc903b728a3a11",
+      "document_id": "4431ab7b-17f3-4bc6-8ee4-691efbcdfdeb",
+      "document_index": 8,
+      "filename": "netgear-rbk852.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/4431ab7b-17f3-4bc6-8ee4-691efbcdfdeb/netgear-rbk852.pdf",
+      "page_count": 161,
+      "parser_artifact": {
+        "artifact_sha256": "0d695ddad6d0d77d68748dd699a84d1ff35e6d1f8524479324df69e327e53afd",
+        "cache_object_key": "rag/cache/v2/parser/bbee3d304f29c674052520ea2231e54ae5873c96e32eb5414fda0dd41457b3e2/4e08ce48-a7cd-4ac6-aafb-344d2dd80ef9/0d695ddad6d0d77d68748dd699a84d1ff35e6d1f8524479324df69e327e53afd.json",
+        "content_sha256": "b6a09793ae7457c541c8a135a9f6834569251582bec5955eabefeb7bd4933d16",
+        "document_id": "4431ab7b-17f3-4bc6-8ee4-691efbcdfdeb",
+        "output_contract": "canonical-document",
+        "size_bytes": 371723,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:03.586258+00"
+      },
+      "parser_artifact_checksum": "0d695ddad6d0d77d68748dd699a84d1ff35e6d1f8524479324df69e327e53afd",
+      "source_identifier": "1WRo9iMXHwgTM-cHL9ULdsf6QH8bJIq2r"
+    },
+    {
+      "byte_size": 2123687,
+      "content_sha256": "bfe80858e4409f0486365873f4b22ee7d9a7f79451257e2c1e4523d21ce7b9b0",
+      "document_id": "404fe683-4727-4c53-9c1d-9adf98a793c4",
+      "document_index": 9,
+      "filename": "netgear-xr500.pdf",
+      "object_key": "rag/datasource/077b19c1-b65c-4447-8394-d96a91d07337/documents/404fe683-4727-4c53-9c1d-9adf98a793c4/netgear-xr500.pdf",
+      "page_count": 214,
+      "parser_artifact": {
+        "artifact_sha256": "8b2949ae02309b094772469b321e652dc98644e5eec5c2f22d9ee1b3087ea33f",
+        "cache_object_key": "rag/cache/v2/parser/eaebb09f516fe81b5ac3ec0a668c21e0b056de0ad0e48971d291151ff1ec954a/cbf0d388-8b2e-44db-94b7-d664490b5b34/8b2949ae02309b094772469b321e652dc98644e5eec5c2f22d9ee1b3087ea33f.json",
+        "content_sha256": "95bbbe50ea3c97e4f59c86331c643431a696eda3a6b738f0dfa6b09b4e5efd5a",
+        "document_id": "404fe683-4727-4c53-9c1d-9adf98a793c4",
+        "output_contract": "canonical-document",
+        "size_bytes": 501569,
+        "stage_type": "parser",
+        "status": "ready",
+        "updated_at": "2026-08-30 14:20:04.599608+00"
+      },
+      "parser_artifact_checksum": "8b2949ae02309b094772469b321e652dc98644e5eec5c2f22d9ee1b3087ea33f",
+      "source_identifier": "1RPUgtXxkCocWg5vsGPIUcxMrHDMj74H2"
+    }
+  ],
+  "generated_at": "2026-08-30T19:31:13.509148+00:00",
+  "manifest_sha256": "7fdc2c78ad23bbd74fc790fb4395d8be0f97fbb4c9242d91a3f6e52d58b30b42",
+  "run_type": "customer_service_census_eda",
+  "selection": "all active PDF documents ordered by filename and document_id"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "omni-rag-report-diagrams",
+  "private": true,
+  "description": "Mermaid sources and rendering toolchain for the Omni-RAG thesis report",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.16.0"
+  }
+}

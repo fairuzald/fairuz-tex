@@ -1,0 +1,70 @@
+% Package loading for the thesis template
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{csquotes}
+\usepackage[a4paper,top=3cm,left=4cm,bottom=3cm,right=3cm]{geometry}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+% Indent the first paragraph after every sectioning heading, including
+% custom paragraph-level headings used in Bab 3.
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\PassOptionsToPackage{table}{xcolor}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage{microtype}
+
+% Table
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% Caption
+\usepackage{float}
+\usepackage{needspace}
+\usepackage[font=small,labelfont=bf,labelsep=colon]{caption}
+\captionsetup{
+    justification=justified,
+    singlelinecheck=true,
+    figurename=Gambar,
+    tablename=Tabel
+}
+
+% Unicode font support
+\usepackage{fontspec}
+
+\IfFontExistsTF{Times New Roman}{
+    \setmainfont{Times New Roman}
+}{
+    \setmainfont{TeX Gyre Termes}
+}
+
+% Gantt Chart
+\usepackage{xcolor}
+\usepackage{pgfgantt}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,positioning,shapes.geometric}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage[backend=biber,style=apa]{biblatex}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+
+% Breakable inline code for identifiers, paths, environment variables, and commands.
+% Use \code{...} for future inline code instead of \texttt{...} when the text may be long.
+% \code{} is verbatim-like (no escaping needed for _, &, etc.), but url.sty
+% drops literal spaces by default. Restore them as real interword kerns so
+% multi-word snippets (CLI commands, etc.) render with visible spacing.
+\DeclareUrlCommand{\code}{\urlstyle{tt}}
+\makeatletter
+\begingroup \lccode`+=32 \lowercase
+   {\endgroup \gdef\Url@ObeySp{\Url@Edit\Url@String{ }{+}}}
+\g@addto@macro{\UrlSpecials}{\do\ {\Url@space\kern\fontdimen2\font\relax}}
+\makeatother

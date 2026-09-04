@@ -1,0 +1,21 @@
+%% ERD PII Mapping: pemetaan scope request dengan konteks percakapan.
+%%{init: {"theme":"base", "themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"10px","primaryTextColor":"#111827","lineColor":"#475569"},"er":{"layoutDirection":"TB"}}}%%
+erDiagram
+    direction TB
+    conversations {
+        uuid id PK
+        uuid user_id FK
+        text title
+        text profile_id "NULL, logical reference"
+        timestamptz deleted_at "NULL"
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    pii_mappings {
+        uuid id PK
+        varchar_64 scope_id UK
+        jsonb mapping
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    conversations ||..o{ pii_mappings : "scope_id (logical, no FK)"

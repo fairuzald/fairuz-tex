@@ -1,0 +1,68 @@
+{
+  "active_document_count": 9,
+  "blank_pages": 0,
+  "datasource": {
+    "description": "netgrear google drive",
+    "file_extensions": [
+      ".pdf"
+    ],
+    "id": "077b19c1-b65c-4447-8394-d96a91d07337",
+    "name": "netgear-customer-service",
+    "scraper_config_json": {
+      "filename_regex": "",
+      "folder_id": "1nLeU0E2zen6QR6YuXmuXpfwQwNtKYA5P",
+      "page_size": 1000,
+      "service_account_json_env": "GDRIVE_SERVICE_ACCOUNT"
+    },
+    "scraper_enabled": false,
+    "scraper_plugin_id": "041f72d7-de34-4e33-81a2-5a9794090f85",
+    "status": "active"
+  },
+  "datasource_id": "077b19c1-b65c-4447-8394-d96a91d07337",
+  "document_count": 9,
+  "exact_duplicate_cluster_count": 177,
+  "figure_pages": 45,
+  "gates": {
+    "all_parser_content_hashes_match": true,
+    "all_parser_generic_outline": true,
+    "all_parser_input_hashes_match": true,
+    "all_raw_hashes_match": true,
+    "nine_documents": true
+  },
+  "generated_at": "2026-08-30T19:31:13.656868+00:00",
+  "image_pages": 112,
+  "manifest_sha256": "7fdc2c78ad23bbd74fc790fb4395d8be0f97fbb4c9242d91a3f6e52d58b30b42",
+  "outline_document_count": 9,
+  "outline_leaf_count": 1240,
+  "outline_node_count": 1557,
+  "outline_report_path": "/home/fairuz/Documents/TA/FR/dpo/experiments/offline-rag-experiments/customer_service_revision/01-target-corpus-size/01-corpus-eda/outline-report.md",
+  "outline_summary_path": "/home/fairuz/Documents/TA/FR/dpo/experiments/offline-rag-experiments/customer_service_revision/01-target-corpus-size/01-corpus-eda/transition/outline_summary.csv",
+  "page_count": 1400,
+  "parser_headings": 1557,
+  "parser_plugin_versions": [
+    "generic-outline@1.0.0"
+  ],
+  "parser_text_blocks": 1566,
+  "question_outline_candidate_count": 1240,
+  "question_outline_frame_path": "/home/fairuz/Documents/TA/FR/dpo/experiments/offline-rag-experiments/customer_service_revision/01-target-corpus-size/01-corpus-eda/question_outline_frame.csv",
+  "question_outline_frame_sha256": "b759d9417c9f7c4f9fc27bc767b7c8f75530ab6e5f2945e039169a8e9c55a966",
+  "question_source_candidates": 1566,
+  "question_source_classification": {
+    "method": "outline_random_pick_planned",
+    "reason": "Question selection uses a seeded random pick from eligible leaf outlines; substring topic/comparison labels are not used.",
+    "status": "outline_review_pending"
+  },
+  "question_source_frame_path": "/home/fairuz/Documents/TA/FR/dpo/experiments/offline-rag-experiments/customer_service_revision/01-target-corpus-size/01-corpus-eda/question_source_frame.csv",
+  "question_source_frame_sha256": "f1058eb82d4542c257f56689be0d40656cd4397776cd98ec9f9837ed1f8f51de",
+  "raw_hash_match_count": 9,
+  "table_pages": 90,
+  "template_duplicate_cluster_count": 208,
+  "text_block_char_quantiles": {
+    "max": 10792,
+    "p50": 1017,
+    "p90": 2422,
+    "p95": 2872,
+    "p99": 3748
+  },
+  "text_chars": 2171615
+}

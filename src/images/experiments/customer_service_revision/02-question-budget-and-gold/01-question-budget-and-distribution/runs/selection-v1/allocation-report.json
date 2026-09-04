@@ -1,0 +1,199 @@
+{
+  "candidate_pool_count": 200,
+  "document_allocations": {
+    "398c0bb9-3253-4629-a5ed-18f51d9fb36b": {
+      "outline_population": 84,
+      "page_bin_pool": {
+        "P1": 4,
+        "P2": 3,
+        "P3": 3,
+        "P4": 5,
+        "P5": 5
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 2,
+        "P4": 2,
+        "P5": 2
+      },
+      "page_count": 105,
+      "question_slots": 10
+    },
+    "404fe683-4727-4c53-9c1d-9adf98a793c4": {
+      "outline_population": 183,
+      "page_bin_pool": {
+        "P1": 4,
+        "P2": 4,
+        "P3": 5,
+        "P4": 5,
+        "P5": 6
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 2,
+        "P4": 3,
+        "P5": 3
+      },
+      "page_count": 214,
+      "question_slots": 12
+    },
+    "4431ab7b-17f3-4bc6-8ee4-691efbcdfdeb": {
+      "outline_population": 144,
+      "page_bin_pool": {
+        "P1": 4,
+        "P2": 4,
+        "P3": 5,
+        "P4": 5,
+        "P5": 4
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 2,
+        "P4": 3,
+        "P5": 2
+      },
+      "page_count": 161,
+      "question_slots": 11
+    },
+    "57d18421-8c71-47bc-992e-0d0dfdcdbbea": {
+      "outline_population": 155,
+      "page_bin_pool": {
+        "P1": 3,
+        "P2": 4,
+        "P3": 4,
+        "P4": 6,
+        "P5": 5
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 2,
+        "P4": 3,
+        "P5": 2
+      },
+      "page_count": 169,
+      "question_slots": 11
+    },
+    "7b2e79c5-ed95-43f3-bb4b-e882e3bfeefa": {
+      "outline_population": 22,
+      "page_bin_pool": {
+        "P1": 2,
+        "P2": 5,
+        "P3": 4,
+        "P4": 4,
+        "P5": 3
+      },
+      "page_bin_slots": {
+        "P1": 1,
+        "P2": 2,
+        "P3": 2,
+        "P4": 2,
+        "P5": 2
+      },
+      "page_count": 26,
+      "question_slots": 9
+    },
+    "8a56b2bf-5d68-4806-abb7-de39894bb404": {
+      "outline_population": 168,
+      "page_bin_pool": {
+        "P1": 4,
+        "P2": 5,
+        "P3": 5,
+        "P4": 5,
+        "P5": 5
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 3,
+        "P4": 2,
+        "P5": 3
+      },
+      "page_count": 186,
+      "question_slots": 12
+    },
+    "d363d52d-99b4-4258-9e83-eca4fbdf4722": {
+      "outline_population": 175,
+      "page_bin_pool": {
+        "P1": 4,
+        "P2": 4,
+        "P3": 6,
+        "P4": 5,
+        "P5": 5
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 3,
+        "P4": 3,
+        "P5": 2
+      },
+      "page_count": 204,
+      "question_slots": 12
+    },
+    "d69381d0-06ed-49bf-9fe1-6050d9374432": {
+      "outline_population": 161,
+      "page_bin_pool": {
+        "P1": 3,
+        "P2": 4,
+        "P3": 5,
+        "P4": 6,
+        "P5": 6
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 2,
+        "P4": 3,
+        "P5": 3
+      },
+      "page_count": 175,
+      "question_slots": 12
+    },
+    "e65eaa31-8579-448d-a22c-88a8fde64409": {
+      "outline_population": 148,
+      "page_bin_pool": {
+        "P1": 4,
+        "P2": 4,
+        "P3": 4,
+        "P4": 5,
+        "P5": 5
+      },
+      "page_bin_slots": {
+        "P1": 2,
+        "P2": 2,
+        "P3": 2,
+        "P4": 2,
+        "P5": 3
+      },
+      "page_count": 160,
+      "question_slots": 11
+    }
+  },
+  "family_review": "completed_after_complete_context_review",
+  "heuristic_labels_used_for_sampling": false,
+  "language_allocations": {
+    "en": 100,
+    "id": 100
+  },
+  "language_review": "completed_bilingual_pair_expansion",
+  "manifest_declared_sha256": "7fdc2c78ad23bbd74fc790fb4395d8be0f97fbb4c9242d91a3f6e52d58b30b42",
+  "manifest_file_sha256": "a88db5f6bd7cd67c651598969425f467b60cff413a8d2d93091b715fdaf657da",
+  "outline_frame_sha256": "b759d9417c9f7c4f9fc27bc767b7c8f75530ab6e5f2945e039169a8e9c55a966",
+  "outline_population": 1240,
+  "outputs": {
+    "candidate_pool": "candidate-pool.csv",
+    "question_slots": "question-slots.csv"
+  },
+  "process": "02.01-question-budget-and-distribution",
+  "question_id_scheme": "Q-001..Q-100 English; Q-101..Q-200 Indonesian; question_pair_id links translations",
+  "question_slot_count": 200,
+  "sampling_method": "seeded_random_pick_with_document_page_bin_coverage",
+  "sampling_unit": "eligible_leaf_outline",
+  "seed": 20260831,
+  "semantic_outline_slot_count": 100,
+  "source_frame_sha256": "f1058eb82d4542c257f56689be0d40656cd4397776cd98ec9f9837ed1f8f51de"
+}

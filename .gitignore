@@ -1,0 +1,24 @@
+# Local JavaScript dependencies and incomplete install cache
+node_modules/
+node_modules.incomplete/
+
+# Scratch and temporary working files
+tmp/
+
+# LaTeX build artefacts
+src/*.aux
+src/*.bcf
+src/*.blg
+src/*.fdb_latexmk
+src/*.fls
+src/*.lof
+src/*.log
+src/*.lot
+src/*.loa
+src/*.out
+src/*.run.xml
+src/*.toc
+
+# Generated text extracts and transient saved error files
+src/main.txt
+src/main.bbl-SAVE-ERROR

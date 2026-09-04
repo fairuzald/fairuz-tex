@@ -1,0 +1,26 @@
+{
+  "candidate_block_count": 942,
+  "candidate_block_minimum": 1,
+  "candidate_packet_count": 100,
+  "context_text_field": "context_text",
+  "gold_block_count": "variable; selected by authoring model from context_text",
+  "hard_token_limit": 8000,
+  "inputs": {
+    "outline_frame": "experiments/offline-rag-experiments/customer_service_revision/01-target-corpus-size/01-corpus-eda/question_outline_frame.csv",
+    "outline_frame_sha256": "b759d9417c9f7c4f9fc27bc767b7c8f75530ab6e5f2945e039169a8e9c55a966",
+    "question_slots": "experiments/offline-rag-experiments/customer_service_revision/02-question-budget-and-gold/01-question-budget-and-distribution/runs/selection-v1/question-slots.csv",
+    "question_slots_sha256": "d469d3c5240dab9fc3ac16cc10449be8267f02c2716576ffa7a988b1b38210ee",
+    "source_frame": "experiments/offline-rag-experiments/customer_service_revision/01-target-corpus-size/01-corpus-eda/question_source_frame.csv",
+    "source_frame_sha256": "f1058eb82d4542c257f56689be0d40656cd4397776cd98ec9f9837ed1f8f51de"
+  },
+  "language_slot_count": 200,
+  "outputs": {
+    "context_packets": "context-packets.jsonl",
+    "context_selection": "context-selection.csv"
+  },
+  "process": "02.02-context-materialization-multiblock-candidates",
+  "question_pair_count": 100,
+  "random_selection_used": false,
+  "retrieval_used": false,
+  "soft_token_limit": 4000
+}

@@ -1,0 +1,35 @@
+\clearpage
+\chapter*{LAMPIRAN B. \emph{QUERY MEMORY ITEMS}}
+\addcontentsline{loa}{appendix}{Lampiran B. Kueri \emph{memory items}}
+
+Lampiran ini memuat kueri untuk mengekstrak \emph{memory item} dari konteks
+percakapan. Placeholder \texttt{previous\_items}, \texttt{summary},
+\texttt{messages}, dan \texttt{max\_items} diisi oleh sistem saat \emph{runtime}.
+
+\begin{quote}\small\ttfamily\raggedright
+Extract important session memory items from the conversation context below.\par
+\par
+PREVIOUS MEMORY ITEMS:\par
+\{prev\_text\}\par
+\par
+ROLLING SUMMARY:\par
+\{summary\}\par
+\par
+NEW MESSAGES:\par
+\{messages\}\par
+\par
+Return at most \{max\_items\} important memory items.\par
+Each item must be short and specific.\par
+Keep still-relevant existing items.\par
+Remove duplicates.\par
+Remove completed or contradicted items.\par
+Sort by importance.\par
+Use bullet points starting with "- ".\par
+Focus on: hard constraints, explicit decisions, current goal,\par
+open tasks, corrections, and technical requirements.
+\end{quote}
+
+Kueri ini menggabungkan \emph{memory item} sebelumnya, \emph{rolling summary}, dan pesan
+terbaru. Hasilnya dibatasi paling banyak \texttt{max\_items} \emph{item}, setiap \emph{item}
+harus singkat, spesifik, tidak duplikat, dan tetap relevan. Item yang sudah
+selesai atau bertentangan dengan informasi baru harus dikeluarkan.

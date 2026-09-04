@@ -1,0 +1,11 @@
+%%{init: {"theme":"base", "themeVariables": {"fontFamily":"Arial, sans-serif", "fontSize":"22px", "primaryTextColor":"#111827", "lineColor":"#475569"}, "flowchart": {"htmlLabels":true, "curve":"linear"}}}%%
+flowchart TB
+    start((Start)) --> queued["Queued"]
+    queued -->|claim node| running["Running"]
+    queued -->|cancel| cancelled["Cancelled"]
+    running -->|artifact ready| succeeded["Succeeded"]
+    running -->|error| failed["Failed"]
+    running -->|cancel / skipped| cancelled["Cancelled"]
+    succeeded --> finish((End))
+    failed --> finish
+    cancelled --> finish

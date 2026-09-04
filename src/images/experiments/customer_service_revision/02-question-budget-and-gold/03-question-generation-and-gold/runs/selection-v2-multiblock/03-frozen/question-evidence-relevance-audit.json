@@ -1,0 +1,5666 @@
+{
+  "datasource": "netgear-customer-service",
+  "evidence_count_distribution": {
+    "1": 16,
+    "2": 68,
+    "3": 13,
+    "4": 2,
+    "5": 1
+  },
+  "language_row_count": 200,
+  "mean_answer_content_coverage": 0.7631,
+  "method": "deterministic provenance, source-frame offsets, quote, hash, bilingual-parity, and content-token relevance checks; source context is English",
+  "min_answer_content_coverage": 0.4444,
+  "process": "02.03-question-generation-and-gold.relevance-audit",
+  "question_pair_count": 100,
+  "reports": [
+    {
+      "answer_content_coverage": 0.8077,
+      "block_checks": [
+        {
+          "block_id": "833c7618-7c73-5ea3-aaf6-5f74eae69f52",
+          "content_overlap": [
+            "cable",
+            "connection",
+            "front",
+            "leds",
+            "modem",
+            "panel",
+            "port",
+            "power",
+            "status"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "724d26e2-ed75-5043-b025-de4c01da0714",
+          "content_overlap": [
+            "button",
+            "cable",
+            "coaxial",
+            "connector",
+            "ethernet",
+            "factory",
+            "least",
+            "modem",
+            "panel",
+            "port",
+            "power",
+            "rear",
+            "reset",
+            "returns",
+            "seconds",
+            "settings",
+            "seven"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2857,
+      "question_pair_id": "Q-001",
+      "selected_block_ids": [
+        "833c7618-7c73-5ea3-aaf6-5f74eae69f52",
+        "724d26e2-ed75-5043-b025-de4c01da0714"
+      ],
+      "selected_sections": [
+        "Hardware Setup > Front Panel and LEDs",
+        "Hardware Setup > Rear Panel"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8636,
+      "block_checks": [
+        {
+          "block_id": "724d26e2-ed75-5043-b025-de4c01da0714",
+          "content_overlap": [
+            "activation",
+            "button",
+            "coaxial",
+            "connections",
+            "connector",
+            "contains",
+            "ethernet",
+            "panel",
+            "port",
+            "power",
+            "rear",
+            "reset",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "b9899548-cfa5-5bb4-8284-7d82e663abd1",
+          "content_overlap": [
+            "address",
+            "information",
+            "label",
+            "login",
+            "mac",
+            "number",
+            "serial"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-002",
+      "selected_block_ids": [
+        "724d26e2-ed75-5043-b025-de4c01da0714",
+        "b9899548-cfa5-5bb4-8284-7d82e663abd1"
+      ],
+      "selected_sections": [
+        "Hardware Setup > Rear Panel",
+        "Hardware Setup > Label"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "bc51c3d9-60e7-5b90-b7fc-8c8f3c0a3a6d",
+          "content_overlap": [
+            "computer",
+            "connection",
+            "internet",
+            "modem",
+            "provider",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "3d9321dd-db92-5587-9b08-a34e736a627e",
+          "content_overlap": [
+            "activate",
+            "activation",
+            "computer",
+            "connect",
+            "ethernet",
+            "information",
+            "internet",
+            "modem",
+            "new",
+            "port",
+            "power",
+            "reboot",
+            "router",
+            "service"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "4270da4c-a5fb-5ae4-a513-fd42dc41cfbb",
+          "content_overlap": [
+            "account",
+            "activate",
+            "cm2000",
+            "contact",
+            "information",
+            "internet",
+            "modem",
+            "provider",
+            "service",
+            "speed",
+            "test"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        },
+        {
+          "block_id": "8ed480ba-e35c-5a7d-85ba-ad748ae7732c",
+          "content_overlap": [
+            "contact",
+            "internet",
+            "provider",
+            "speed",
+            "test"
+          ],
+          "evidence_index": 4,
+          "issues": []
+        },
+        {
+          "block_id": "8fd1b794-0507-59d3-88fa-2209736ef6da",
+          "content_overlap": [
+            "activate",
+            "activation",
+            "computer",
+            "connect",
+            "ethernet",
+            "information",
+            "internet",
+            "modem",
+            "port",
+            "power",
+            "reboot",
+            "router",
+            "service",
+            "wan"
+          ],
+          "evidence_index": 5,
+          "issues": []
+        }
+      ],
+      "evidence_count": 5,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-003",
+      "selected_block_ids": [
+        "bc51c3d9-60e7-5b90-b7fc-8c8f3c0a3a6d",
+        "3d9321dd-db92-5587-9b08-a34e736a627e",
+        "4270da4c-a5fb-5ae4-a513-fd42dc41cfbb",
+        "8ed480ba-e35c-5a7d-85ba-ad748ae7732c",
+        "8fd1b794-0507-59d3-88fa-2209736ef6da"
+      ],
+      "selected_sections": [
+        "Hardware Setup > Install and Activate Your Cable Modem",
+        "Hardware Setup > Install and Activate Your Cable Modem > Connect Your Cable Modem to a Computer",
+        "Hardware Setup > Install and Activate Your Cable Modem > Activate Your Internet Service",
+        "Hardware Setup > Install and Activate Your Cable Modem > Perform a Speed Test",
+        "Hardware Setup > Install and Activate Your Cable Modem > Connect Your Cable Modem to a Router After Installation and Activation"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8387,
+      "block_checks": [
+        {
+          "block_id": "04fa120c-f70a-5771-82d0-525c222814e1",
+          "content_overlap": [
+            "admin",
+            "change",
+            "modem",
+            "need",
+            "normal",
+            "operation",
+            "password",
+            "set",
+            "settings"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "4cb893dc-21bd-5b88-92cb-a874cd79e74e",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "admin",
+            "connect",
+            "enter",
+            "http",
+            "label",
+            "login",
+            "modem",
+            "password",
+            "product"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "0de5a970-8b6a-5e57-ba98-6f57671a841c",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "admin",
+            "administration",
+            "advanced",
+            "apply",
+            "change",
+            "enter",
+            "http",
+            "label",
+            "login",
+            "modem",
+            "new",
+            "old",
+            "password",
+            "product",
+            "secure",
+            "select",
+            "set",
+            "settings",
+            "twice"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-004",
+      "selected_block_ids": [
+        "04fa120c-f70a-5771-82d0-525c222814e1",
+        "4cb893dc-21bd-5b88-92cb-a874cd79e74e",
+        "0de5a970-8b6a-5e57-ba98-6f57671a841c"
+      ],
+      "selected_sections": [
+        "Manage Your Network",
+        "Manage Your Network > Log in to the cable modem",
+        "Manage Your Network > Change the admin password"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8636,
+      "block_checks": [
+        {
+          "block_id": "eb2ebf98-481f-54be-b4a3-56ea1bdf5749",
+          "content_overlap": [
+            "address",
+            "cable",
+            "channel",
+            "channels",
+            "connection",
+            "connects",
+            "downstream",
+            "frequency",
+            "internet",
+            "locks",
+            "modem",
+            "obtains",
+            "procedure",
+            "ranges",
+            "scans",
+            "startup",
+            "status",
+            "upstream",
+            "wan"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "89ec02e1-535c-52f6-9162-6966ecfbb9c3",
+          "content_overlap": [
+            "cable",
+            "modem",
+            "status"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.0,
+      "question_pair_id": "Q-005",
+      "selected_block_ids": [
+        "eb2ebf98-481f-54be-b4a3-56ea1bdf5749",
+        "89ec02e1-535c-52f6-9162-6966ecfbb9c3"
+      ],
+      "selected_sections": [
+        "Manage Your Network > View cable modem initialization",
+        "Manage Your Network > View cable modem status"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7778,
+      "block_checks": [
+        {
+          "block_id": "32161388-87c1-53c5-9f08-9867bf5baeb1",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "address",
+            "factory",
+            "label",
+            "lan",
+            "modem",
+            "password",
+            "product",
+            "reset",
+            "settings"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "62f9a09d-d5a8-5805-8b92-4d0be62383ce",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "advanced",
+            "configured",
+            "erases",
+            "factory",
+            "http",
+            "interrupt",
+            "label",
+            "minute",
+            "modem",
+            "page",
+            "password",
+            "product",
+            "reboots",
+            "reset",
+            "settings",
+            "tab",
+            "takes",
+            "web"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-006",
+      "selected_block_ids": [
+        "32161388-87c1-53c5-9f08-9867bf5baeb1",
+        "62f9a09d-d5a8-5805-8b92-4d0be62383ce"
+      ],
+      "selected_sections": [
+        "Manage Your Network > Reset the cable modem to factory default settings",
+        "Manage Your Network > Reset the cable modem to factory default settings > Use the factory reset software button"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8571,
+      "block_checks": [
+        {
+          "block_id": "32161388-87c1-53c5-9f08-9867bf5baeb1",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "address",
+            "back",
+            "button",
+            "cannot",
+            "label",
+            "lan",
+            "modem",
+            "password",
+            "product",
+            "reset",
+            "settings"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "c5c4c17f-c329-5b9c-837f-7d33e641682f",
+          "content_overlap": [
+            "back",
+            "button",
+            "clip",
+            "configured",
+            "erases",
+            "hold",
+            "minute",
+            "modem",
+            "paper",
+            "press",
+            "reboots",
+            "reset",
+            "settings",
+            "straightened",
+            "takes",
+            "until"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.375,
+      "question_pair_id": "Q-007",
+      "selected_block_ids": [
+        "32161388-87c1-53c5-9f08-9867bf5baeb1",
+        "c5c4c17f-c329-5b9c-837f-7d33e641682f"
+      ],
+      "selected_sections": [
+        "Manage Your Network > Reset the cable modem to factory default settings",
+        "Manage Your Network > Reset the cable modem to factory default settings > Use the reset button on the back panel"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8056,
+      "block_checks": [
+        {
+          "block_id": "a88667b7-b299-50cb-9f9c-7ca1197494a0",
+          "content_overlap": [
+            "cable",
+            "check",
+            "computer",
+            "connection",
+            "ethernet",
+            "internet",
+            "led",
+            "leds",
+            "modem",
+            "online",
+            "power",
+            "provider",
+            "support"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "85bd9c8e-a264-5649-acbc-73648b7ce861",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "254",
+            "address",
+            "admin",
+            "browser",
+            "but",
+            "cable",
+            "cannot",
+            "caps",
+            "check",
+            "computer",
+            "connection",
+            "ethernet",
+            "internet",
+            "lock",
+            "lowercase",
+            "modem",
+            "name",
+            "range"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "5127b280-fd0a-571f-ab9a-f66bb57d3f73",
+          "content_overlap": [
+            "address",
+            "but",
+            "cable",
+            "cannot",
+            "internet",
+            "led",
+            "mac",
+            "modem",
+            "online",
+            "provider",
+            "registered",
+            "white"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-008",
+      "selected_block_ids": [
+        "a88667b7-b299-50cb-9f9c-7ca1197494a0",
+        "85bd9c8e-a264-5649-acbc-73648b7ce861",
+        "5127b280-fd0a-571f-ab9a-f66bb57d3f73"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Use LEDs to Troubleshoot",
+        "Troubleshooting > Cannot log in to the cable modem",
+        "Troubleshooting > Troubleshoot the cable internet connection"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "aaab89bf-432b-54b0-8b19-e4aba634a9a7",
+          "content_overlap": [
+            "100",
+            "168",
+            "192",
+            "admin",
+            "default",
+            "factory",
+            "http",
+            "label",
+            "login",
+            "name",
+            "password",
+            "port",
+            "printed",
+            "product",
+            "user"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "88695618-cf2a-5bf0-9a58-da1167d8f0c6",
+          "content_overlap": [
+            "110",
+            "adapter",
+            "coaxial",
+            "connector",
+            "ethernet",
+            "gbps",
+            "port",
+            "specifications",
+            "vdc"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-009",
+      "selected_block_ids": [
+        "aaab89bf-432b-54b0-8b19-e4aba634a9a7",
+        "88695618-cf2a-5bf0-9a58-da1167d8f0c6"
+      ],
+      "selected_sections": [
+        "Supplemental Information > Factory Settings",
+        "Supplemental Information > Technical Specifications"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7857,
+      "block_checks": [
+        {
+          "block_id": "6f0c387b-1f88-5053-ab87-88c4b71a3cea",
+          "content_overlap": [
+            "antenna",
+            "card",
+            "ethernet",
+            "gigabit",
+            "modem",
+            "nano",
+            "panel",
+            "power",
+            "rear",
+            "reset",
+            "sim",
+            "slot"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "37f50132-32d9-5fb0-a62d-366e401ac417",
+          "content_overlap": [
+            "bottom",
+            "card",
+            "facing",
+            "gently",
+            "horizontally",
+            "insert",
+            "install",
+            "mobile",
+            "modem",
+            "nano",
+            "obtain",
+            "off",
+            "panel",
+            "place",
+            "power",
+            "provider",
+            "sim",
+            "slot"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-010",
+      "selected_block_ids": [
+        "6f0c387b-1f88-5053-ab87-88c4b71a3cea",
+        "37f50132-32d9-5fb0-a62d-366e401ac417"
+      ],
+      "selected_sections": [
+        "Introduction and Hardware Overview > Modem Rear Panel",
+        "Introduction and Hardware Overview > Install the Nano SIM Card"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7857,
+      "block_checks": [
+        {
+          "block_id": "36789817-932f-55f7-9c50-bb45d2df0cbe",
+          "content_overlap": [
+            "cable",
+            "computer",
+            "connect",
+            "end",
+            "ethernet",
+            "gigabit",
+            "lan",
+            "modem",
+            "other",
+            "port"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "bac92cce-e737-5536-b2ae-ea8ce3d6c37d",
+          "content_overlap": [
+            "cable",
+            "connect",
+            "end",
+            "ethernet",
+            "gigabit",
+            "lan",
+            "modem",
+            "other",
+            "port",
+            "router"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8333,
+      "question_pair_id": "Q-011",
+      "selected_block_ids": [
+        "36789817-932f-55f7-9c50-bb45d2df0cbe",
+        "bac92cce-e737-5536-b2ae-ea8ce3d6c37d"
+      ],
+      "selected_sections": [
+        "Get Started > Connect a Computer, Switch, Hub, Router, or WiFi Router to the Modem > Connect a Computer to the LAN Port of the Modem",
+        "Get Started > Connect a Computer, Switch, Hub, Router, or WiFi Router to the Modem > Connect a Router or WiFi Router to the LAN Port of the Modem"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7917,
+      "block_checks": [
+        {
+          "block_id": "7a457e5c-aa3c-5b7f-8670-bd1a2011d57a",
+          "content_overlap": [
+            "168",
+            "192",
+            "bridge",
+            "built",
+            "connected",
+            "connection",
+            "devices",
+            "dhcp",
+            "mode",
+            "modem",
+            "multiple",
+            "nat",
+            "network",
+            "router",
+            "settings",
+            "switch",
+            "through"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "fa675707-eec3-5dae-b80f-46a21238adcf",
+          "content_overlap": [
+            "168",
+            "192",
+            "addresses",
+            "bridge",
+            "connected",
+            "connection",
+            "devices",
+            "dhcp",
+            "mode",
+            "modem",
+            "network",
+            "router",
+            "same",
+            "service",
+            "settings"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-012",
+      "selected_block_ids": [
+        "7a457e5c-aa3c-5b7f-8670-bd1a2011d57a",
+        "fa675707-eec3-5dae-b80f-46a21238adcf"
+      ],
+      "selected_sections": [
+        "Manage the Modem LAN Settings > Manage Router Mode and Bridge Mode",
+        "Manage the Modem LAN Settings > Change the DHCP Server Settings"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.72,
+      "block_checks": [
+        {
+          "block_id": "44157573-a57c-5a85-a69b-05c25c03dc6a",
+          "content_overlap": [
+            "always",
+            "charges",
+            "connect",
+            "coverage",
+            "dashboard",
+            "disconnect",
+            "except",
+            "incur",
+            "mobile",
+            "network",
+            "never",
+            "outside",
+            "preferences",
+            "provider",
+            "roaming",
+            "select",
+            "setting",
+            "settings",
+            "submit"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "cf1f57e0-473a-57f3-8d91-a52b0070e80b",
+          "content_overlap": [
+            "connect",
+            "dashboard",
+            "disconnect",
+            "mobile",
+            "network"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2857,
+      "question_pair_id": "Q-013",
+      "selected_block_ids": [
+        "44157573-a57c-5a85-a69b-05c25c03dc6a",
+        "cf1f57e0-473a-57f3-8d91-a52b0070e80b"
+      ],
+      "selected_sections": [
+        "Manage the Mobile Broadband Connection > Manage Mobile Broadband Auto Connect Options",
+        "Manage the Mobile Broadband Connection > Manually Connect to or Disconnect From the Mobile Broadband Network"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.5909,
+      "block_checks": [
+        {
+          "block_id": "441256a8-38c5-5b89-952a-c44f2cd29e77",
+          "content_overlap": [
+            "add",
+            "advanced",
+            "device",
+            "disabled",
+            "find",
+            "forwarding",
+            "port",
+            "protocol",
+            "remember",
+            "select",
+            "service",
+            "settings"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "72dd6f50-8da8-5970-b90b-3a0719762e64",
+          "content_overlap": [
+            "advanced",
+            "device",
+            "forwarding",
+            "port",
+            "remember",
+            "remove",
+            "select",
+            "service",
+            "settings"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.375,
+      "question_pair_id": "Q-014",
+      "selected_block_ids": [
+        "441256a8-38c5-5b89-952a-c44f2cd29e77",
+        "72dd6f50-8da8-5970-b90b-3a0719762e64"
+      ],
+      "selected_sections": [
+        "Secure Your Network > Manage Port Forwarding for Incoming Traffic > Enable Port Forwarding and Add a Service or Application",
+        "Secure Your Network > Manage Port Forwarding for Incoming Traffic > Remove a Service or Application for Port Forwarding"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "84875d88-f82a-5d68-88f2-2d33684ebeb7",
+          "content_overlap": [
+            "connect",
+            "disable",
+            "modem",
+            "personalize",
+            "pin",
+            "puk",
+            "security",
+            "sim",
+            "unblock"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "57b408ca-cdf1-5548-8faa-d0fbf7a09889",
+          "content_overlap": [
+            "enabled",
+            "modem",
+            "personalize",
+            "pin",
+            "security",
+            "sim"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "eb06abbc-3f74-5ddc-bfd6-17572beb2155",
+          "content_overlap": [
+            "attempts",
+            "blocked",
+            "correct",
+            "disable",
+            "incorrect",
+            "longer",
+            "modem",
+            "need",
+            "obtain",
+            "pin",
+            "provider",
+            "puk",
+            "security",
+            "sim",
+            "unblock"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        },
+        {
+          "block_id": "f06eeb80-8260-5ab3-b32e-10d527e746ba",
+          "content_overlap": [
+            "attempts",
+            "blocked",
+            "correct",
+            "incorrect",
+            "modem",
+            "need",
+            "pin",
+            "procedure",
+            "provider",
+            "puk",
+            "sim",
+            "unblock"
+          ],
+          "evidence_index": 4,
+          "issues": []
+        }
+      ],
+      "evidence_count": 4,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-015",
+      "selected_block_ids": [
+        "84875d88-f82a-5d68-88f2-2d33684ebeb7",
+        "57b408ca-cdf1-5548-8faa-d0fbf7a09889",
+        "eb06abbc-3f74-5ddc-bfd6-17572beb2155",
+        "f06eeb80-8260-5ab3-b32e-10d527e746ba"
+      ],
+      "selected_sections": [
+        "Secure Your Network > Manage SIM Card Security",
+        "Secure Your Network > Manage SIM Card Security > Personalize the SIM PIN",
+        "Secure Your Network > Manage SIM Card Security > Disable SIM Card Security",
+        "Secure Your Network > Manage SIM Card Security > Unblock the SIM Card With a PUK"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7368,
+      "block_checks": [
+        {
+          "block_id": "7e1a62c7-f256-5d08-a456-a62949c30491",
+          "content_overlap": [
+            "automatically",
+            "billing",
+            "connected",
+            "current",
+            "cycle",
+            "data",
+            "monthly",
+            "next",
+            "resets",
+            "section",
+            "session",
+            "start",
+            "time",
+            "usage"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "0ccb8b69-decb-5c77-9ef9-18e520716b11",
+          "content_overlap": [
+            "connected",
+            "data",
+            "monthly",
+            "section",
+            "usage"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5714,
+      "question_pair_id": "Q-016",
+      "selected_block_ids": [
+        "7e1a62c7-f256-5d08-a456-a62949c30491",
+        "0ccb8b69-decb-5c77-9ef9-18e520716b11"
+      ],
+      "selected_sections": [
+        "Manage the Modem and Monitor Usage and the Network > View Monthly Data and Session Data Usage",
+        "Manage the Modem and Monitor Usage and the Network > Set a Plan Limit for the Data Counter"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7,
+      "block_checks": [
+        {
+          "block_id": "43434cb0-0be2-5d97-be19-dfb7256b7c44",
+          "content_overlap": [
+            "access",
+            "first",
+            "modem",
+            "page",
+            "pages",
+            "time",
+            "web"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.0,
+      "question_pair_id": "Q-017",
+      "selected_block_ids": [
+        "43434cb0-0be2-5d97-be19-dfb7256b7c44"
+      ],
+      "selected_sections": [
+        "Frequently Asked Questions > How do I access the modem’s web pages?"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6897,
+      "block_checks": [
+        {
+          "block_id": "ecb1143f-6095-5459-b965-f4eca8e4245c",
+          "content_overlap": [
+            "alert",
+            "check",
+            "error",
+            "installed",
+            "messages",
+            "provider",
+            "sim",
+            "table"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "82ef2627-a58c-55ae-ab74-3f865a33e979",
+          "content_overlap": [
+            "account",
+            "active",
+            "address",
+            "cable",
+            "check",
+            "connect",
+            "connection",
+            "coverage",
+            "dhcp",
+            "enabled",
+            "ethernet",
+            "mobile",
+            "pin",
+            "provider",
+            "security",
+            "sim",
+            "table"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6,
+      "question_pair_id": "Q-018",
+      "selected_block_ids": [
+        "ecb1143f-6095-5459-b965-f4eca8e4245c",
+        "82ef2627-a58c-55ae-ab74-3f865a33e979"
+      ],
+      "selected_sections": [
+        "Alerts and Troubleshooting > Alert Messages",
+        "Alerts and Troubleshooting > Quick Tips for Troubleshooting"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7727,
+      "block_checks": [
+        {
+          "block_id": "6f442d4b-b8ba-5fe7-b4e9-9e90463dc194",
+          "content_overlap": [
+            "address",
+            "apn",
+            "but",
+            "contact",
+            "exists",
+            "internet",
+            "modem",
+            "profile",
+            "provider",
+            "still"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "683f18e6-f7fd-592e-8623-35a7300f6294",
+          "content_overlap": [
+            "address",
+            "but",
+            "computer",
+            "data",
+            "dns",
+            "internet",
+            "limit",
+            "load",
+            "modem",
+            "monthly",
+            "pages",
+            "provider"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-019",
+      "selected_block_ids": [
+        "6f442d4b-b8ba-5fe7-b4e9-9e90463dc194",
+        "683f18e6-f7fd-592e-8623-35a7300f6294"
+      ],
+      "selected_sections": [
+        "Alerts and Troubleshooting > Troubleshoot the Mobile Broadband Internet Connection > Obtain an Internet IP Address From Your Service Provider",
+        "Alerts and Troubleshooting > Troubleshoot the Mobile Broadband Internet Connection > Troubleshoot Internet Browsing"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8462,
+      "block_checks": [
+        {
+          "block_id": "dbca2b5a-8673-5396-be6d-051cb0b860c4",
+          "content_overlap": [
+            "connection",
+            "internet"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "1190a45f-877b-5cd2-a8d9-5ab1c390c374",
+          "content_overlap": [
+            "address",
+            "apply",
+            "click",
+            "connection",
+            "dns",
+            "encapsulation",
+            "enter",
+            "internet",
+            "isp",
+            "login",
+            "mac",
+            "mode",
+            "name",
+            "net",
+            "option",
+            "password",
+            "pppoe",
+            "provider",
+            "required",
+            "routerlogin",
+            "select",
+            "service",
+            "test"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-020",
+      "selected_block_ids": [
+        "dbca2b5a-8673-5396-be6d-051cb0b860c4",
+        "1190a45f-877b-5cd2-a8d9-5ab1c390c374"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Manually set up the Internet connection",
+        "Specify Your Internet Settings > Manually set up the Internet connection > Specify an Internet connection that uses a login and PPPoE service"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7,
+      "block_checks": [
+        {
+          "block_id": "b60ce24d-2b57-52a7-93ab-556a06485338",
+          "content_overlap": [
+            "address",
+            "characters",
+            "eight",
+            "group",
+            "groups",
+            "hexadecimal",
+            "ipv6",
+            "separated"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "ad49e55f-a53b-5c41-8bf1-a36c022c9b3b",
+          "content_overlap": [
+            "6to4",
+            "address",
+            "advanced",
+            "apply",
+            "assignment",
+            "check",
+            "connection",
+            "dns",
+            "enter",
+            "first",
+            "internet",
+            "ipv4",
+            "ipv6",
+            "make",
+            "relay",
+            "router",
+            "select",
+            "set",
+            "setting",
+            "settings",
+            "setup",
+            "static",
+            "sure",
+            "tunnel"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8333,
+      "question_pair_id": "Q-021",
+      "selected_block_ids": [
+        "b60ce24d-2b57-52a7-93ab-556a06485338",
+        "ad49e55f-a53b-5c41-8bf1-a36c022c9b3b"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Specify IPv6 Internet connections > Requirements for entering IPv6 addresses",
+        "Specify Your Internet Settings > Specify IPv6 Internet connections > Set up an IPv6 6to4 tunnel Internet connection"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8108,
+      "block_checks": [
+        {
+          "block_id": "aba5c3ef-7a47-5a71-bbb4-2da2cc9d65dc",
+          "content_overlap": [
+            "device",
+            "largest",
+            "mtu",
+            "packet"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "ae418564-dba4-5258-bb5b-731e4c45585d",
+          "content_overlap": [
+            "1436",
+            "1492",
+            "1500",
+            "change",
+            "common",
+            "default",
+            "device",
+            "ethernet",
+            "isp",
+            "largest",
+            "leave",
+            "mtu",
+            "open",
+            "packet",
+            "pppoe",
+            "pptp",
+            "recommends",
+            "secure",
+            "size",
+            "support",
+            "typical",
+            "unless",
+            "value",
+            "vpn",
+            "websites"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "d4e1d4fc-7655-51fc-8d81-af75a4b11734",
+          "content_overlap": [
+            "1436",
+            "1492",
+            "1500",
+            "advanced",
+            "apply",
+            "change",
+            "device",
+            "enter",
+            "ethernet",
+            "isp",
+            "mtu",
+            "pppoe",
+            "pptp",
+            "secure",
+            "setup",
+            "size",
+            "value",
+            "wan",
+            "websites"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-022",
+      "selected_block_ids": [
+        "aba5c3ef-7a47-5a71-bbb4-2da2cc9d65dc",
+        "ae418564-dba4-5258-bb5b-731e4c45585d",
+        "d4e1d4fc-7655-51fc-8d81-af75a4b11734"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Manage the MTU size",
+        "Specify Your Internet Settings > Manage the MTU size > MTU concepts",
+        "Specify Your Internet Settings > Manage the MTU size > Change the MTU size"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.9286,
+      "block_checks": [
+        {
+          "block_id": "8eefd80d-9f8a-5850-b82e-4aef51283405",
+          "content_overlap": [
+            "qos",
+            "remove"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "31b5dd16-326a-5e79-817f-c2585e0248a2",
+          "content_overlap": [
+            "advanced",
+            "application",
+            "apply",
+            "click",
+            "delete",
+            "device",
+            "net",
+            "qos",
+            "remove",
+            "routerlogin",
+            "rule",
+            "select",
+            "service",
+            "setup",
+            "table"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-023",
+      "selected_block_ids": [
+        "8eefd80d-9f8a-5850-b82e-4aef51283405",
+        "31b5dd16-326a-5e79-817f-c2585e0248a2"
+      ],
+      "selected_sections": [
+        "Optimize Performance > Manage Default and Custom QoS Rules",
+        "Optimize Performance > Manage Default and Custom QoS Rules > Remove a QoS Rule"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "0528f0b9-15e5-5482-9a68-0f02d2d61d68",
+          "content_overlap": [
+            "access",
+            "advanced",
+            "apply",
+            "change",
+            "device",
+            "enable",
+            "file",
+            "files",
+            "ftp",
+            "methods",
+            "network",
+            "readyshare",
+            "set",
+            "settings",
+            "storage",
+            "usb",
+            "within",
+            "workgroup"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "b510a03e-68c2-5e3f-a341-c16e7b2390d0",
+          "content_overlap": [
+            "access",
+            "advanced",
+            "apply",
+            "device",
+            "enable",
+            "file",
+            "files",
+            "ftp",
+            "network",
+            "readyshare",
+            "settings",
+            "storage",
+            "transfer",
+            "usb",
+            "within"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-024",
+      "selected_block_ids": [
+        "0528f0b9-15e5-5482-9a68-0f02d2d61d68",
+        "b510a03e-68c2-5e3f-a341-c16e7b2390d0"
+      ],
+      "selected_sections": [
+        "Share USB Storage Devices Attached to the Router > Manage Access to a Storage Device",
+        "Share USB Storage Devices Attached to the Router > Enable FTP access within your network"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6957,
+      "block_checks": [
+        {
+          "block_id": "4a519d38-1c5f-5662-bdb7-489bcabcd987",
+          "content_overlap": [
+            "access",
+            "add",
+            "advanced",
+            "apply",
+            "available",
+            "click",
+            "folder",
+            "name",
+            "network",
+            "read",
+            "readyshare",
+            "select",
+            "storage",
+            "usb",
+            "write"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "12d6aaad-d982-5f95-8b7d-63ba7706aba5",
+          "content_overlap": [
+            "advanced",
+            "apply",
+            "available",
+            "click",
+            "edit",
+            "folder",
+            "name",
+            "network",
+            "readyshare",
+            "select",
+            "storage",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.625,
+      "question_pair_id": "Q-025",
+      "selected_block_ids": [
+        "4a519d38-1c5f-5662-bdb7-489bcabcd987",
+        "12d6aaad-d982-5f95-8b7d-63ba7706aba5"
+      ],
+      "selected_sections": [
+        "Share USB Storage Devices Attached to the Router > Add a network folder on a USB storage device",
+        "Share USB Storage Devices Attached to the Router > Edit a network folder on a USB storage device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7647,
+      "block_checks": [
+        {
+          "block_id": "3fbed70d-f242-5a78-90cc-f0f2674fe5f7",
+          "content_overlap": [
+            "computer",
+            "default",
+            "enabled",
+            "internet",
+            "ipsec",
+            "l2tp",
+            "lan",
+            "pass",
+            "pptp",
+            "receive",
+            "through",
+            "traffic",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-026",
+      "selected_block_ids": [
+        "3fbed70d-f242-5a78-90cc-f0f2674fe5f7"
+      ],
+      "selected_sections": [
+        "Manage the WAN and LAN Network Settings > Manage VPN Pass-Through"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 1.0,
+      "block_checks": [
+        {
+          "block_id": "0c80bfa0-c243-53e3-8ba1-8ef14df71c4b",
+          "content_overlap": [
+            "between",
+            "bridge",
+            "device",
+            "internet",
+            "iptv",
+            "isp",
+            "nat",
+            "port",
+            "router",
+            "service"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "92de127d-5c3f-5d2a-a801-234fc3e5b014",
+          "content_overlap": [
+            "being",
+            "between",
+            "bridge",
+            "connected",
+            "device",
+            "internet",
+            "iptv",
+            "isp",
+            "nat",
+            "packets",
+            "port",
+            "prevents",
+            "processed",
+            "require",
+            "router",
+            "service"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-027",
+      "selected_block_ids": [
+        "0c80bfa0-c243-53e3-8ba1-8ef14df71c4b",
+        "92de127d-5c3f-5d2a-a801-234fc3e5b014"
+      ],
+      "selected_sections": [
+        "Manage the WAN and LAN Network Settings > Set Up a Bridge for a Port Group or VLAN Tag Group",
+        "Manage the WAN and LAN Network Settings > Set Up a Bridge for a Port Group or VLAN Tag Group > Set Up a Bridge for a Port Group"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6923,
+      "block_checks": [
+        {
+          "block_id": "2a3ade55-f893-5d78-8ead-3ff6b3d197c7",
+          "content_overlap": [
+            "administration",
+            "advanced",
+            "check",
+            "computer",
+            "connected",
+            "connection",
+            "download",
+            "ethernet",
+            "firmware",
+            "update",
+            "upload"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "82763a83-8a87-5a86-ac3a-cd78e0a68d0f",
+          "content_overlap": [
+            "administration",
+            "advanced",
+            "check",
+            "computer",
+            "connected",
+            "connection",
+            "correct",
+            "download",
+            "ethernet",
+            "fails",
+            "file",
+            "firmware",
+            "needed",
+            "specific",
+            "unzip",
+            "update",
+            "upload",
+            "version"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.375,
+      "question_pair_id": "Q-028",
+      "selected_block_ids": [
+        "2a3ade55-f893-5d78-8ead-3ff6b3d197c7",
+        "82763a83-8a87-5a86-ac3a-cd78e0a68d0f"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Update the router firmware > Check for new firmware and update the router",
+        "Manage Your Router > Update the router firmware > Manually upload firmware to the router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7778,
+      "block_checks": [
+        {
+          "block_id": "5a7fc3bd-5bd0-57b2-944d-5a981598dcf7",
+          "content_overlap": [
+            "advanced",
+            "blinking",
+            "control",
+            "detected",
+            "disable",
+            "except",
+            "led",
+            "off",
+            "power",
+            "setting",
+            "settings",
+            "setup",
+            "traffic",
+            "turn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.0,
+      "question_pair_id": "Q-029",
+      "selected_block_ids": [
+        "5a7fc3bd-5bd0-57b2-944d-5a981598dcf7"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Disable or Enable LED Blinking or Turn Off LEDs"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8095,
+      "block_checks": [
+        {
+          "block_id": "e466a3e1-89df-5cd9-a452-cf16fb5080f5",
+          "content_overlap": [
+            "android",
+            "device",
+            "install",
+            "router",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "006d8e6b-77f6-54fa-826b-6d417979808f",
+          "content_overlap": [
+            "android",
+            "app",
+            "client",
+            "configuration",
+            "connect",
+            "device",
+            "download",
+            "file",
+            "files",
+            "google",
+            "home",
+            "install",
+            "network",
+            "open",
+            "openvpn",
+            "page",
+            "phone",
+            "play",
+            "router",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-030",
+      "selected_block_ids": [
+        "e466a3e1-89df-5cd9-a452-cf16fb5080f5",
+        "006d8e6b-77f6-54fa-826b-6d417979808f"
+      ],
+      "selected_sections": [
+        "Use VPN to Access Your Network > Install OpenVPN software",
+        "Use VPN to Access Your Network > Install OpenVPN software > Install OpenVPN Software on an Android Device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7619,
+      "block_checks": [
+        {
+          "block_id": "0a3e9e25-c2a0-5ff5-9ea7-dfcd3a28faec",
+          "content_overlap": [
+            "cable",
+            "check",
+            "computer",
+            "connected",
+            "ethernet",
+            "internet",
+            "lan",
+            "leds",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "818e0932-f3ff-5602-b5b9-5f1d94d353ed",
+          "content_overlap": [
+            "access",
+            "addresses",
+            "but",
+            "computer",
+            "default",
+            "dns",
+            "gateway",
+            "internet",
+            "limit",
+            "meter",
+            "router",
+            "traffic"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4286,
+      "question_pair_id": "Q-031",
+      "selected_block_ids": [
+        "0a3e9e25-c2a0-5ff5-9ea7-dfcd3a28faec",
+        "818e0932-f3ff-5602-b5b9-5f1d94d353ed"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Troubleshoot with the LEDs > Internet or Ethernet LAN port LEDs are off",
+        "Troubleshooting > Troubleshoot Internet browsing"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "cf6a9c70-f40a-521b-8ee5-c0a7ff8c1279",
+          "content_overlap": [
+            "cable",
+            "computer",
+            "connect",
+            "ethernet",
+            "lan",
+            "network",
+            "port",
+            "power",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "b1147279-285c-50dc-965c-7722351f3563",
+          "content_overlap": [
+            "computer",
+            "enter",
+            "find",
+            "label",
+            "network",
+            "password",
+            "power",
+            "router"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-032",
+      "selected_block_ids": [
+        "cf6a9c70-f40a-521b-8ee5-c0a7ff8c1279",
+        "b1147279-285c-50dc-965c-7722351f3563"
+      ],
+      "selected_sections": [
+        "Connect to the Network and Access the Router > Connect to the Network > Wired Connection",
+        "Connect to the Network and Access the Router > Connect to the Network > WiFi Connection"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.875,
+      "block_checks": [
+        {
+          "block_id": "9213a4bb-497e-56d3-be43-8791bb53a54e",
+          "content_overlap": [
+            "advanced",
+            "automatically",
+            "click",
+            "configuration",
+            "connection",
+            "determine",
+            "internet",
+            "net",
+            "next",
+            "protocols",
+            "routerlogin",
+            "searches",
+            "select",
+            "servers",
+            "set",
+            "setup",
+            "wizard"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-033",
+      "selected_block_ids": [
+        "9213a4bb-497e-56d3-be43-8791bb53a54e"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Use the Internet Setup Wizard"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8125,
+      "block_checks": [
+        {
+          "block_id": "3a682a15-e809-5a0b-b646-c75d0c358df0",
+          "content_overlap": [
+            "add",
+            "apply",
+            "click",
+            "device",
+            "enable",
+            "name",
+            "network",
+            "policy",
+            "priority",
+            "qos",
+            "select"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "8aecb252-6293-553d-8e28-ef7b756f0c82",
+          "content_overlap": [
+            "add",
+            "apply",
+            "click",
+            "device",
+            "enable",
+            "ethernet",
+            "lan",
+            "name",
+            "network",
+            "policy",
+            "port",
+            "priority",
+            "qos",
+            "select"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4286,
+      "question_pair_id": "Q-034",
+      "selected_block_ids": [
+        "3a682a15-e809-5a0b-b646-c75d0c358df0",
+        "8aecb252-6293-553d-8e28-ef7b756f0c82"
+      ],
+      "selected_sections": [
+        "Optimize Performance > Optimize Internet Streaming With Dynamic QoS > Enable Advanced QoS and Manually Set Up QoS Rules > Add a QoS Rule by Device",
+        "Optimize Performance > Optimize Internet Streaming With Dynamic QoS > Enable Advanced QoS and Manually Set Up QoS Rules > Add a QoS Rule by LAN pot"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8,
+      "block_checks": [
+        {
+          "block_id": "54a5ae0e-dabe-533f-8906-cd65b27661ec",
+          "content_overlap": [
+            "automatically",
+            "communications",
+            "connections",
+            "devices",
+            "discover",
+            "multiplayer",
+            "network",
+            "peer",
+            "play",
+            "plug",
+            "real",
+            "registered",
+            "services",
+            "time",
+            "universal",
+            "upnp"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-035",
+      "selected_block_ids": [
+        "54a5ae0e-dabe-533f-8906-cd65b27661ec"
+      ],
+      "selected_sections": [
+        "Optimize Performance > Improve Network Connections With Universal Plug-N-Play"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.64,
+      "block_checks": [
+        {
+          "block_id": "0b8cd0d8-1f9c-5c69-886e-06744b09b661",
+          "content_overlap": [
+            "advanced",
+            "http",
+            "internet",
+            "link",
+            "net",
+            "port",
+            "router",
+            "routerlogin",
+            "statistics",
+            "status",
+            "tab",
+            "www"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "537310b8-39d1-57ca-81f0-ddddc2ad9916",
+          "content_overlap": [
+            "advanced",
+            "check",
+            "connection",
+            "dhcp",
+            "dns",
+            "gateway",
+            "http",
+            "internet",
+            "net",
+            "port",
+            "router",
+            "routerlogin",
+            "status",
+            "tab",
+            "www"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8333,
+      "question_pair_id": "Q-036",
+      "selected_block_ids": [
+        "0b8cd0d8-1f9c-5c69-886e-06744b09b661",
+        "537310b8-39d1-57ca-81f0-ddddc2ad9916"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Display Internet Port Statistics",
+        "Manage Your Router > Check the Internet Connection Status"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8611,
+      "block_checks": [
+        {
+          "block_id": "15938877-47a1-57e0-a802-c88e283ff497",
+          "content_overlap": [
+            "address",
+            "change",
+            "internet",
+            "know",
+            "router",
+            "settings",
+            "sure",
+            "wan"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "79d677ad-2fef-50d3-92dd-c07a6df0f14e",
+          "content_overlap": [
+            "8443",
+            "address",
+            "addresses",
+            "advanced",
+            "allowed",
+            "apply",
+            "choose",
+            "custom",
+            "external",
+            "first",
+            "home",
+            "http",
+            "internet",
+            "login",
+            "management",
+            "port",
+            "remote",
+            "restrict",
+            "router",
+            "settings",
+            "setup",
+            "turn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "c63a4385-d5ca-500b-bb85-d656176fdbe2",
+          "content_overlap": [
+            "123",
+            "134",
+            "177",
+            "8443",
+            "address",
+            "custom",
+            "example",
+            "external",
+            "followed",
+            "home",
+            "http",
+            "port",
+            "remote",
+            "router",
+            "wan"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.375,
+      "question_pair_id": "Q-037",
+      "selected_block_ids": [
+        "15938877-47a1-57e0-a802-c88e283ff497",
+        "79d677ad-2fef-50d3-92dd-c07a6df0f14e",
+        "c63a4385-d5ca-500b-bb85-d656176fdbe2"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Remote Access",
+        "Manage Your Router > Remote Access > Set Up Remote Management",
+        "Manage Your Router > Remote Access > Use Remote Access"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7647,
+      "block_checks": [
+        {
+          "block_id": "1c87234f-8aff-560c-8028-20099626deb5",
+          "content_overlap": [
+            "administration",
+            "advanced",
+            "apply",
+            "daylight",
+            "enter",
+            "ntp",
+            "saving",
+            "set",
+            "settings",
+            "time",
+            "zone"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "d4980606-c8d1-5aca-adbe-96e35254c9e1",
+          "content_overlap": [
+            "administration",
+            "advanced",
+            "apply",
+            "enter",
+            "netgear",
+            "ntp",
+            "preferred",
+            "server",
+            "set",
+            "settings",
+            "time"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.25,
+      "question_pair_id": "Q-038",
+      "selected_block_ids": [
+        "1c87234f-8aff-560c-8028-20099626deb5",
+        "d4980606-c8d1-5aca-adbe-96e35254c9e1"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Set Your Time Zone",
+        "Manage Your Router > Change the NTP Server"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.619,
+      "block_checks": [
+        {
+          "block_id": "7e090661-6e52-5e1b-9b1e-3efc302a53dd",
+          "content_overlap": [
+            "computer",
+            "connected",
+            "device",
+            "dns",
+            "dynamic",
+            "home",
+            "name",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "af255485-98d7-59f8-94db-806fd6280e64",
+          "content_overlap": [
+            "access",
+            "address",
+            "computer",
+            "connected",
+            "device",
+            "dns",
+            "dynamic",
+            "files",
+            "ftp",
+            "home",
+            "internet",
+            "name",
+            "port",
+            "remote",
+            "router",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4444,
+      "question_pair_id": "Q-039",
+      "selected_block_ids": [
+        "7e090661-6e52-5e1b-9b1e-3efc302a53dd",
+        "af255485-98d7-59f8-94db-806fd6280e64"
+      ],
+      "selected_sections": [
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Your Personal FTP Server > Change the Dynamic DNS Settings",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB Storage Devices Through the Internet"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8421,
+      "block_checks": [
+        {
+          "block_id": "89cf7641-ad76-514d-a38e-ff036b200250",
+          "content_overlap": [
+            "account",
+            "complete",
+            "create",
+            "device",
+            "fields",
+            "link",
+            "mynetgear",
+            "page",
+            "readycloud",
+            "register",
+            "router",
+            "sign",
+            "visit"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "e2441363-6c2a-53a1-bc5f-70f736213984",
+          "content_overlap": [
+            "account",
+            "connect",
+            "create",
+            "device",
+            "link",
+            "page",
+            "readycloud",
+            "register",
+            "registration",
+            "router",
+            "sign",
+            "storage",
+            "usb",
+            "visit"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8,
+      "question_pair_id": "Q-040",
+      "selected_block_ids": [
+        "89cf7641-ad76-514d-a38e-ff036b200250",
+        "e2441363-6c2a-53a1-bc5f-70f736213984"
+      ],
+      "selected_sections": [
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Remotely Access a USB Device Using ReadyCLOUD > Create a ReadyCLOUD Account",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Remotely Access a USB Device Using ReadyCLOUD > Register Your Router With ReadyCLOUD"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8667,
+      "block_checks": [
+        {
+          "block_id": "aa1a9020-2d26-56b6-b111-03a8e5731486",
+          "content_overlap": [
+            "device",
+            "install",
+            "ios",
+            "router",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "0cff8f5c-96b8-5d33-9c11-37f93f8300fb",
+          "content_overlap": [
+            "app",
+            "client",
+            "configuration",
+            "connect",
+            "device",
+            "download",
+            "files",
+            "install",
+            "ios",
+            "openvpn",
+            "router",
+            "store",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2,
+      "question_pair_id": "Q-041",
+      "selected_block_ids": [
+        "aa1a9020-2d26-56b6-b111-03a8e5731486",
+        "0cff8f5c-96b8-5d33-9c11-37f93f8300fb"
+      ],
+      "selected_sections": [
+        "Use VPN to Access Your Network > Install OpenVPN Software",
+        "Use VPN to Access Your Network > Install OpenVPN Software > Install OpenVPN Software on an iOS Device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6667,
+      "block_checks": [
+        {
+          "block_id": "f2289449-f54e-5af6-8243-762118ef305b",
+          "content_overlap": [
+            "minutes",
+            "modem",
+            "network",
+            "off",
+            "restart",
+            "router",
+            "turn",
+            "unplug",
+            "wait"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "0840bab1-67d6-5c6c-b00f-e0a82dee63b9",
+          "content_overlap": [
+            "cables",
+            "device",
+            "ethernet",
+            "internet",
+            "lan",
+            "leds",
+            "modem",
+            "power",
+            "router"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.375,
+      "question_pair_id": "Q-042",
+      "selected_block_ids": [
+        "f2289449-f54e-5af6-8243-762118ef305b",
+        "0840bab1-67d6-5c6c-b00f-e0a82dee63b9"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Quick Tips > Sequence to Restart Your Network",
+        "Troubleshooting > Quick Tips > Check Ethernet Cable Connections"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8182,
+      "block_checks": [
+        {
+          "block_id": "33e10a89-cd52-5aa3-a20c-b5fe9e6472da",
+          "content_overlap": [
+            "access",
+            "address",
+            "list",
+            "mac",
+            "make",
+            "router",
+            "security",
+            "settings",
+            "ssid",
+            "sure",
+            "wifi",
+            "wireless"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "65aa662f-9473-5c74-b996-74e7f545f09c",
+          "content_overlap": [
+            "button",
+            "check",
+            "device",
+            "hidden",
+            "led",
+            "list",
+            "off",
+            "router",
+            "security",
+            "settings",
+            "ssid",
+            "sure",
+            "weak",
+            "wifi",
+            "wireless"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-043",
+      "selected_block_ids": [
+        "33e10a89-cd52-5aa3-a20c-b5fe9e6472da",
+        "65aa662f-9473-5c74-b996-74e7f545f09c"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Quick Tips > WiFi Settings",
+        "Troubleshooting > Troubleshoot WiFi Connectivity"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 1.0,
+      "block_checks": [
+        {
+          "block_id": "89d399fa-1c1b-5d37-b35a-194ce673ec69",
+          "content_overlap": [
+            "adapter",
+            "cable",
+            "contains",
+            "ethernet",
+            "package",
+            "power",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.0,
+      "question_pair_id": "Q-044",
+      "selected_block_ids": [
+        "89d399fa-1c1b-5d37-b35a-194ce673ec69"
+      ],
+      "selected_sections": [
+        "Hardware Setup > Unpack your router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6818,
+      "block_checks": [
+        {
+          "block_id": "6af6a140-458c-5188-b116-2f8430c69437",
+          "content_overlap": [
+            "account",
+            "internet",
+            "isp",
+            "key",
+            "login",
+            "netgear",
+            "network",
+            "router",
+            "service",
+            "subscriptions"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "b9937b70-a336-5587-80b2-44b7567807fd",
+          "content_overlap": [
+            "http",
+            "login",
+            "net",
+            "network",
+            "router",
+            "routerlogin",
+            "settings",
+            "www"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8333,
+      "question_pair_id": "Q-045",
+      "selected_block_ids": [
+        "6af6a140-458c-5188-b116-2f8430c69437",
+        "b9937b70-a336-5587-80b2-44b7567807fd"
+      ],
+      "selected_sections": [
+        "Connect to the network and access the router > Types of logins",
+        "Connect to the network and access the router > Use a web browser to access the router > Log in to the router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.875,
+      "block_checks": [
+        {
+          "block_id": "f02b327f-e424-5fbd-884a-afa982cfba97",
+          "content_overlap": [
+            "advanced",
+            "apply",
+            "click",
+            "ethernet",
+            "ipv6",
+            "layer",
+            "packets",
+            "pass",
+            "process",
+            "router",
+            "select",
+            "setup",
+            "switch",
+            "through"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-046",
+      "selected_block_ids": [
+        "f02b327f-e424-5fbd-884a-afa982cfba97"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Specify IPv6 Internet connections > Set up an IPv6 pass-through Internet connection"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8148,
+      "block_checks": [
+        {
+          "block_id": "304579c0-2505-541b-9272-41a33abdc404",
+          "content_overlap": [
+            "alg",
+            "default",
+            "diagnostic",
+            "dmz",
+            "dos",
+            "filtering",
+            "firewall",
+            "igmp",
+            "internet",
+            "mtu",
+            "nat",
+            "necessary",
+            "need",
+            "ping",
+            "port",
+            "protection",
+            "proxying",
+            "reason",
+            "scan",
+            "security",
+            "server",
+            "settings",
+            "setup",
+            "sip",
+            "wan"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4286,
+      "question_pair_id": "Q-047",
+      "selected_block_ids": [
+        "304579c0-2505-541b-9272-41a33abdc404"
+      ],
+      "selected_sections": [
+        "Manage Network Settings > View or change the WAN settings"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6667,
+      "block_checks": [
+        {
+          "block_id": "ebd82415-b17d-5082-8472-3811a168faaf",
+          "content_overlap": [
+            "add",
+            "address",
+            "advanced",
+            "apply",
+            "choose",
+            "device",
+            "dhcp",
+            "lan",
+            "mac",
+            "network",
+            "renew",
+            "reservation",
+            "reserve",
+            "select",
+            "setup"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "79da6936-bc1d-53fc-b043-434193a77ba9",
+          "content_overlap": [
+            "address",
+            "advanced",
+            "apply",
+            "change",
+            "device",
+            "edit",
+            "lan",
+            "network",
+            "reservation",
+            "select",
+            "setup"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-048",
+      "selected_block_ids": [
+        "ebd82415-b17d-5082-8472-3811a168faaf",
+        "79da6936-bc1d-53fc-b043-434193a77ba9"
+      ],
+      "selected_sections": [
+        "Manage Network Settings > Manage reserved LAN IP addresses > Reserve an IP address",
+        "Manage Network Settings > Manage reserved LAN IP addresses > Edit a reserved IP address"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7273,
+      "block_checks": [
+        {
+          "block_id": "88a61bbc-985f-5b34-9830-9632803f359f",
+          "content_overlap": [
+            "change",
+            "different",
+            "keep",
+            "key",
+            "label",
+            "network",
+            "new",
+            "password",
+            "preset",
+            "router",
+            "ssid",
+            "unless",
+            "without"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "0f01b620-ac86-5a3e-bacb-6893a15e210e",
+          "content_overlap": [
+            "change",
+            "different",
+            "join",
+            "key",
+            "label",
+            "network",
+            "new",
+            "password",
+            "preset",
+            "printed",
+            "router",
+            "secure",
+            "wpa",
+            "wpa2"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-049",
+      "selected_block_ids": [
+        "88a61bbc-985f-5b34-9830-9632803f359f",
+        "0f01b620-ac86-5a3e-bacb-6893a15e210e"
+      ],
+      "selected_sections": [
+        "Manage Network Settings > Specify basic WiFi settings",
+        "Manage Network Settings > Change the WiFi password or the WiFi security"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.64,
+      "block_checks": [
+        {
+          "block_id": "aeaf90b5-5cb4-5ff1-af4a-2f43d2368c76",
+          "content_overlap": [
+            "compatibility",
+            "compliant",
+            "computer",
+            "device",
+            "devices",
+            "flash",
+            "hard",
+            "list",
+            "readyshare",
+            "router",
+            "usb",
+            "work"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "bb9735df-2bc3-50f1-9fb8-2235613d714e",
+          "content_overlap": [
+            "connect",
+            "device",
+            "devices",
+            "power",
+            "readyshare",
+            "router",
+            "special",
+            "supply",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2,
+      "question_pair_id": "Q-050",
+      "selected_block_ids": [
+        "aeaf90b5-5cb4-5ff1-af4a-2f43d2368c76",
+        "bb9735df-2bc3-50f1-9fb8-2235613d714e"
+      ],
+      "selected_sections": [
+        "Share USB Storage Devices Attached to the Router > USB device requirements",
+        "Share USB Storage Devices Attached to the Router > Connect a USB storage device to the router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7619,
+      "block_checks": [
+        {
+          "block_id": "14bc83c7-61a2-5364-b2c3-e1a9446f3dbe",
+          "content_overlap": [
+            "access",
+            "advanced",
+            "available",
+            "device",
+            "folder",
+            "folders",
+            "name",
+            "network",
+            "readyshare",
+            "share",
+            "shared",
+            "storage",
+            "usb",
+            "view"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "9d1e53fd-0a2d-51bd-bb64-2521b239e8f3",
+          "content_overlap": [
+            "access",
+            "advanced",
+            "available",
+            "create",
+            "device",
+            "drive",
+            "folder",
+            "folders",
+            "name",
+            "network",
+            "open",
+            "readyshare",
+            "share",
+            "storage",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8571,
+      "question_pair_id": "Q-051",
+      "selected_block_ids": [
+        "14bc83c7-61a2-5364-b2c3-e1a9446f3dbe",
+        "9d1e53fd-0a2d-51bd-bb64-2521b239e8f3"
+      ],
+      "selected_sections": [
+        "Share USB Storage Devices Attached to the Router > View network folders on a storage device",
+        "Share USB Storage Devices Attached to the Router > Add a network folder on a USB storage device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.4737,
+      "block_checks": [
+        {
+          "block_id": "e43b60ee-74fd-5d48-823c-2588148d4411",
+          "content_overlap": [
+            "account",
+            "already",
+            "dns",
+            "dynamic",
+            "dyndns",
+            "enter",
+            "netgear",
+            "page",
+            "settings"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "d7d2bc93-72bb-53d6-945c-0708fde2888b",
+          "content_overlap": [
+            "account",
+            "change",
+            "dns",
+            "dynamic",
+            "enter",
+            "page",
+            "settings"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8571,
+      "question_pair_id": "Q-052",
+      "selected_block_ids": [
+        "e43b60ee-74fd-5d48-823c-2588148d4411",
+        "d7d2bc93-72bb-53d6-945c-0708fde2888b"
+      ],
+      "selected_sections": [
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Set up and manage Dynamic DNS > Specify a DNS account that you already created",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Set up and manage Dynamic DNS > Change the Dynamic DNS settings"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7143,
+      "block_checks": [
+        {
+          "block_id": "10f082e0-460d-59c2-bf25-090a7b36a4a8",
+          "content_overlap": [
+            "address",
+            "example",
+            "forwarding",
+            "http",
+            "internet",
+            "local",
+            "port",
+            "public",
+            "requests",
+            "router",
+            "server",
+            "web"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "cf516841-9648-5ad0-aaaa-b65b9c5d85aa",
+          "content_overlap": [
+            "address",
+            "example",
+            "forwarding",
+            "internet",
+            "port",
+            "request",
+            "router",
+            "rule",
+            "sends",
+            "sent",
+            "server",
+            "web"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-053",
+      "selected_block_ids": [
+        "10f082e0-460d-59c2-bf25-090a7b36a4a8",
+        "cf516841-9648-5ad0-aaaa-b65b9c5d85aa"
+      ],
+      "selected_sections": [
+        "Manage port forwarding and port triggering > Manage port forwarding to a local server > Application example: Make a local web server public",
+        "Manage port forwarding and port triggering > Manage port forwarding to a local server > How the router implements the port forwarding rule"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.84,
+      "block_checks": [
+        {
+          "block_id": "f24fac39-a3db-5243-9d24-4986ad8e8cf1",
+          "content_overlap": [
+            "access",
+            "add",
+            "address",
+            "case",
+            "control",
+            "device",
+            "enabled",
+            "mac",
+            "make",
+            "match",
+            "network",
+            "router",
+            "security",
+            "sensitive",
+            "ssid",
+            "wifi"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "48b55cf6-5b08-527e-bd26-f4183bca41e2",
+          "content_overlap": [
+            "check",
+            "device",
+            "enabled",
+            "hidden",
+            "led",
+            "network",
+            "router",
+            "security",
+            "select",
+            "ssid",
+            "whether",
+            "wifi"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-054",
+      "selected_block_ids": [
+        "f24fac39-a3db-5243-9d24-4986ad8e8cf1",
+        "48b55cf6-5b08-527e-bd26-f4183bca41e2"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Quick tips > Check the WiFi settings",
+        "Troubleshooting > Troubleshoot WiFi connectivity"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.5385,
+      "block_checks": [
+        {
+          "block_id": "7059c14f-c840-5863-9050-2518f69aa8d5",
+          "content_overlap": [
+            "default",
+            "factory",
+            "lan",
+            "reset",
+            "return",
+            "router",
+            "settings",
+            "user"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-055",
+      "selected_block_ids": [
+        "7059c14f-c840-5863-9050-2518f69aa8d5"
+      ],
+      "selected_sections": [
+        "Supplemental Information > Factory settings"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7037,
+      "block_checks": [
+        {
+          "block_id": "c31cd99a-365c-5ce5-8381-39df25c52273",
+          "content_overlap": [
+            "antenna",
+            "antennas",
+            "attach",
+            "labeled",
+            "post",
+            "router",
+            "shown"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "f42f57b0-65cd-5982-935c-289c54636287",
+          "content_overlap": [
+            "area",
+            "away",
+            "center",
+            "glass",
+            "line",
+            "metal",
+            "near",
+            "other",
+            "place",
+            "range",
+            "router",
+            "sight",
+            "walls",
+            "within"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-056",
+      "selected_block_ids": [
+        "c31cd99a-365c-5ce5-8381-39df25c52273",
+        "f42f57b0-65cd-5982-935c-289c54636287"
+      ],
+      "selected_sections": [
+        "Hardware Setup > Attach and position the antennas",
+        "Hardware Setup > Position your router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8421,
+      "block_checks": [
+        {
+          "block_id": "1b2c7958-ebc1-5927-bfb6-4acbd0f97781",
+          "content_overlap": [
+            "cable",
+            "computer",
+            "connect",
+            "ethernet",
+            "lan",
+            "network",
+            "port",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "e00425b6-15d6-5234-b2e5-d0f194e4e777",
+          "content_overlap": [
+            "connect",
+            "device",
+            "enter",
+            "key",
+            "label",
+            "network",
+            "open",
+            "router",
+            "select",
+            "settings",
+            "ssid"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6,
+      "question_pair_id": "Q-057",
+      "selected_block_ids": [
+        "1b2c7958-ebc1-5927-bfb6-4acbd0f97781",
+        "e00425b6-15d6-5234-b2e5-d0f194e4e777"
+      ],
+      "selected_sections": [
+        "Connect to the Network and Access the Router > Connect to the router network > Connect to the router using a wired connection",
+        "Connect to the Network and Access the Router > Connect to the router network > Connect to the router WiFi network"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8,
+      "block_checks": [
+        {
+          "block_id": "e87e22a2-a89c-58a7-9ff2-ff82463e19a7",
+          "content_overlap": [
+            "address",
+            "addresses",
+            "auto",
+            "automatically",
+            "config",
+            "detects",
+            "dns",
+            "filtering",
+            "ipv6",
+            "lan",
+            "router",
+            "set",
+            "wan"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-058",
+      "selected_block_ids": [
+        "e87e22a2-a89c-58a7-9ff2-ff82463e19a7"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Specify IPv6 Internet connections > Use auto config for an IPv6 Internet connection"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "9a5a5bff-8b53-5c37-9d87-9ce596f7433e",
+          "content_overlap": [
+            "access",
+            "address",
+            "allow",
+            "block",
+            "control",
+            "device",
+            "mac"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "f5872d3c-76d3-512c-bb09-69a649f6720f",
+          "content_overlap": [
+            "access",
+            "address",
+            "allow",
+            "apply",
+            "block",
+            "control",
+            "device",
+            "mac",
+            "security"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-059",
+      "selected_block_ids": [
+        "9a5a5bff-8b53-5c37-9d87-9ce596f7433e",
+        "f5872d3c-76d3-512c-bb09-69a649f6720f"
+      ],
+      "selected_sections": [
+        "Control Access to the Internet > Network access control list",
+        "Control Access to the Internet > Network access control list > Enable the network access control list, set the access rule, and allow or block connected devices"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.9167,
+      "block_checks": [
+        {
+          "block_id": "ab459710-fc4e-5fb7-b276-ec36619929af",
+          "content_overlap": [
+            "bandwidth",
+            "internet",
+            "qos"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "d2849132-6a3d-520c-8f2c-bd5e904e522d",
+          "content_overlap": [
+            "apply",
+            "bandwidth",
+            "detect",
+            "devices",
+            "download",
+            "enable",
+            "enter",
+            "internet",
+            "let",
+            "make",
+            "qos",
+            "speeds",
+            "speedtest",
+            "upload"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.375,
+      "question_pair_id": "Q-060",
+      "selected_block_ids": [
+        "ab459710-fc4e-5fb7-b276-ec36619929af",
+        "d2849132-6a3d-520c-8f2c-bd5e904e522d"
+      ],
+      "selected_sections": [
+        "Optimize Performance > Use Dynamic QoS to optimize Internet traffic management",
+        "Optimize Performance > Use Dynamic QoS to optimize Internet traffic management > Enable Dynamic QoS"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.5833,
+      "block_checks": [
+        {
+          "block_id": "f6fd63f2-f6fd-5bae-a838-1a933a94fc87",
+          "content_overlap": [
+            "apply",
+            "dynamic",
+            "enabled",
+            "page",
+            "qos",
+            "update"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "93ffa849-c75e-5120-be9a-d99bb0eed70b",
+          "content_overlap": [
+            "apply",
+            "dynamic",
+            "enabled",
+            "now",
+            "page",
+            "qos",
+            "update"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.1667,
+      "question_pair_id": "Q-061",
+      "selected_block_ids": [
+        "f6fd63f2-f6fd-5bae-a838-1a933a94fc87",
+        "93ffa849-c75e-5120-be9a-d99bb0eed70b"
+      ],
+      "selected_sections": [
+        "Optimize Performance > Use Dynamic QoS to optimize Internet traffic management > Enable or disable the automatic QoS database update",
+        "Optimize Performance > Use Dynamic QoS to optimize Internet traffic management > Manually update the dynamic QoS database"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7857,
+      "block_checks": [
+        {
+          "block_id": "0e8a4859-ac3f-57fd-a7ae-a5affebcdfde",
+          "content_overlap": [
+            "browser",
+            "router",
+            "settings",
+            "user"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "03a4fccb-bb0c-56ec-b67b-eee79c190813",
+          "content_overlap": [
+            "browser",
+            "close",
+            "erase",
+            "factory",
+            "minutes",
+            "off",
+            "restarts",
+            "router",
+            "settings",
+            "turn",
+            "user"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-062",
+      "selected_block_ids": [
+        "0e8a4859-ac3f-57fd-a7ae-a5affebcdfde",
+        "03a4fccb-bb0c-56ec-b67b-eee79c190813"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Manage the router configuration file > Back up the settings",
+        "Manage Your Router > Manage the router configuration file > Erase the settings"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.9355,
+      "block_checks": [
+        {
+          "block_id": "a13c3553-78f9-5ede-9cd9-390daad977b6",
+          "content_overlap": [
+            "address",
+            "away",
+            "between",
+            "client",
+            "configuration",
+            "connect",
+            "connection",
+            "ddns",
+            "enable",
+            "encrypted",
+            "external",
+            "files",
+            "gateway",
+            "home",
+            "install",
+            "internet",
+            "laptop",
+            "name",
+            "openvpn",
+            "router",
+            "service",
+            "set",
+            "static",
+            "traffic",
+            "vpn",
+            "wan"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "9078acec-f7bb-55fa-8707-b9a0825e4d79",
+          "content_overlap": [
+            "advanced",
+            "apply",
+            "client",
+            "configuration",
+            "connection",
+            "download",
+            "enable",
+            "home",
+            "install",
+            "name",
+            "openvpn",
+            "package",
+            "router",
+            "service",
+            "set",
+            "setup",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "0b9dd330-c3d7-545c-a617-8fb41923d277",
+          "content_overlap": [
+            "client",
+            "configuration",
+            "download",
+            "enable",
+            "files",
+            "install",
+            "openvpn",
+            "router",
+            "service",
+            "vpn"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-063",
+      "selected_block_ids": [
+        "a13c3553-78f9-5ede-9cd9-390daad977b6",
+        "9078acec-f7bb-55fa-8707-b9a0825e4d79",
+        "0b9dd330-c3d7-545c-a617-8fb41923d277"
+      ],
+      "selected_sections": [
+        "Use OpenVPN to Access Your Network > About VPN connections",
+        "Use OpenVPN to Access Your Network > Enable OpenVPN service in the router",
+        "Use OpenVPN to Access Your Network > Install OpenVPN software on a VPN client"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6923,
+      "block_checks": [
+        {
+          "block_id": "5fc0a06a-b9bd-5a78-8f70-08b7b7ff6bcc",
+          "content_overlap": [
+            "access",
+            "connection",
+            "home",
+            "internet",
+            "service",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "01143d51-a727-543c-b607-948530c2902c",
+          "content_overlap": [
+            "access",
+            "apply",
+            "connection",
+            "enable",
+            "home",
+            "internet",
+            "network",
+            "service",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4286,
+      "question_pair_id": "Q-064",
+      "selected_block_ids": [
+        "5fc0a06a-b9bd-5a78-8f70-08b7b7ff6bcc",
+        "01143d51-a727-543c-b607-948530c2902c"
+      ],
+      "selected_sections": [
+        "Use OpenVPN to Access Your Network > Use VPN to access your Internet service at home",
+        "Use OpenVPN to Access Your Network > Use VPN to access your Internet service at home > Block VPN client Internet access in the router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7,
+      "block_checks": [
+        {
+          "block_id": "af31b6ec-73a8-5529-8fa5-da1f467d1bef",
+          "content_overlap": [
+            "delete",
+            "forwarding",
+            "port",
+            "select",
+            "service",
+            "table",
+            "triggering"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.0,
+      "question_pair_id": "Q-065",
+      "selected_block_ids": [
+        "af31b6ec-73a8-5529-8fa5-da1f467d1bef"
+      ],
+      "selected_sections": [
+        "Manage Port Forwarding and Port Triggering > Manage port forwarding to a local server > Delete a port forwarding entry"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7368,
+      "block_checks": [
+        {
+          "block_id": "b60d283b-acea-5673-be03-c506dc1df859",
+          "content_overlap": [
+            "address",
+            "check",
+            "network",
+            "ping",
+            "reply",
+            "run",
+            "windows"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "d6a2438e-ce2e-5744-b23d-64355bb7f3b2",
+          "content_overlap": [
+            "address",
+            "check",
+            "gateway",
+            "host",
+            "isp",
+            "mac",
+            "modem",
+            "name",
+            "network",
+            "ping",
+            "remote",
+            "run",
+            "test",
+            "windows"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-066",
+      "selected_block_ids": [
+        "b60d283b-acea-5673-be03-c506dc1df859",
+        "d6a2438e-ce2e-5744-b23d-64355bb7f3b2"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Troubleshoot your network using the ping utility > Test the LAN path to your router",
+        "Troubleshooting > Troubleshoot your network using the ping utility > Test the path from a Windows-based computer to a remote device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.4545,
+      "block_checks": [
+        {
+          "block_id": "a3662689-f8b9-5c28-8c0a-b2185487bec9",
+          "content_overlap": [
+            "enter",
+            "find",
+            "join",
+            "label",
+            "password",
+            "router",
+            "select"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-067",
+      "selected_block_ids": [
+        "a3662689-f8b9-5c28-8c0a-b2185487bec9"
+      ],
+      "selected_sections": [
+        "Connect to the network and access the router > Connect to the network > Find and connect to the WiFi network"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8667,
+      "block_checks": [
+        {
+          "block_id": "51405423-2987-5292-8fb8-9b78e651d7c5",
+          "content_overlap": [
+            "automatically",
+            "browser"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "feb09c00-0fd2-5b2c-ae97-969bd349df0e",
+          "content_overlap": [
+            "address",
+            "automatically",
+            "browser",
+            "cache",
+            "clear",
+            "computer",
+            "connection",
+            "lan",
+            "led",
+            "make",
+            "page",
+            "power",
+            "reopen",
+            "setup",
+            "sure"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2857,
+      "question_pair_id": "Q-068",
+      "selected_block_ids": [
+        "51405423-2987-5292-8fb8-9b78e651d7c5",
+        "feb09c00-0fd2-5b2c-ae97-969bd349df0e"
+      ],
+      "selected_sections": [
+        "Connect to the network and access the router > Use a web browser to access the router",
+        "Connect to the network and access the router > Use a web browser to access the router > Automatic Internet Setup"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7368,
+      "block_checks": [
+        {
+          "block_id": "fbf822a7-110a-5ac3-b64c-6a5fbaf2ccc4",
+          "content_overlap": [
+            "largest",
+            "mtu",
+            "packet"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "eae4f314-abe4-5229-ac3e-d9cc4c571b27",
+          "content_overlap": [
+            "change",
+            "default",
+            "largest",
+            "mtu",
+            "open",
+            "packet",
+            "provider",
+            "recommends",
+            "setting",
+            "size",
+            "unless",
+            "value"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "18a45189-9618-54b7-a131-4f7218fbc1df",
+          "content_overlap": [
+            "apply",
+            "change",
+            "enter",
+            "mtu",
+            "settings",
+            "size",
+            "value"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-069",
+      "selected_block_ids": [
+        "fbf822a7-110a-5ac3-b64c-6a5fbaf2ccc4",
+        "eae4f314-abe4-5229-ac3e-d9cc4c571b27",
+        "18a45189-9618-54b7-a131-4f7218fbc1df"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Manage the MTU size",
+        "Specify Your Internet Settings > Manage the MTU size > MTU concepts",
+        "Specify Your Internet Settings > Manage the MTU size > Change the MTU size"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8571,
+      "block_checks": [
+        {
+          "block_id": "01cd477a-47d2-5fed-a150-f3482022089e",
+          "content_overlap": [
+            "address",
+            "addresses",
+            "apply",
+            "computer",
+            "devices",
+            "dhcp",
+            "lan",
+            "router",
+            "server",
+            "setup"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "8dba79ed-9bf8-5cb2-833b-a493317e765e",
+          "content_overlap": [
+            "address",
+            "addresses",
+            "another",
+            "apply",
+            "clear",
+            "computer",
+            "dhcp",
+            "lan",
+            "manually",
+            "router",
+            "server",
+            "service",
+            "set",
+            "setup"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-070",
+      "selected_block_ids": [
+        "01cd477a-47d2-5fed-a150-f3482022089e",
+        "8dba79ed-9bf8-5cb2-833b-a493317e765e"
+      ],
+      "selected_sections": [
+        "Manage Network Settings > Specify the IP addresses that the router assigns",
+        "Manage Network Settings > Disable the DHCP server feature in the router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.4444,
+      "block_checks": [
+        {
+          "block_id": "183e963a-d605-5403-a4e2-b882de020cbb",
+          "content_overlap": [
+            "enable",
+            "networks",
+            "radio"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "33088b55-3bd9-50bd-8652-c3cd7fd2d88f",
+          "content_overlap": [
+            "coexistence",
+            "enable",
+            "ghz",
+            "interference",
+            "mhz",
+            "networks",
+            "radio",
+            "speed"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2857,
+      "question_pair_id": "Q-071",
+      "selected_block_ids": [
+        "183e963a-d605-5403-a4e2-b882de020cbb",
+        "33088b55-3bd9-50bd-8652-c3cd7fd2d88f"
+      ],
+      "selected_sections": [
+        "Manage Network Settings > Control the WiFi radios > Enable or disable the WiFi radios",
+        "Manage Network Settings > Enable or disable 20/40 MHz coexistence for the 2.4 GHz radio"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7931,
+      "block_checks": [
+        {
+          "block_id": "15ed12eb-f2dc-5ebe-a1ce-38faeca23290",
+          "content_overlap": [
+            "3ad",
+            "802",
+            "aggregated",
+            "aggregation",
+            "configure",
+            "connect",
+            "device",
+            "ethernet",
+            "lacp",
+            "port",
+            "ports",
+            "set",
+            "switch"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "25c77477-9af3-5379-a417-10b10c71f77b",
+          "content_overlap": [
+            "3ad",
+            "802",
+            "advanced",
+            "aggregation",
+            "apply",
+            "connect",
+            "connecting",
+            "device",
+            "enable",
+            "ethernet",
+            "lacp",
+            "lag",
+            "make",
+            "nas",
+            "port",
+            "ports",
+            "set",
+            "setup",
+            "static",
+            "supports",
+            "sure",
+            "switch"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "09ef238c-cabe-5ea4-9616-24e57ee8f002",
+          "content_overlap": [
+            "3ad",
+            "802",
+            "advanced",
+            "aggregation",
+            "apply",
+            "connect",
+            "device",
+            "enable",
+            "ethernet",
+            "lacp",
+            "lag",
+            "port",
+            "ports",
+            "setup",
+            "static",
+            "supports"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5714,
+      "question_pair_id": "Q-072",
+      "selected_block_ids": [
+        "15ed12eb-f2dc-5ebe-a1ce-38faeca23290",
+        "25c77477-9af3-5379-a417-10b10c71f77b",
+        "09ef238c-cabe-5ea4-9616-24e57ee8f002"
+      ],
+      "selected_sections": [
+        "Manage Network Settings > Manage Ethernet Port Aggregation to a LAN Device",
+        "Manage Network Settings > Manage Ethernet Port Aggregation to a LAN Device > Set Up Ethernet Port Aggregation to a LAN Device",
+        "Manage Network Settings > Manage Ethernet Port Aggregation to a LAN Device > View or Change the Router Ethernet Port Aggregation Mode"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8,
+      "block_checks": [
+        {
+          "block_id": "04f1b52b-9f18-591e-ac0a-b16ee4a34dad",
+          "content_overlap": [
+            "blinks",
+            "connection",
+            "data",
+            "enable",
+            "internet",
+            "limit",
+            "meter",
+            "set",
+            "time",
+            "traffic",
+            "volume",
+            "warning",
+            "whether"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8,
+      "question_pair_id": "Q-073",
+      "selected_block_ids": [
+        "04f1b52b-9f18-591e-ac0a-b16ee4a34dad"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Monitor Internet traffic"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6364,
+      "block_checks": [
+        {
+          "block_id": "8533530e-9001-5a31-a453-6077909ff031",
+          "content_overlap": [
+            "apply",
+            "daylight",
+            "ntp",
+            "saving",
+            "set",
+            "settings",
+            "time",
+            "zone"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "29f43702-7db0-5452-b0a7-d5a2155c5b59",
+          "content_overlap": [
+            "apply",
+            "ntp",
+            "set",
+            "settings",
+            "time"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.7143,
+      "question_pair_id": "Q-074",
+      "selected_block_ids": [
+        "8533530e-9001-5a31-a453-6077909ff031",
+        "29f43702-7db0-5452-b0a7-d5a2155c5b59"
+      ],
+      "selected_sections": [
+        "Manage Your Router > Set your time zone",
+        "Manage Your Router > Set the NTP Server"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7222,
+      "block_checks": [
+        {
+          "block_id": "5e5c51b3-dccd-5818-b9ae-65b70b14cfda",
+          "content_overlap": [
+            "access",
+            "allows",
+            "default",
+            "device",
+            "folder",
+            "network",
+            "password",
+            "read",
+            "readyshare",
+            "share",
+            "storage",
+            "usb",
+            "write"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "b2cee766-ed4f-59bb-8d66-703a2aecba75",
+          "content_overlap": [
+            "access",
+            "allows",
+            "create",
+            "default",
+            "device",
+            "drive",
+            "folder",
+            "network",
+            "password",
+            "read",
+            "readyshare",
+            "share",
+            "storage",
+            "usb",
+            "write"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8,
+      "question_pair_id": "Q-075",
+      "selected_block_ids": [
+        "5e5c51b3-dccd-5818-b9ae-65b70b14cfda",
+        "b2cee766-ed4f-59bb-8d66-703a2aecba75"
+      ],
+      "selected_sections": [
+        "Share USB Storage Devices Attached to the Router > View network folders on a storage device",
+        "Share USB Storage Devices Attached to the Router > Add a network folder on a USB storage device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8462,
+      "block_checks": [
+        {
+          "block_id": "0fc19ad4-a3f3-5128-a97a-000311ce8919",
+          "content_overlap": [
+            "access",
+            "enable",
+            "home",
+            "internet",
+            "local",
+            "network",
+            "service",
+            "sites",
+            "slower",
+            "through",
+            "user",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "f28a4c35-4d28-56c9-a6aa-9d30d17a3c6c",
+          "content_overlap": [
+            "access",
+            "internet",
+            "service",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8,
+      "question_pair_id": "Q-076",
+      "selected_block_ids": [
+        "0fc19ad4-a3f3-5128-a97a-000311ce8919",
+        "f28a4c35-4d28-56c9-a6aa-9d30d17a3c6c"
+      ],
+      "selected_sections": [
+        "Use VPN to Access Your Network > Use VPN to access your Internet service at home > Set up VPN client Internet access in the router",
+        "Use VPN to Access Your Network > Use VPN to access your Internet service at home > Use a VPN tunnel to access your Internet service at home"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 1.0,
+      "block_checks": [
+        {
+          "block_id": "494eba00-b9d1-5fec-898e-b212c6f28baf",
+          "content_overlap": [
+            "minutes",
+            "modem",
+            "network",
+            "off",
+            "router",
+            "turn",
+            "unplug",
+            "wait"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "4f3d2903-b1ca-556d-a4f9-f0bea742c6b5",
+          "content_overlap": [
+            "modem",
+            "router",
+            "start"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2,
+      "question_pair_id": "Q-077",
+      "selected_block_ids": [
+        "494eba00-b9d1-5fec-898e-b212c6f28baf",
+        "4f3d2903-b1ca-556d-a4f9-f0bea742c6b5"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Quick tips > Sequence to restart your network",
+        "Troubleshooting > Quick tips > Check the power adapter and Ethernet cable connections"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7059,
+      "block_checks": [
+        {
+          "block_id": "1c16631a-253c-55de-96e9-4f70304c9712",
+          "content_overlap": [
+            "amber",
+            "blue",
+            "connection",
+            "good",
+            "led",
+            "magenta",
+            "router",
+            "satellite",
+            "sync"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "fd0ce992-9b7f-58e2-9140-f25a95a0b95b",
+          "content_overlap": [
+            "again",
+            "amber",
+            "blue",
+            "closer",
+            "colors",
+            "connection",
+            "good",
+            "led",
+            "magenta",
+            "move",
+            "router",
+            "satellite",
+            "sync"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.625,
+      "question_pair_id": "Q-078",
+      "selected_block_ids": [
+        "1c16631a-253c-55de-96e9-4f70304c9712",
+        "fd0ce992-9b7f-58e2-9140-f25a95a0b95b"
+      ],
+      "selected_sections": [
+        "Overview > Orbi satellite overview > Orbi satellite LED behavior",
+        "Overview > Sync your Orbi satellite with your Orbi router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6333,
+      "block_checks": [
+        {
+          "block_id": "a705dc8c-df43-54a7-96d4-bec53069d331",
+          "content_overlap": [
+            "ipv6"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "de3de3b9-79ad-5fbc-9db0-88299436c0c8",
+          "content_overlap": [
+            "address",
+            "characters",
+            "colons",
+            "eight",
+            "group",
+            "groups",
+            "hexadecimal",
+            "ipv6",
+            "separated"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "bafbe93c-5d33-537b-82ee-2c89ca1550eb",
+          "content_overlap": [
+            "advanced",
+            "apply",
+            "auto",
+            "config",
+            "connection",
+            "detect",
+            "dhcp",
+            "enter",
+            "fixed",
+            "ipv6",
+            "isp",
+            "pppoe",
+            "type"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5714,
+      "question_pair_id": "Q-079",
+      "selected_block_ids": [
+        "a705dc8c-df43-54a7-96d4-bec53069d331",
+        "de3de3b9-79ad-5fbc-9db0-88299436c0c8",
+        "bafbe93c-5d33-537b-82ee-2c89ca1550eb"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Manage an IPv6 Internet connection",
+        "Specify Your Internet Settings > Manage an IPv6 Internet connection > Requirements for entering IPv6 addresses",
+        "Specify Your Internet Settings > Manage an IPv6 Internet connection > Specify IPv6 Internet connections"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7059,
+      "block_checks": [
+        {
+          "block_id": "de3de3b9-79ad-5fbc-9db0-88299436c0c8",
+          "content_overlap": [
+            "address",
+            "ipv6"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "acfcfc10-9010-5a5e-9f6c-e4bbbf310479",
+          "content_overlap": [
+            "address",
+            "always",
+            "apply",
+            "connection",
+            "dns",
+            "enter",
+            "ipv6",
+            "login",
+            "name",
+            "optional",
+            "pppoe",
+            "service",
+            "set",
+            "uses"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.7143,
+      "question_pair_id": "Q-080",
+      "selected_block_ids": [
+        "de3de3b9-79ad-5fbc-9db0-88299436c0c8",
+        "acfcfc10-9010-5a5e-9f6c-e4bbbf310479"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Manage an IPv6 Internet connection > Requirements for entering IPv6 addresses",
+        "Specify Your Internet Settings > Manage an IPv6 Internet connection > Set up an IPv6 PPPoE Internet connection"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.4667,
+      "block_checks": [
+        {
+          "block_id": "aee81160-3f45-597d-97ea-c7a1ad45d30a",
+          "content_overlap": [
+            "alerts",
+            "apply",
+            "email",
+            "enter",
+            "events",
+            "notification",
+            "notifications",
+            "security",
+            "smtp"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.75,
+      "question_pair_id": "Q-081",
+      "selected_block_ids": [
+        "aee81160-3f45-597d-97ea-c7a1ad45d30a"
+      ],
+      "selected_sections": [
+        "Control Access to the Internet > Set up security event email notifications"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8,
+      "block_checks": [
+        {
+          "block_id": "695ad5a7-796a-5776-8666-89a1b5d3790d",
+          "content_overlap": [
+            "10g",
+            "aggregation",
+            "connect",
+            "gbps",
+            "internet",
+            "modem",
+            "port",
+            "preference",
+            "router",
+            "supports",
+            "wan"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "a6546993-1d1a-5eb2-b616-d7c4995490a6",
+          "content_overlap": [
+            "10g",
+            "advanced",
+            "aggregation",
+            "apply",
+            "connect",
+            "enable",
+            "gbps",
+            "internet",
+            "lacp",
+            "modem",
+            "port",
+            "preference",
+            "rbr860",
+            "router",
+            "select",
+            "setup",
+            "supports",
+            "wan"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "6bb5767a-39e9-5a45-9bab-e7b9f978ef05",
+          "content_overlap": [
+            "10g",
+            "advanced",
+            "aggregation",
+            "apply",
+            "back",
+            "connect",
+            "gbps",
+            "internet",
+            "modem",
+            "port",
+            "preference",
+            "router",
+            "select",
+            "setup",
+            "wan"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.7778,
+      "question_pair_id": "Q-082",
+      "selected_block_ids": [
+        "695ad5a7-796a-5776-8666-89a1b5d3790d",
+        "a6546993-1d1a-5eb2-b616-d7c4995490a6",
+        "6bb5767a-39e9-5a45-9bab-e7b9f978ef05"
+      ],
+      "selected_sections": [
+        "Specify Network Settings > Manage the WAN preference for Orbi router model RBR860",
+        "Specify Network Settings > Manage the WAN preference for Orbi router model RBR860 > Set up Internet port aggregation for Orbi router model RBR860",
+        "Specify Network Settings > Manage the WAN preference for Orbi router model RBR860 > Change the WAN preference back to the Internet port for Orbi router model RBR860"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.9231,
+      "block_checks": [
+        {
+          "block_id": "0c1c7d8a-f45e-5523-bea2-3f232a33908c",
+          "content_overlap": [
+            "add",
+            "destination",
+            "gateway",
+            "lan",
+            "local",
+            "mask",
+            "network",
+            "route",
+            "static",
+            "traffic"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "83b0f8da-6afa-5070-9d44-c12b3b247e8b",
+          "content_overlap": [
+            "add",
+            "destination",
+            "gateway",
+            "host",
+            "lan",
+            "mask",
+            "network",
+            "route",
+            "same",
+            "segment",
+            "single",
+            "static"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4286,
+      "question_pair_id": "Q-083",
+      "selected_block_ids": [
+        "0c1c7d8a-f45e-5523-bea2-3f232a33908c",
+        "83b0f8da-6afa-5070-9d44-c12b3b247e8b"
+      ],
+      "selected_sections": [
+        "Specify Network Settings > Manage custom static routes",
+        "Specify Network Settings > Manage custom static routes > Set up a static route"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7273,
+      "block_checks": [
+        {
+          "block_id": "0121bbc3-46f8-588c-b9d6-e7e69974a9fe",
+          "content_overlap": [
+            "check",
+            "com",
+            "download",
+            "internet",
+            "orbilogin",
+            "select",
+            "speeds",
+            "speedtest",
+            "take",
+            "upload"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5,
+      "question_pair_id": "Q-084",
+      "selected_block_ids": [
+        "0121bbc3-46f8-588c-b9d6-e7e69974a9fe"
+      ],
+      "selected_sections": [
+        "Mantain and Monitor Your Network > Check your Internet bandwidth"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8,
+      "block_checks": [
+        {
+          "block_id": "18c63118-b35b-5dc4-868c-424c36df8576",
+          "content_overlap": [
+            "home",
+            "internet",
+            "service",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "e8fbf22f-7fac-51cc-8b76-ef68177b1407",
+          "content_overlap": [
+            "apply",
+            "clients",
+            "enable",
+            "home",
+            "internet",
+            "network",
+            "service",
+            "user",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-085",
+      "selected_block_ids": [
+        "18c63118-b35b-5dc4-868c-424c36df8576",
+        "e8fbf22f-7fac-51cc-8b76-ef68177b1407"
+      ],
+      "selected_sections": [
+        "Use OpenVPN to Access Your Network > Use VPN to access your Internet service at home",
+        "Use OpenVPN to Access Your Network > Use VPN to access your Internet service at home > Block VPN client Internet access in the router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6364,
+      "block_checks": [
+        {
+          "block_id": "64c7ce15-7a5a-580d-adbe-160bed89ad0b",
+          "content_overlap": [
+            "address",
+            "create",
+            "forwarding",
+            "local",
+            "network",
+            "port",
+            "server",
+            "service"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "2f0fbedc-9ef5-5d0f-a5ab-6d155052f839",
+          "content_overlap": [
+            "address",
+            "forwarding",
+            "network",
+            "port",
+            "server"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.25,
+      "question_pair_id": "Q-086",
+      "selected_block_ids": [
+        "64c7ce15-7a5a-580d-adbe-160bed89ad0b",
+        "2f0fbedc-9ef5-5d0f-a5ab-6d155052f839"
+      ],
+      "selected_sections": [
+        "Customize Internet Traffic Rules for Ports > Manage port forwarding to a local server > Set up port forwarding to a local server",
+        "Customize Internet Traffic Rules for Ports > Manage port forwarding to a local server > How the router implements the port forwarding rule"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.875,
+      "block_checks": [
+        {
+          "block_id": "594cc248-162e-5180-b1f6-243ea1c30a9e",
+          "content_overlap": [
+            "minutes",
+            "modem",
+            "off",
+            "restart",
+            "router",
+            "turn",
+            "unplug",
+            "wait"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "13759793-9afc-595a-9823-db9c83e1289c",
+          "content_overlap": [
+            "router"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.25,
+      "question_pair_id": "Q-087",
+      "selected_block_ids": [
+        "594cc248-162e-5180-b1f6-243ea1c30a9e",
+        "13759793-9afc-595a-9823-db9c83e1289c"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Quick tips > Sequence to restart your network",
+        "Troubleshooting > Quick tips > WiFi settings"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7222,
+      "block_checks": [
+        {
+          "block_id": "d3189db7-52ee-502f-8466-5dbddbf1c80e",
+          "content_overlap": [
+            "address",
+            "check",
+            "computer",
+            "lan",
+            "network",
+            "path",
+            "ping",
+            "run",
+            "windows"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "8989f72f-c45f-5a19-b2ce-b190765e7b28",
+          "content_overlap": [
+            "address",
+            "check",
+            "computer",
+            "gateway",
+            "host",
+            "isp",
+            "lan",
+            "mac",
+            "modem",
+            "name",
+            "network",
+            "path",
+            "ping",
+            "run",
+            "test",
+            "windows"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.5714,
+      "question_pair_id": "Q-088",
+      "selected_block_ids": [
+        "d3189db7-52ee-502f-8466-5dbddbf1c80e",
+        "8989f72f-c45f-5a19-b2ce-b190765e7b28"
+      ],
+      "selected_sections": [
+        "Troubleshooting > Troubleshoot your network using the ping utility > Test the LAN path to your router",
+        "Troubleshooting > Troubleshoot your network using the ping utility > Test the path from your computer to a remote device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8889,
+      "block_checks": [
+        {
+          "block_id": "3252b308-2ca3-5fec-b98f-6d89b53b5bb2",
+          "content_overlap": [
+            "adapter",
+            "antennas",
+            "cable",
+            "contains",
+            "ethernet",
+            "package",
+            "power",
+            "router"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        }
+      ],
+      "evidence_count": 1,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-089",
+      "selected_block_ids": [
+        "3252b308-2ca3-5fec-b98f-6d89b53b5bb2"
+      ],
+      "selected_sections": [
+        "Hardware Setup > Unpack your router"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7,
+      "block_checks": [
+        {
+          "block_id": "57de6a0a-7950-51e6-ae2d-6b4a3b64321d",
+          "content_overlap": [
+            "internet",
+            "settings"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "cb248990-463a-5428-8ee2-082f71f0484e",
+          "content_overlap": [
+            "account",
+            "apply",
+            "dns",
+            "enter",
+            "host",
+            "internet",
+            "leave",
+            "login",
+            "mac",
+            "option",
+            "require",
+            "required",
+            "settings",
+            "setup",
+            "test"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-090",
+      "selected_block_ids": [
+        "57de6a0a-7950-51e6-ae2d-6b4a3b64321d",
+        "cb248990-463a-5428-8ee2-082f71f0484e"
+      ],
+      "selected_sections": [
+        "Specify Your Internet Settings > Manually set up the Internet connection",
+        "Specify Your Internet Settings > Manually set up the Internet connection > Specify an Internet connection without a login"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6364,
+      "block_checks": [
+        {
+          "block_id": "87c05b8e-f679-5c99-b655-9b055683ae84",
+          "content_overlap": [
+            "anti",
+            "bandwidth",
+            "bufferbloat",
+            "devices",
+            "total"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "44b909e7-8fcd-5a49-bae0-e2be984df636",
+          "content_overlap": [
+            "anti",
+            "bandwidth",
+            "bufferbloat",
+            "device",
+            "devices",
+            "internet",
+            "other",
+            "total",
+            "used"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2857,
+      "question_pair_id": "Q-091",
+      "selected_block_ids": [
+        "87c05b8e-f679-5c99-b655-9b055683ae84",
+        "44b909e7-8fcd-5a49-bae0-e2be984df636"
+      ],
+      "selected_sections": [
+        "Customize Quality of Service Settings and Optimize Gaming > Manage bandwidth allocation",
+        "Customize Quality of Service Settings and Optimize Gaming > Manage bandwidth allocation > Prevent network congestion with Anti-Bufferbloat"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "067a1684-73ec-508e-8233-13a8d6b9f430",
+          "content_overlap": [
+            "service",
+            "traffic"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "d9934c94-0789-5258-8d3c-3482e84637b0",
+          "content_overlap": [
+            "device",
+            "front",
+            "lag",
+            "network",
+            "prioritization",
+            "queue",
+            "selected",
+            "service",
+            "traffic"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "3ac82c6c-31ff-53a0-a39c-b5b9db32a00a",
+          "content_overlap": [
+            "device",
+            "network",
+            "prioritization",
+            "selected",
+            "service",
+            "traffic"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.3333,
+      "question_pair_id": "Q-092",
+      "selected_block_ids": [
+        "067a1684-73ec-508e-8233-13a8d6b9f430",
+        "d9934c94-0789-5258-8d3c-3482e84637b0",
+        "3ac82c6c-31ff-53a0-a39c-b5b9db32a00a"
+      ],
+      "selected_sections": [
+        "Customize Quality of Service Settings and Optimize Gaming > Manage traffic prioritization",
+        "Customize Quality of Service Settings and Optimize Gaming > Manage traffic prioritization > Prioritize traffic for a device and view prioritization information",
+        "Customize Quality of Service Settings and Optimize Gaming > Manage traffic prioritization > Add a device for traffic prioritization"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 1.0,
+      "block_checks": [
+        {
+          "block_id": "b76b2605-ab8e-5508-90b0-0cc46974fc3e",
+          "content_overlap": [
+            "address",
+            "lan",
+            "reserved"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "e3bace6b-5d07-5dcc-8041-f1933c6cd04f",
+          "content_overlap": [
+            "address",
+            "again",
+            "apply",
+            "change",
+            "edit",
+            "entry",
+            "lan",
+            "reservation",
+            "reserved",
+            "select",
+            "setup"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6,
+      "question_pair_id": "Q-093",
+      "selected_block_ids": [
+        "b76b2605-ab8e-5508-90b0-0cc46974fc3e",
+        "e3bace6b-5d07-5dcc-8041-f1933c6cd04f"
+      ],
+      "selected_sections": [
+        "Manage the Router’s Network Settings > Manage reserved LAN IP addresses",
+        "Manage the Router’s Network Settings > Manage reserved LAN IP addresses > Change a reserved IP address"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "0af88c60-337f-5b55-8e8b-e2b07f800616",
+          "content_overlap": [
+            "access",
+            "connection",
+            "security",
+            "settings",
+            "wired"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "e8550a88-ca9e-5dc2-8bb3-4dd7ff222c8d",
+          "content_overlap": [
+            "access",
+            "connection",
+            "enterprise",
+            "main",
+            "radius",
+            "security",
+            "server",
+            "settings",
+            "wired"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.2,
+      "question_pair_id": "Q-094",
+      "selected_block_ids": [
+        "0af88c60-337f-5b55-8e8b-e2b07f800616",
+        "e8550a88-ca9e-5dc2-8bb3-4dd7ff222c8d"
+      ],
+      "selected_sections": [
+        "Manage the Router’s WiFi Settings > Specify basic WiFi settings",
+        "Manage the Router’s WiFi Settings > Configure WPA/WPA2 enterprise WiFi security"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.6667,
+      "block_checks": [
+        {
+          "block_id": "2cc3db60-d462-5d2e-8bb3-212863e51abf",
+          "content_overlap": [
+            "device",
+            "devices",
+            "list",
+            "usb"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "7b507311-06c1-518a-b57f-17ce47a7dc19",
+          "content_overlap": [
+            "available",
+            "device",
+            "devices",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "dee55ef8-729a-51e5-9b1c-29cce4910ea6",
+          "content_overlap": [
+            "allow",
+            "approved",
+            "available",
+            "device",
+            "devices",
+            "select",
+            "settings",
+            "usb"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8,
+      "question_pair_id": "Q-095",
+      "selected_block_ids": [
+        "2cc3db60-d462-5d2e-8bb3-212863e51abf",
+        "7b507311-06c1-518a-b57f-17ce47a7dc19",
+        "dee55ef8-729a-51e5-9b1c-29cce4910ea6"
+      ],
+      "selected_sections": [
+        "Share USB Storage Devices Attached to the Router > USB device requirements",
+        "Share USB Storage Devices Attached to the Router > Connect a USB storage device to the router",
+        "Share USB Storage Devices Attached to the Router > Approve USB devices"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.7333,
+      "block_checks": [
+        {
+          "block_id": "84bf0b6c-a37f-5a99-920b-d730b0c58307",
+          "content_overlap": [
+            "access",
+            "connect",
+            "device",
+            "files",
+            "ftp",
+            "home",
+            "internet",
+            "router",
+            "storage",
+            "usb"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "c929ed63-79dc-5933-9d6f-91e772c5b4d1",
+          "content_overlap": [
+            "access",
+            "address",
+            "computer",
+            "connect",
+            "home",
+            "internet",
+            "name",
+            "page",
+            "port",
+            "remote",
+            "router",
+            "storage",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "1d4788df-374d-52e0-a31b-c406a91abfcc",
+          "content_overlap": [
+            "access",
+            "available",
+            "computer",
+            "device",
+            "folder",
+            "ftp",
+            "internet",
+            "limit",
+            "name",
+            "page",
+            "read",
+            "readyshare",
+            "router",
+            "settings",
+            "storage",
+            "usb",
+            "write"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        },
+        {
+          "block_id": "9c7f8f5e-dadb-5ed0-b8be-baa2f11349a8",
+          "content_overlap": [
+            "access",
+            "address",
+            "computer",
+            "ddns",
+            "device",
+            "files",
+            "ftp",
+            "internet",
+            "name",
+            "page",
+            "port",
+            "remote",
+            "router",
+            "storage",
+            "usb"
+          ],
+          "evidence_index": 4,
+          "issues": []
+        }
+      ],
+      "evidence_count": 4,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.625,
+      "question_pair_id": "Q-096",
+      "selected_block_ids": [
+        "84bf0b6c-a37f-5a99-920b-d730b0c58307",
+        "c929ed63-79dc-5933-9d6f-91e772c5b4d1",
+        "1d4788df-374d-52e0-a31b-c406a91abfcc",
+        "9c7f8f5e-dadb-5ed0-b8be-baa2f11349a8"
+      ],
+      "selected_sections": [
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB storage devices through the Internet",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB storage devices through the Internet > Access USB storage devices from a remote computer",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB storage devices through the Internet > Set up FTP access through the Internet",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB storage devices through the Internet > Use FTP to access storage devices through the Internet"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.9091,
+      "block_checks": [
+        {
+          "block_id": "1d4788df-374d-52e0-a31b-c406a91abfcc",
+          "content_overlap": [
+            "access",
+            "browser",
+            "computer",
+            "ftp",
+            "internet",
+            "name",
+            "router",
+            "set",
+            "usb"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "9c7f8f5e-dadb-5ed0-b8be-baa2f11349a8",
+          "content_overlap": [
+            "access",
+            "account",
+            "address",
+            "browser",
+            "client",
+            "computer",
+            "ddns",
+            "files",
+            "ftp",
+            "internet",
+            "name",
+            "router",
+            "set",
+            "usb"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-097",
+      "selected_block_ids": [
+        "1d4788df-374d-52e0-a31b-c406a91abfcc",
+        "9c7f8f5e-dadb-5ed0-b8be-baa2f11349a8"
+      ],
+      "selected_sections": [
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB storage devices through the Internet > Set up FTP access through the Internet",
+        "Use Dynamic DNS to Access USB Storage Devices Through the Internet > Access USB storage devices through the Internet > Use FTP to access storage devices through the Internet"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8571,
+      "block_checks": [
+        {
+          "block_id": "6456b41d-491e-536d-beda-6bac85f1de0f",
+          "content_overlap": [
+            "android",
+            "client",
+            "configuration",
+            "configure",
+            "download",
+            "enable",
+            "file",
+            "files",
+            "install",
+            "openvpn",
+            "ovpn",
+            "page",
+            "router",
+            "service",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "65a39d84-6b18-50df-b32a-a7d46fbe2cfc",
+          "content_overlap": [
+            "android",
+            "configuration",
+            "connect",
+            "connection",
+            "download",
+            "enable",
+            "file",
+            "files",
+            "google",
+            "import",
+            "install",
+            "make",
+            "open",
+            "openvpn",
+            "ovpn",
+            "page",
+            "phone",
+            "play",
+            "router",
+            "service",
+            "smart",
+            "sure",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        }
+      ],
+      "evidence_count": 2,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.6667,
+      "question_pair_id": "Q-098",
+      "selected_block_ids": [
+        "6456b41d-491e-536d-beda-6bac85f1de0f",
+        "65a39d84-6b18-50df-b32a-a7d46fbe2cfc"
+      ],
+      "selected_sections": [
+        "Use OpenVPN to Access Your Network > Install OpenVPN software on a VPN client",
+        "Use OpenVPN to Access Your Network > Install OpenVPN software on a VPN client > Install OpenVPN software on an Android device"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.8462,
+      "block_checks": [
+        {
+          "block_id": "407577d5-49e8-5bff-a6c1-3ed073e77654",
+          "content_overlap": [
+            "client",
+            "connect",
+            "connection",
+            "devices",
+            "enable",
+            "external",
+            "router",
+            "server",
+            "vpn"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "647b4f2b-f7e4-59a8-95e7-2b8309f75418",
+          "content_overlap": [
+            "client",
+            "commercial",
+            "connect",
+            "connection",
+            "country",
+            "devices",
+            "enable",
+            "encrypted",
+            "external",
+            "license",
+            "need",
+            "provider",
+            "router",
+            "server",
+            "vpn"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "36995834-66ad-5975-9724-aa9f228f5502",
+          "content_overlap": [
+            "advanced",
+            "choose",
+            "city",
+            "client",
+            "commercial",
+            "connect",
+            "connection",
+            "country",
+            "enable",
+            "enter",
+            "license",
+            "login",
+            "need",
+            "protocol",
+            "provider",
+            "router",
+            "select",
+            "server",
+            "settings",
+            "vpn"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.8333,
+      "question_pair_id": "Q-099",
+      "selected_block_ids": [
+        "407577d5-49e8-5bff-a6c1-3ed073e77654",
+        "647b4f2b-f7e4-59a8-95e7-2b8309f75418",
+        "36995834-66ad-5975-9724-aa9f228f5502"
+      ],
+      "selected_sections": [
+        "Use VPN to Access An External Network",
+        "Use VPN to Access An External Network > Set up a VPN client connection",
+        "Use VPN to Access An External Network > Enable the VPN client in the router and connect to a VPN server"
+      ],
+      "status": "pass"
+    },
+    {
+      "answer_content_coverage": 0.75,
+      "block_checks": [
+        {
+          "block_id": "1e648057-fab4-582c-abb2-c775e2d3301f",
+          "content_overlap": [
+            "application",
+            "dynamically",
+            "forwarding",
+            "opens",
+            "port",
+            "ports",
+            "range",
+            "service",
+            "traffic",
+            "triggering"
+          ],
+          "evidence_index": 1,
+          "issues": []
+        },
+        {
+          "block_id": "75118c37-2376-50c5-b907-2ae6d10da16e",
+          "content_overlap": [
+            "add",
+            "advanced",
+            "again",
+            "application",
+            "apply",
+            "enter",
+            "forwarding",
+            "inbound",
+            "name",
+            "opens",
+            "port",
+            "ports",
+            "range",
+            "service",
+            "settings",
+            "traffic",
+            "triggering",
+            "unlike",
+            "user"
+          ],
+          "evidence_index": 2,
+          "issues": []
+        },
+        {
+          "block_id": "64c16e90-13ba-5c5f-aff7-eb4db090d3b9",
+          "content_overlap": [
+            "9999",
+            "add",
+            "advanced",
+            "application",
+            "apply",
+            "disable",
+            "enter",
+            "forwarding",
+            "inbound",
+            "minutes",
+            "name",
+            "opens",
+            "port",
+            "ports",
+            "service",
+            "settings",
+            "timeout",
+            "triggering",
+            "user"
+          ],
+          "evidence_index": 3,
+          "issues": []
+        }
+      ],
+      "evidence_count": 3,
+      "issues": [],
+      "language_parity": true,
+      "question_content_coverage": 0.4,
+      "question_pair_id": "Q-100",
+      "selected_block_ids": [
+        "1e648057-fab4-582c-abb2-c775e2d3301f",
+        "75118c37-2376-50c5-b907-2ae6d10da16e",
+        "64c16e90-13ba-5c5f-aff7-eb4db090d3b9"
+      ],
+      "selected_sections": [
+        "Manage and Customize Internet Traffic Rules for Ports > Manage port triggering for services and applications",
+        "Manage and Customize Internet Traffic Rules for Ports > Manage port triggering for services and applications > Add a port triggering service or application",
+        "Manage and Customize Internet Traffic Rules for Ports > Manage port triggering for services and applications > Enable port triggering and specify the time-out value"
+      ],
+      "status": "pass"
+    }
+  ],
+  "status_counts": {
+    "pass": 100
+  }
+}

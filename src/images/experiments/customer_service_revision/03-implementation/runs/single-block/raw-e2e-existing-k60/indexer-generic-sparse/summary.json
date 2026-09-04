@@ -1,0 +1,19 @@
+{
+  "condition_id": "indexer-generic-sparse",
+  "profile_id": "797ce799-a957-4eaa-be52-5f27067622cc",
+  "profile_name": "customer-service-e2e-indexer-generic-sparse-ting-k60",
+  "question_count": 200,
+  "valid_trace_count": 200,
+  "failed_question_count": 0,
+  "document_count": 9,
+  "metric_mode": "single-block",
+  "use_reranker": false,
+  "intent_provider": "passthrough",
+  "answer_generation_provider": "deterministic",
+  "kg_mode": "none",
+  "chunk_precision@10": 0.03900000000000001,
+  "chunk_success@10": 0.265,
+  "gold_block_recall@10": 0.265,
+  "chunk_ndcg@10": 0.1026223346033629,
+  "median_latency_ms": 3484.9905
+}

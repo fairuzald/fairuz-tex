@@ -1,0 +1,1876 @@
+\section{Rancangan Solusi}
+\label{sec:rancangan-solusi}
+
+Bagian ini menerjemahkan analisis solusi menjadi rancangan implementasi Omni-RAG.
+Rancangan dapat ditelusuri ke penyimpanan, kontrak \emph{message}, konfigurasi
+\emph{plugin}, dan urutan interaksi \emph{service}. Nama \emph{service}, tabel, \emph{field},
+\emph{queue}, dan \emph{artifact} mengikuti implementasi aktual.
+
+Rancangan memiliki dua jalur. Jalur \emph{offline} mencakup \emph{profile}, katalog
+\emph{plugin}, \emph{chunker}, \emph{indexer}, \emph{knowledge graph},
+dan sinkronisasi dokumen. Jalur \emph{online} berfokus pada \emph{Context PII},
+\emph{guardrail}, dan \emph{history compactor}. Pemrosesan di antara pemeriksaan
+masukan dan keluaran diperlakukan sebagai batas integrasi hilir, bukan kontribusi
+utama penelitian ini.
+
+\subsection{Arsitektur Sistem}
+\label{subsec:rancangan-arsitektur-implementasi}
+
+Arsitektur sistem Omni-RAG dibagi menjadi dua mode. Mode \emph{offline} membangun
+\emph{artifact} pengetahuan dari \emph{datasource}, sedangkan mode \emph{online} memproses
+pertanyaan dan mengembalikan jawaban. Kedua mode menggunakan HTTP sebagai batas
+\emph{service} dan penyimpanan terpusat untuk menjaga status setiap proses.
+
+Subbab ini hanya merancang alur komponen yang menjadi cakupan pekerjaan pada
+Subbab~\ref{subsec:posisi-komponen}, komponen lain ditampilkan sebagai konteks.
+
+\subsubsection{Arsitektur Sistem pada Mode \emph{Offline}}
+\label{subsubsec:rancangan-deployment-service}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.34\textheight,keepaspectratio]{images/manual/3.11.png}
+    \caption{Arsitektur sistem \emph{service} pemrosesan \emph{offline} Omni-RAG}
+    \label{fig:rancangan-deployment-service}
+\end{figure}
+
+Pada mode \emph{offline}, administrator berinteraksi melalui antarmuka administrasi.
+Ketika administrator menjalankan sinkronisasi secara \emph{manual}, antarmuka administrasi
+mengirim permintaan HTTP ke \emph{Admin HTTP Server}. Server memeriksa konfigurasi
+\emph{datasource} dan \emph{profile}, kemudian memulai proses pengambilan dokumen
+melalui \emph{upstream worker}. \emph{Upstream worker} mengambil data dari sumber
+asal dan meneruskannya ke \emph{Parser Worker} untuk diubah menjadi dokumen
+kanonik. Dokumen dan \emph{metadata} hasil parsing disimpan di \emph{Object Storage},
+sedangkan status proses dicatat di PostgreSQL. Setelah \emph{artifact} \emph{parser} tersedia,
+\emph{worker} menerbitkan pesan \code{chunk.requested} ke RabbitMQ agar tahap berikutnya
+dapat dimulai.
+
+Setiap tahap berkomunikasi melalui RabbitMQ yang mengatur pertukaran pesan
+antar-\emph{worker}. RabbitMQ menggunakan satu \emph{topic exchange} dan \emph{queue}
+untuk setiap tahap. Dengan arsitektur ini, pekerjaan dapat diproses secara
+asinkron dan diulang tanpa mengirim ulang seluruh permintaan dari antarmuka.
+
+\emph{Chunker Worker} mengonsumsi pesan dari \emph{parser} melalui RabbitMQ, mengambil
+\emph{artifact} dokumen yang sesuai dari \emph{Object Storage}, lalu menjalankan \emph{chunker
+plugin} untuk menghasilkan \code{CanonicalChunks}. \emph{artifact} potongan ditulis kembali
+ke \emph{Object Storage}. Setelah penulisan berhasil, \emph{worker} menerbitkan pesan
+berikutnya ke RabbitMQ untuk memulai tahap indeksasi.
+
+\emph{Indexer Worker} membaca pesan tersebut dan mengambil \code{CanonicalChunks}
+dari \emph{Object Storage}. \emph{Worker} menjalankan \emph{indexer plugin} untuk
+membentuk representasi leksikal dan/atau vektor, menyimpan \emph{artifact}
+\code{CanonicalIndex}, kemudian melakukan \emph{upsert} dokumen ke OpenSearch
+sebagai basis data vektor dan pencarian. Jika \emph{profile} memilih \emph{knowledge graph},
+tahap ini menerbitkan pesan untuk \emph{Knowledge Graph Worker}.
+
+\emph{Knowledge Graph Worker} mengambil potongan kanonik yang sama dari
+\emph{Object Storage}, membentuk \code{CanonicalGraph} deterministik, dan
+menyimpan \emph{artifact}-nya sebelum melakukan \emph{upsert} simpul serta sisi ke Neo4j.
+Dengan demikian, indeks OpenSearch dan \emph{graph} Neo4j dibangun dari sumber potongan
+yang sama, tetapi dapat diproses dan dievaluasi sebagai dua proyeksi terpisah.
+
+RabbitMQ menerapkan \emph{exchange} untuk pesan gagal pada setiap \emph{queue}. Pesan
+yang gagal diproses atau ditolak tidak diputar tanpa akhir, tetapi dialihkan ke
+antrean kegagalan tahap tersebut bersama informasi kegagalannya. Status
+\emph{pipeline} dan setiap \emph{worker} dipantau di PostgreSQL. Setelah penyebabnya
+diperbaiki, administrator dapat menjalankan operasi \emph{retry} dari \emph{service}
+monitoring. \emph{service} ini menerbitkan ulang pesan tahap yang gagal melalui \emph{exchange}
+yang sama tanpa mengulang tahap yang sudah berhasil.
+
+\subsubsection{Arsitektur Sistem pada Mode \emph{Online}}
+\label{subsubsec:rancangan-deployment-online}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.27\textheight,keepaspectratio]{images/manual/3.12.png}
+    \caption{Arsitektur sistem \emph{service} pemrosesan \emph{online} Omni-RAG}
+    \label{fig:rancangan-deployment-online}
+\end{figure}
+
+Pada mode \emph{online}, pengguna mengirim pertanyaan melalui antarmuka percakapan ke
+\emph{HTTP Server} menggunakan \emph{chat streaming}. Server meneruskan
+permintaan ke rangkaian komponen \emph{online} dan mengembalikan jawaban melalui
+koneksi yang sama.
+
+Setiap komponen \emph{online} berinteraksi dengan \emph{service} infrastruktur melalui
+antarmuka masing-masing. \emph{Context PII} menggunakan \emph{service} NER dan
+PostgreSQL untuk melindungi data serta menyimpan pemetaan. \emph{Guardrail
+Module} berinteraksi dengan LLM untuk pemeriksaan keselamatan. \emph{History
+Compactor} menggunakan LLM dan PostgreSQL untuk mengelola riwayat percakapan.
+\emph{Outside Scope Component} mewakili proses aplikasi lain yang berada di
+luar cakupan gambar. Urutan interaksi antarkomponen mengikuti
+Gambar~\ref{fig:rancangan-deployment-online}.
+
+\subsection{Arsitektur Modul dan Komponen}
+\label{subsec:rancangan-modul-komponen}
+
+Uraian modul berikut mengikuti komponen dalam cakupan pada
+Subbab~\ref{subsec:posisi-komponen}, komponen pendukung hanya dijelaskan seperlunya.
+
+\subsubsection{Arsitektur Modul dan Komponen pada Mode \emph{Offline}}
+\label{subsubsec:rancangan-modul-komponen-offline}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.57\textheight,keepaspectratio]{images/manual/3.13.png}
+    \caption{Arsitektur modul dan komponen pada mode \emph{offline}}
+    \label{fig:rancangan-modul-komponen-offline}
+\end{figure}
+
+Gambar~\ref{fig:rancangan-modul-komponen-offline} memetakan komponen yang
+membentuk alur pemrosesan dokumen pada mode \emph{offline}. Komponen inti
+dikelompokkan menjadi \emph{Data Source Module}, \emph{Profile Module},
+\emph{Plugin Module}, \emph{Handoff}, dan \emph{Worker Module}. Setiap kelompok
+memiliki tanggung jawab yang terpisah, tetapi berkomunikasi melalui \emph{artifact} dan
+pesan yang telah ditentukan.
+
+\emph{Data Source Module} menjadi titik awal pemrosesan melalui \emph{Data Source
+Orchestration}. Orkestrasi ini memulai proses secara \emph{manual} atau terjadwal, lalu
+\emph{Document Ingestion \& Profile Fan-out} menyimpan dokumen mentah dan
+meneruskannya ke setiap \emph{profile} yang aktif. Dokumen yang berhasil disimpan
+diserahkan ke \emph{Handoff} sebagai \emph{Raw Document} untuk diproses pada tahap
+berikutnya.
+
+\emph{Profile Module} menyimpan \emph{RAG Profile} dan konfigurasi \emph{node} \emph{pipeline}.
+\emph{Pipeline Specification Resolver} membaca konfigurasi tersebut, lalu
+menentukan \emph{plugin} yang harus dipakai untuk setiap tahap. Dengan demikian, satu
+\emph{profile} dapat memilih strategi \emph{chunker}, \emph{indexer}, dan \emph{plugin} KG tanpa
+mengubah alur orkestrasi.
+
+\emph{Plugin Module} menyediakan \emph{Plugin Catalog}, \emph{Plugin Registry},
+dan \emph{Plugin Shell}. Registry menyimpan nama, versi, \emph{manifest}, skema
+konfigurasi, dan \emph{entry point} \emph{plugin} yang tersedia. Shell membaca ketiga
+informasi tersebut untuk memuat implementasi yang benar ketika \emph{worker} meminta
+sebuah \emph{plugin}. Implementasinya dikelompokkan menjadi \emph{Chunker Plugin} seperti
+\emph{Sliding Window}, \emph{Recursive Text}, \emph{Generic Structure Aware}, dan
+\emph{Legal Structure Aware}, \emph{Indexer Plugin} \emph{dense}, \emph{sparse}, dan \emph{hybrid}
+untuk skenario umum maupun legal, serta \emph{KG Plugin} \code{legal-graph}.
+\emph{Profile} yang tidak membutuhkan \emph{knowledge graph} cukup berhenti
+setelah tahap \emph{indexer}.
+
+\emph{Handoff} memisahkan penyimpanan \emph{artifact} dari pengiriman perintah. Setelah
+\emph{Raw Document} tersedia, komponen ini menerbitkan \emph{Parse Message} melalui
+RabbitMQ. \emph{Parser} pada \emph{Upstream Module} mengonsumsi pesan tersebut, membaca
+\emph{artifact} mentah, dan menghasilkan \emph{CanonicalDocument Artifact}. \emph{artifact} ini
+ditulis ke \emph{object storage} melalui \emph{Canonical Artifact Writer}, kemudian
+\emph{worker} menerbitkan \emph{Chunk Message} untuk tahap berikutnya.
+
+\emph{Chunker Module} mengonsumsi \emph{Chunk Message}, meminta resolver memilih
+\emph{plugin} \emph{chunker} dari registry, lalu membaca \emph{CanonicalDocument Artifact}.
+Hasil pemotongan disimpan sebagai \emph{CanonicalChunks Artifact} dan sebuah
+\emph{Index Message} diterbitkan. \emph{Indexer Module} melakukan pola yang sama
+dengan \emph{plugin} \emph{indexer}. \emph{Worker} membaca \emph{artifact} potongan, menghasilkan indeks
+leksikal atau \emph{dense} sesuai konfigurasi, menyimpan \emph{artifact} kanoniknya, dan
+mengirimkan hasil indeks ke OpenSearch melalui \emph{Indexer Context Service}.
+
+Jika \emph{profile} mengaktifkan KG, \emph{KG Module} mengonsumsi \emph{KG Message} dan
+memuat \emph{plugin} KG yang dipilih. \emph{Worker} membaca \emph{CanonicalChunks Artifact},
+menghasilkan \emph{CanonicalGraph}, lalu menulis proyeksi \emph{graph} ke Neo4j melalui
+\emph{KG Context Service}. Setiap \emph{Context Service} bertindak sebagai
+mediator antara \emph{worker} dan infrastruktur penyimpanan, sehingga \emph{worker} tidak
+bergantung langsung pada detail \emph{object storage}, OpenSearch, atau Neo4j.
+
+Dengan alur tersebut, urutan pemrosesan adalah \emph{Data Source Orchestration},
+\emph{Document Ingestion \& Profile Fan-out}, \emph{Parser}, \emph{Chunker},
+\emph{Indexer}, lalu KG opsional. Setiap tahap menerima pesan dari tahap
+sebelumnya, membaca \emph{artifact} yang sesuai, menulis keluarannya, dan menerbitkan
+pesan untuk tahap berikutnya. Pemisahan ini membuat setiap \emph{worker} dapat diganti
+atau diulang tanpa mengubah modul lain.
+
+\subsubsection{Arsitektur Modul dan Komponen pada Mode \emph{Online}}
+\label{subsubsec:rancangan-modul-komponen-online}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{images/manual/3.14.png}
+    \caption{Arsitektur modul dan komponen pada mode \emph{online}}
+    \label{fig:rancangan-modul-komponen-online}
+\end{figure}
+
+Gambar~\ref{fig:rancangan-modul-komponen-online} menunjukkan alur permintaan
+mulai dari antarmuka percakapan sampai jawaban dikembalikan. Setiap modul memakai
+\emph{service} pada \emph{Infrastructure Module} melalui antarmuka yang sesuai. Dengan
+demikian, model NER, LLM, dan penyimpanan percakapan dapat diganti tanpa
+mengubah urutan utama pemrosesan.
+
+Permintaan pertama-tama masuk ke \emph{PII Module}. \emph{PII Anonymization}
+memanggil \emph{Presidio Analyzer} untuk mengenali entitas pribadi pada teks.
+Konfigurasi aktualnya menggunakan model spaCy \code{id_ner_spacy_indonesian}
+dengan \code{lang_code=id}. Karena itu, pemrosesan dibatasi pada teks berbahasa
+Indonesia. Nilai yang terdeteksi diganti dengan \emph{placeholder} berformat
+\code{<PII_ENTITY_TOKEN>}. Bagian \code{ENTITY} menunjukkan jenis entitas,
+sedangkan \code{TOKEN} menggunakan 16 karakter heksadesimal. Format ini menjadi
+penanda yang tidak membawa nilai PII asli dan dapat dikenali kembali saat proses
+\emph{deanonymization}.
+
+\emph{Mapping Manager} menyimpan pasangan \emph{placeholder} dan nilai asli pada
+PostgreSQL. Pemetaan diikat ke cakupan yang mewakili \emph{profile}, percakapan,
+dan permintaan yang sedang diproses. Pengikatan ini memastikan bahwa satu
+percakapan hanya dapat memulihkan \emph{mapping} miliknya sendiri dan \emph{mapping} tersebut
+tidak dapat dipakai pada konteks percakapan lain.
+
+Teks yang sudah dianonimkan diteruskan ke \emph{Input Guardrail} pada
+\emph{Guardrail Module}. Komponen ini menggunakan NeMo Guardrails untuk
+memeriksa pelanggaran keselamatan seperti \emph{prompt injection} sebelum permintaan
+diteruskan. NeMo Guardrails berinteraksi dengan LLM pada infrastruktur untuk
+menilai permintaan, lalu mengembalikan keputusan kepada orkestrator. Permintaan
+yang lolos diteruskan ke \emph{Main Orchestrator Module} untuk menjalankan
+\emph{retrieval} dan menyusun konteks jawaban.
+
+\emph{Main Orchestrator Module} mengambil data percakapan dari \emph{Context
+Management}. \emph{History Compactor} memeriksa apakah histori masih berada di
+bawah batas \emph{context window}. Jika histori sudah terlalu besar, komponen ini
+meminta LLM membuat ringkasan yang lebih singkat dan menyimpannya bersama
+percakapan. \emph{Memory Items Decoder} mengekstrak fakta, preferensi, atau
+keputusan yang perlu dipertahankan, kemudian menyimpannya sebagai \emph{memory item}.
+Konteks yang diteruskan ke orkestrator merupakan gabungan ringkasan, \emph{memory item},
+dan pesan terbaru yang masih diperlukan.
+
+Setelah LLM menghasilkan jawaban, jawaban tersebut melewati \emph{Output
+Guardrail}. Pemeriksaan ini memastikan keluaran tidak melanggar aturan
+keselamatan sebelum dikirim kembali. Jika pemeriksaan berhasil, \emph{PII
+Deanonymization} membaca \emph{mapping} dengan cakupan yang sama untuk mengganti
+placeholder menjadi nilai asli. Jawaban yang sudah dipulihkan kemudian
+dikembalikan kepada pengguna, sedangkan komponen eksternal hanya menerima teks
+yang telah dilindungi.
+
+\subsection{Rancangan ERD dan \emph{Database Schema}}
+\label{subsec:rancangan-data-skema-kontrak}
+
+\begingroup
+
+Rancangan ERD pada subbab ini menjadi acuan DDL yang mendefinisikan skema
+basis data untuk setiap modul. Tabel dikelompokkan menjadi \emph{Data Source}, \emph{Profile}
+dan \emph{Pipeline}, percakapan, serta pemetaan PII.
+
+Skema basis data di sini mencakup tabel untuk komponen dalam cakupan
+Subbab~\ref{subsec:posisi-komponen}, tabel di luar kontribusi hanya menjadi konteks.
+
+\subsubsection{\emph{Data Source}, \emph{Documents}, dan \emph{Scrape Runs}}
+\label{subsubsec:rancangan-data-source}
+
+\emph{Data Source} memiliki empat tabel, yaitu \code{datasources},
+\code{datasource_documents}, \code{datasource_scrape_runs}, dan
+\code{datasource_scrape_run_entries}. Dua tabel \emph{scraper} berada di luar
+kontribusi ini dan hanya ditampilkan sebagai \emph{preview}. Rincian implementasi
+\code{datasources} dan \code{datasource_documents} ditunjukkan pada skema
+berikut.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{generated/diagrams/rancangan-erd-document.png}
+    \caption{ERD \emph{Data Source}, \emph{Documents}, dan \emph{Scrape Runs}}
+    \label{fig:rancangan-erd-document}
+\end{figure}
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{4.0cm}p{2.3cm}p{2.5cm}p{\dimexpr\textwidth-4.0cm-2.3cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{datasources}: identitas dan konfigurasi \emph{Data Source}}\label{tab:rancangan-schema-datasources}\\
+\toprule \emph{Field} & Tipe PostgreSQL & Kunci, NULL, atau \emph{default} & Keterangan \\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe PostgreSQL & Kunci, NULL, atau \emph{default} & Keterangan \\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas sumber.\\
+\code{name} & \code{text} & UNIQUE, NOT NULL & Nama sumber.\\
+\code{description} & \code{text} & NULL & Deskripsi sumber.\\
+\code{status} & enum \code{datasource_status} & NOT NULL & \code{active}, \code{archived}.\\
+\code{file_extensions} & \code{jsonb} & NOT NULL & Daftar ekstensi yang diizinkan, minimal satu elemen.\\
+\code{scraper_plugin_id} & \code{uuid} & FK, NULL & \emph{Plugin} \emph{scraper}, \code{RESTRICT} saat dihapus.\\
+\code{scraper_config_json} & \code{jsonb} & NULL & Konfigurasi \emph{scraper}.\\
+\code{schedule_cron} & \code{text} & NULL & Jadwal \emph{scraper} berbentuk cron.\\
+\code{schedule_timezone} & \code{text} & NULL & Zona waktu jadwal.\\
+\code{scraper_enabled} & \code{boolean} & NULL & Penanda \emph{scraper} aktif.\\
+\code{scraper_stop_mode} & enum \code{datasource_scrape_stop_mode} & NULL & \code{none}, \code{max_pages}, \code{known_pages}.\\
+\code{scraper_stop_value} & \code{integer} & NULL & Nilai batas halaman jika mode bukan \code{none}.\\
+\code{scraper_enumerate_delay_min_seconds} & \code{double precision} & NULL & Batas bawah jeda enumerasi dalam detik.\\
+\code{scraper_enumerate_delay_max_seconds} & \code{double precision} & NULL & Batas atas jeda enumerasi dalam detik.\\
+\code{scraper_download_delay_min_seconds} & \code{double precision} & NULL & Batas bawah jeda unduh dalam detik.\\
+\code{scraper_download_delay_max_seconds} & \code{double precision} & NULL & Batas atas jeda unduh dalam detik.\\
+\code{scraper_download_concurrency} & \code{integer} & NULL & Jumlah unduhan paralel, minimal satu jika diisi.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu pembuatan sumber.\\
+\code{updated_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu perubahan sumber.\\
+\code{archived_at} & \code{timestamptz} & NULL & Waktu pengarsipan.\\
+\end{longtable}
+
+\normalsize
+Tabel \code{datasources} menjadi \emph{parent} bagi
+\code{datasource_documents}, \code{datasource_scrape_runs}, dan
+\code{pipeline_profiles}. Hubungannya \emph{one-to-many}: satu \emph{datasource} dapat memiliki
+banyak dokumen, \emph{scrape} \emph{run}, dan \emph{profile}. Datasource memiliki hubungan \emph{many-to-one}
+dengan \emph{plugin} \emph{scraper} karena setiap \emph{datasource} menggunakan paling banyak satu
+\emph{plugin}. Jika \emph{datasource} dihapus, dokumen turunannya ikut dihapus dengan aturan
+\code{CASCADE}.
+
+\scriptsize
+
+\begin{longtable}{@{}p{4.0cm}p{2.3cm}p{2.5cm}p{\dimexpr\textwidth-4.0cm-2.3cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{datasource\_documents}: metadata dan lokasi objek dokumen}\label{tab:rancangan-schema-datasource-documents}\\
+\toprule \emph{Field} & Tipe PostgreSQL & Kunci, NULL, atau \emph{default} & Keterangan \\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe PostgreSQL & Kunci, NULL, atau \emph{default} & Keterangan \\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas dokumen.\\
+\code{datasource_id} & \code{uuid} & FK, NOT NULL & Sumber pemilik, \code{CASCADE} saat dihapus.\\
+\code{source_identifier} & \code{text} & NULL & Identitas dokumen pada sistem sumber.\\
+\code{source_url} & \code{text} & NULL & URL dokumen pada sistem sumber.\\
+\code{content_sha256} & \code{text} & NOT NULL & Hash SHA-256 64 karakter heksadesimal.\\
+\code{filename} & \code{text} & NOT NULL & Nama berkas dokumen.\\
+\code{extension} & \code{text} & NOT NULL & Ekstensi berkas dokumen.\\
+\code{object_key} & \code{text} & NOT NULL & Lokasi objek dokumen.\\
+\code{content_type} & \code{text} & NOT NULL & Tipe media dokumen.\\
+\code{byte_size} & \code{bigint} & NOT NULL & Ukuran dokumen dalam byte.\\
+\code{metadata_json} & \code{jsonb} & NOT NULL & \emph{Metadata} sumber dan ingestion.\\
+\code{origin} & enum \code{datasource_document_origin} & NOT NULL & \code{scraper}, \code{upload}.\\
+\code{status} & enum \code{datasource_document_status} & NOT NULL & \code{active}, \code{archived}.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu dokumen dicatat.\\
+\code{updated_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu \emph{metadata} dokumen diubah.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{datasource_documents} memiliki hubungan \emph{many-to-one} dengan
+\code{datasources}. Artinya, satu \emph{datasource} dapat memiliki banyak dokumen,
+sedangkan setiap dokumen berasal dari satu \emph{datasource}. Satu dokumen dapat dirujuk
+oleh banyak \emph{scrape} \emph{entry}. Jika \emph{datasource} dihapus, seluruh dokumen turunannya ikut
+dihapus dengan aturan \code{CASCADE}.
+
+\endgroup
+
+\subsubsection{\emph{Profile}, \emph{Pipeline}, dan Execution Records}
+\label{subsubsec:rancangan-profile-pipeline}
+
+Kelompok kedua menyimpan konfigurasi \emph{pipeline} dan catatan eksekusinya. Tabel
+\code{plugin_registry} menjadi katalog implementasi \emph{plugin}, sedangkan
+\code{pipeline_profiles} menyimpan versi \emph{profile} dan \code{pipeline_profile_nodes}
+menyimpan urutan \emph{node} beserta \emph{plugin} yang dipilih. Saat \emph{pipeline} dijalankan,
+\code{rag_pipeline_runs} mencatat satu proses \emph{end-to-end} dan \code{rag_node_runs}
+mencatat status setiap \emph{node} serta percobaannya. Dengan demikian, konfigurasi,
+\emph{plugin}, dan monitoring eksekusi berada dalam satu kelompok yang jelas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{generated/diagrams/rancangan-erd-plugin-profile.png}
+    \caption{ERD konfigurasi \emph{Plugin}, \emph{Profile}, \emph{Node}, dan eksekusi \emph{Pipeline}}
+    \label{fig:rancangan-erd-plugin-profile}
+\end{figure}
+
+\scriptsize
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{pipeline\_profiles}: konfigurasi dan versi \emph{Profile}}\label{tab:rancangan-schema-pipeline-profiles}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{pipeline_profiles.id} & \code{uuid} & PK, NOT NULL & Identitas \emph{profile}.\\
+\code{name} & \code{text} & UNIQUE pair, NOT NULL & Nama \emph{profile}.\\
+\code{version} & \code{text} & UNIQUE pair, NOT NULL & Versi konfigurasi \emph{profile}.\\
+\code{description} & \code{text} & NULL & Deskripsi \emph{profile}.\\
+\code{status} & enum \code{pipeline_profile_status} & NOT NULL & \code{active}, \code{disabled}.\\
+\code{datasource_id} & \code{uuid} & FK RESTRICT, NULL & \emph{Datasource} langganan, NULL untuk \emph{profile} tanpa \emph{ingestion}.\\
+\code{xai_config_json} & \code{json} & NOT NULL & Konfigurasi XAI pada \emph{profile}.\\
+\code{intent_configs_json} & \code{json} & NOT NULL & Konfigurasi \emph{intent} pada \emph{profile}.\\
+\code{domain_config_json} & \code{json} & NOT NULL & Konfigurasi \emph{domain}, mode ingestion, dan referensi sumber.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu \emph{profile} dibuat.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{pipeline_profiles} memiliki hubungan \emph{many-to-one} dengan
+\code{datasources}. Artinya, banyak \emph{profile} dapat menggunakan satu \emph{datasource}.
+Tabel \code{pipeline_profiles} juga memiliki hubungan \emph{one-to-many} dengan
+\code{pipeline_profile_nodes}, sehingga satu \emph{profile} dapat terdiri dari banyak
+\emph{node}. Datasource yang masih digunakan \emph{profile} tidak dapat dihapus karena aturan
+\code{RESTRICT}. Jika \emph{profile} dihapus, \emph{node} terkait ikut terhapus dengan aturan
+\code{CASCADE}.
+
+\scriptsize
+
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{pipeline\_profile\_nodes}: urutan \emph{Node} dan \emph{Plugin}}\label{tab:rancangan-schema-pipeline-profile-nodes}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas baris \emph{node}.\\
+\code{profile_id} & \code{uuid} & FK, NOT NULL & \emph{Profile} pemilik, \emph{node} dihapus bersama \emph{profile}.\\
+\code{node_id} & \code{text} & UNIQUE/\emph{profile} & Identitas \emph{node} di dalam \emph{profile}.\\
+\code{component_type} & enum \code{component_type} & NOT NULL & \code{parser}, \code{chunker}, \code{indexer}, \code{kg}, \code{retrieval_orchestrator}, \code{xai_intent}, \code{xai_retrieval}, \code{xai_reranking}, \code{scraper}.\\
+\code{plugin_id} & \code{uuid} & FK, NOT NULL & \emph{Plugin} yang dipilih.\\
+\code{sort_order} & \code{integer} & UNIQUE/\emph{profile} & Posisi \emph{node}, satu posisi tidak boleh ganda.\\
+\code{config_json} & \code{json} & NOT NULL & Konfigurasi efektif yang lolos JSON \emph{Schema}.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{pipeline_profile_nodes} memiliki hubungan \emph{many-to-one}
+dengan \code{pipeline_profiles} dan \code{plugin_registry}. Artinya, setiap \emph{node}
+berada pada satu \emph{profile} dan menggunakan satu \emph{plugin}. Karena satu \emph{profile} dan satu
+\emph{plugin} dapat digunakan oleh banyak \emph{node}, keduanya memiliki hubungan \emph{many-to-many}
+melalui tabel \emph{node}. Jika \emph{profile} dihapus, \emph{node} terkait ikut terhapus dengan aturan
+\code{CASCADE}, \emph{plugin} tidak ikut dihapus selama masih digunakan.
+
+\scriptsize
+
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{plugin\_registry}: katalog implementasi \emph{Plugin}}\label{tab:rancangan-schema-plugin-registry}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas katalog \emph{plugin}.\\
+\code{name} & \code{text} & NOT NULL & Nama implementasi.\\
+\code{version} & \code{text} & NOT NULL & Versi implementasi.\\
+\code{component_type} & enum \code{component_type} & NOT NULL & \code{parser}, \code{chunker}, \code{indexer}, \code{kg}, \code{retrieval_orchestrator}, \code{xai_intent}, \code{xai_retrieval}, \code{xai_reranking}, \code{scraper}.\\
+\code{status} & enum \code{plugin_status} & NOT NULL & \code{active}, \code{disabled}.\\
+\code{entrypoint} & \code{text} & NOT NULL & Nama kelas yang di-\emph{resolve} \emph{runtime}.\\
+\code{config_schema_json} & \code{json} & NOT NULL & JSON \emph{Schema} konfigurasi.\\
+\code{manifest_json} & \code{json} & NOT NULL & \emph{Capability} dan \emph{compatibility}.\\
+\code{description} & \code{text} & NULL & Fungsi \emph{plugin}.\\
+\code{created_at} & \code{timestamptz} & NOT NULL & Waktu registrasi.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{plugin_registry} memiliki hubungan \emph{one-to-many} dengan
+\emph{profile} \emph{node} dan \emph{datasource} \emph{scraper}. Artinya, satu \emph{plugin} dapat digunakan oleh
+banyak \emph{profile} \emph{node} dan datasource. \emph{Plugin} yang masih digunakan tidak dapat
+dihapus, statusnya dapat diubah menjadi \code{disabled}.
+
+\scriptsize
+
+\normalsize
+\scriptsize
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{rag\_pipeline\_runs}: catatan eksekusi \emph{Pipeline}}\label{tab:rancangan-schema-rag-pipeline-runs}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{rag_pipeline_runs.id} & \code{uuid} & PK, NOT NULL & Identitas satu \emph{pipeline run}.\\
+\code{request_id} & \code{uuid} & UNIQUE, NOT NULL & Korelasi permintaan awal.\\
+\code{document_id} & \code{text} & NULL & Referensi logis dokumen.\\
+\code{filename} & \code{text} & NOT NULL & Nama berkas untuk observasi.\\
+\code{profile_id} & \code{uuid} & FK SET NULL & \emph{Profile} pemilik ketika masih tersedia.\\
+\code{status} & enum \code{rag_run_status} & NOT NULL & \code{queued}, \code{running}, \code{succeeded}, \code{failed}, \code{cancelled}.\\
+\code{error_json} & \code{jsonb} & NULL & Kode, pesan, dan detail kegagalan \emph{run}.\\
+\code{pipeline_attempt} & \code{integer} & NOT NULL & Percobaan \emph{pipeline}, mulai dari satu.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu \emph{run} dibuat.\\
+\code{started_at} & \code{timestamptz} & NULL & Waktu \emph{run} mulai diproses.\\
+\code{finished_at} & \code{timestamptz} & NULL & Waktu \emph{run} selesai.\\
+\code{updated_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu status \emph{run} terakhir diubah.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{rag_pipeline_runs} memiliki hubungan \emph{many-to-one} dengan
+\emph{profile} dan \emph{one-to-many} dengan \code{rag_node_runs}. Artinya, satu \emph{profile} dapat
+memiliki banyak \emph{run}, dan satu \emph{run} dapat memiliki banyak \emph{node} \emph{run}. Jika \emph{profile}
+dihapus, catatan \emph{run} tetap dipertahankan agar riwayat eksekusi masih dapat
+dilihat.
+
+\scriptsize
+
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{rag\_node\_runs}: status dan percobaan \emph{Node}}\label{tab:rancangan-schema-rag-node-runs}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas satu eksekusi \emph{node}.\\
+\code{run_id} & \code{uuid} & FK CASCADE & \emph{Pipeline run} pemilik.\\
+\code{component_type} & enum \code{rag_component_type} & NOT NULL & \code{chunker}, \code{indexer}, \code{kg}, \code{parser}, \code{scraper}.\\
+\code{plugin_name} & \code{text} & NULL & Nama \emph{plugin} yang dijalankan.\\
+\code{plugin_version} & \code{text} & NULL & Versi \emph{plugin} yang dijalankan.\\
+\code{status} & enum \code{rag_run_status} & NOT NULL & \code{queued}, \code{running}, \code{succeeded}, \code{failed}, \code{cancelled}.\\
+\code{attempt} & \code{integer} & NOT NULL & Nomor percobaan \emph{node}.\\
+\code{pipeline_attempt} & \code{integer} & NOT NULL & Nomor percobaan \emph{pipeline}.\\
+\code{artifact_object_key} & \code{text} & NULL & \emph{Artifact} keluaran \emph{node}.\\
+\code{cache_hit} & \code{boolean} & NULL & Penanda keluaran dipulihkan dari \emph{artifact cache}.\\
+\code{cache_key} & \code{text} & NULL & Kunci deterministik untuk pencarian \emph{artifact cache}.\\
+\code{error_json} & \code{jsonb} & NULL & Kegagalan lokal \emph{node}.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu \emph{node} \emph{run} dibuat.\\
+\code{started_at} & \code{timestamptz} & NULL & Waktu \emph{node} mulai diproses.\\
+\code{finished_at} & \code{timestamptz} & NULL & Waktu \emph{node} selesai.\\
+\code{updated_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu status \emph{node} terakhir diubah.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{rag_node_runs} memiliki hubungan \emph{many-to-one} dengan
+\code{rag_pipeline_runs}. Artinya, satu \emph{pipeline} \emph{run} dapat memiliki banyak \emph{node}
+\emph{run}. Jika \emph{pipeline} \emph{run} dihapus, seluruh \emph{node} \emph{run} di dalamnya ikut dihapus dengan
+aturan \code{CASCADE}.
+
+\subsubsection{\emph{Conversations}, \emph{Messages}, \emph{Summaries}, dan \emph{Memory}}
+\label{subsubsec:rancangan-conversation}
+
+Kelompok ketiga menyimpan keadaan percakapan. Tabel \code{conversations}
+menyimpan identitas percakapan, \code{messages} menyimpan pesan berurutan, dan
+\code{conversation_summaries} menyimpan hasil pemadatan histori.
+\code{conversation_memory_items} menyimpan fakta atau preferensi yang
+dipertahankan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{generated/diagrams/rancangan-erd-conversation.png}
+    \caption{ERD hubungan percakapan, pesan, ringkasan, dan \emph{memory item}}
+    \label{fig:rancangan-erd-conversation}
+\end{figure}
+
+\scriptsize
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{conversations}: identitas dan status percakapan}\label{tab:rancangan-schema-conversations}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{conversations.id} & \code{uuid} & PK, NOT NULL & Identitas percakapan.\\
+\code{user_id} & \code{uuid} & FK CASCADE & Pemilik percakapan.\\
+\code{title} & \code{text} & NOT NULL & Judul tampilan.\\
+\code{profile_id} & \code{varchar} & NULL & Referensi logis \emph{profile} \emph{service}.\\
+\code{deleted_at} & \code{timestamptz} & NULL & Soft \emph{delete} percakapan.\\
+\code{created_at} & \code{timestamptz} & NOT NULL & Waktu percakapan dibuat.\\
+\code{updated_at} & \code{timestamptz} & NOT NULL & Waktu percakapan diubah.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{conversations} memiliki hubungan \emph{many-to-one} dengan \emph{user}
+dan \emph{one-to-many} dengan \code{messages}, \code{conversation_summaries}, serta
+\code{conversation_memory_items}. Artinya, satu \emph{user} dapat memiliki banyak
+percakapan, dan satu percakapan dapat memiliki banyak data anak. Jika \emph{user} atau
+percakapan dihapus, seluruh data anaknya ikut dihapus dengan aturan
+\code{CASCADE}.
+
+\scriptsize
+
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{messages}: pesan dalam percakapan}\label{tab:rancangan-schema-messages}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas pesan.\\
+\code{conversation_id} & \code{uuid} & FK CASCADE & Percakapan pemilik.\\
+\code{seq_no} & \code{bigint} & NOT NULL & Urutan monotonik dalam percakapan.\\
+\code{role} & \code{text} & NOT NULL & Peran pengirim. Kolom ini berupa teks dan bukan enum \emph{database}.\\
+\code{content} & \code{text} & NOT NULL & Isi pesan.\\
+\code{token_count} & \code{bigint} & NOT NULL & Estimasi ukuran untuk anggaran konteks.\\
+\code{memory_eligible} & \code{boolean} & NOT NULL & True hanya setelah \emph{guardrail} lolos.\\
+\code{metadata} & \code{jsonb} & NOT NULL & \emph{Metadata} \emph{audit}, sumber, dan \emph{status}.\\
+\code{created_at} & \code{timestamptz} & NOT NULL & Waktu pesan disimpan.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{messages} memiliki hubungan \emph{many-to-one} dengan
+\code{conversations}. Artinya, satu percakapan dapat memiliki banyak pesan. Jika
+percakapan dihapus, seluruh pesannya ikut dihapus dengan aturan \code{CASCADE}.
+
+\scriptsize
+
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{conversation\_summaries}: ringkasan percakapan}\label{tab:rancangan-schema-conversation-summaries}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas \emph{batch} ringkasan.\\
+\code{conversation_id} & \code{uuid} & FK CASCADE & Percakapan pemilik.\\
+\code{level} & \code{bigint} & NOT NULL, \code{0} & Tingkat ringkasan.\\
+\code{batch_seq_no} & \code{bigint} & NOT NULL & Nomor batch ringkasan.\\
+\code{summary} & \code{text} & NOT NULL & Ringkasan bergulir.\\
+\code{covered_from_seq_no} & \code{bigint} & NOT NULL & Nomor urut awal pesan yang dipadatkan.\\
+\code{covered_until_seq_no} & \code{bigint} & NOT NULL & Nomor urut akhir pesan yang dipadatkan.\\
+\code{token_count} & \code{bigint} & NOT NULL & Ukuran ringkasan.\\
+\code{metadata} & \code{jsonb} & NOT NULL & \emph{Metadata} batch.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu pembuatan batch.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{conversation_summaries} memiliki hubungan \emph{many-to-one} dengan
+\code{conversations}. Artinya, satu percakapan dapat memiliki banyak ringkasan.
+Jika percakapan dihapus, seluruh ringkasannya ikut dihapus dengan aturan
+\code{CASCADE}.
+
+\scriptsize
+
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{conversation\_memory\_items}: item memory percakapan}\label{tab:rancangan-schema-conversation-memory-items}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas butir memori.\\
+\code{conversation_id} & \code{uuid} & FK CASCADE & Percakapan pemilik.\\
+\code{batch_seq_no} & \code{bigint} & NOT NULL & \emph{Batch compaction} penghasil.\\
+\code{seq_order} & \code{smallint} & NOT NULL & Posisi butir dalam \emph{batch}.\\
+\code{text} & \code{text} & NOT NULL & Fakta/preferensi ringkas.\\
+\code{metadata} & \code{jsonb} & NOT NULL & \emph{Metadata} butir memori.\\
+\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu pembuatan butir memori.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{conversation_memory_items} memiliki hubungan \emph{many-to-one}
+dengan \code{conversations}. Artinya, satu percakapan dapat memiliki banyak
+\emph{memory item}. Jika percakapan dihapus, \emph{memory item} di dalamnya ikut dihapus dengan
+aturan \code{CASCADE}.
+
+\subsubsection{PII Mapping dan Recovery}
+\label{subsubsec:rancangan-pii-mapping}
+
+Kelompok terakhir berisi tabel \code{pii_mappings} untuk menyimpan pemetaan
+\emph{placeholder} dan nilai PII pada setiap cakupan permintaan. Skema dan
+aturan integritasnya ditampilkan pada tabel berikut.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{generated/diagrams/rancangan-erd-memory-privacy.png}
+    \caption{ERD hubungan konteks percakapan dan PII \emph{mapping}}
+    \label{fig:rancangan-erd-memory-privacy}
+\end{figure}
+
+\scriptsize
+\begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
+\caption{Struktur tabel \texttt{pii\_mappings}: pemetaan dan pemulihan PII}\label{tab:rancangan-schema-pii}\\
+\toprule \emph{Field} & Tipe PostgreSQL & Kunci/NULL & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe PostgreSQL & Kunci/NULL & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{id} & \code{uuid} & PK, NOT NULL & Identitas baris \emph{mapping}.\\
+\code{scope_id} & \code{varchar(64)} & UNIQUE, NOT NULL & Cakupan permintaan/percakapan untuk isolasi pemulihan PII.\\
+\code{mapping} & \code{jsonb} & NOT NULL & Pemetaan \emph{placeholder} ke nilai asli.\\
+\code{created_at} & \code{timestamptz} & NOT NULL & Waktu \emph{mapping} dibuat.\\
+\code{updated_at} & \code{timestamptz} & NOT NULL & Waktu \emph{mapping} diubah.\\
+\end{longtable}
+
+\normalsize
+\noindent Tabel \code{pii_mappings} tidak memiliki relasi fisik dengan tabel
+percakapan. Secara logis, hubungannya \emph{one-to-many} dari percakapan ke cakupan
+permintaan, sehingga satu percakapan dapat memiliki banyak cakupan dan setiap cakupan
+memiliki paling banyak satu \emph{mapping}. \emph{Mapping} tidak ikut dihapus ketika percakapan
+dihapus agar permintaan yang sedang berjalan tetap dapat memakainya.
+
+\endgroup
+
+\subsection{Rancangan Integration Contracts dan API}
+\label{subsec:rancangan-kontrak-api}
+
+Rancangan kontrak ini dibagi menjadi tiga bagian: skema event yang dipertukarkan
+melalui RabbitMQ, kontrak \emph{canonical} sebagai format keluaran standar \emph{plugin}, dan
+kontrak API untuk \emph{service} \emph{Data Source} serta \emph{profile}.
+
+Kontrak yang dirinci di sini mengatur komponen dalam cakupan pada
+Subbab~\ref{subsec:posisi-komponen}, dependensi lain hanya disebut saat diperlukan.
+
+\subsubsection{RabbitMQ \emph{Message Contracts}}
+\label{subsubsec:rancangan-message-artifact}
+
+Subbab ini menjelaskan kontrak dan hubungan permintaan yang dibawa melalui
+RabbitMQ. Setiap pesan menjadi perintah untuk satu \emph{worker}. \emph{Worker} membaca
+pesan, memeriksa identitas \emph{run} dan \emph{node}, mengambil \emph{artifact} dari \emph{object storage},
+menjalankan \emph{plugin} yang telah dipilih \emph{profile}, lalu menerbitkan pesan untuk
+tahap berikutnya. Isi dokumen tidak dimasukkan ke dalam pesan. Pesan hanya
+membawa identitas peristiwa, korelasi \emph{run} dan \emph{node}, kunci idempotensi, serta
+referensi \emph{artifact}. Dengan cara ini, antrean tetap ringan dan setiap tahap dapat
+diulang tanpa mengirim ulang seluruh dokumen.
+
+Konfigurasi \emph{plugin} juga tidak disalin ke pesan. \emph{Worker} membaca \emph{node} \emph{profile} dan
+katalog \emph{plugin} ketika pesan ditangani, lalu memvalidasi kontrak \emph{input} sebelum
+mengeksekusi \emph{plugin}. \emph{artifact} disimpan pada \emph{object storage}. Karena itu, pesan
+berfungsi sebagai penghubung kontrol, sedangkan \emph{object storage} menjadi
+penghubung data antartahap.
+
+Topologi menggunakan \emph{topic exchange} \code{legal_knowledge.topic} dan
+\emph{exchange} pesan gagal \code{legal_knowledge.dlx}. Queue utama terdiri atas
+\code{rag.parse.requested}, \code{rag.chunk.requested},
+\code{rag.index.requested}, dan \code{rag.kg.requested}. Setiap queue memiliki
+antrean kegagalan dengan nama \code{rag.<stage>.dead_letter}. Pesan persisten
+baru diakui setelah \emph{handler} menyelesaikan \emph{commit} status dan publikasi tahap
+berikutnya. Jika \emph{handler} gagal, pesan diarahkan ke antrean kegagalan agar dapat
+dipantau dan dikirim ulang setelah penyebabnya diperbaiki.
+
+Alur \emph{handoff} pada Gambar~\ref{fig:arsitektur-pipeline-kanonik}
+menunjukkan pemisahan antara dependensi data dan dependensi kontrol. \emph{Parser}
+mengonsumsi \emph{raw document} dan menerbitkan \emph{chunk message} setelah
+\code{CanonicalDocument} tersedia di \emph{object storage}. \emph{Worker} \emph{chunker} membaca
+referensi \emph{artifact} pada pesan tersebut, menghasilkan \code{CanonicalChunks}, dan
+menerbitkan \emph{index message} setelah hasilnya tersimpan. \emph{Worker} \emph{indexer}
+menggunakan \code{CanonicalChunks} untuk membentuk \code{CanonicalIndex} dan
+\emph{service} mengirimkan hasilnya ke indeks. Jika \emph{profile} mengaktifkan KG, \emph{indexer}
+menerbitkan \emph{KG message} setelah tahap indeks berhasil. \emph{Worker} KG membaca
+\code{CanonicalChunks} yang sama, membentuk \code{CanonicalGraph}, lalu
+menyerahkan proyeksinya ke \emph{service} \emph{graph}. Dengan demikian, pesan membawa
+perintah dan korelasi, sedangkan \emph{artifact} membawa isi data yang diproses.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Skema \texttt{NodeEventEnvelope}}\label{tab:rancangan-node-event-envelope}\\
+\toprule Struktur/\emph{Field} & Tipe atau Nilai & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule Struktur/\emph{Field} & Tipe atau Nilai & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{event_id} & \emph{string} non-empty & Identitas unik \emph{event}.\\
+\code{schema_version} & literal \code{"2"} & Versi kontrak \emph{message}.\\
+\code{run_id} & \emph{string} non-empty & \emph{Pipeline run} pemilik.\\
+\code{requested_at} & datetime & Waktu permintaan.\\
+\code{request_id} & \emph{string} non-empty & Korelasi permintaan awal.\\
+\code{node_id} & \emph{string} non-empty & \emph{Node profile} yang dituju.\\
+\code{attempt} & \emph{integer} $\geq 1$ & Nomor percobaan \emph{node}.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Skema \texttt{ArtifactReference}}\label{tab:rancangan-artifact-reference}\\
+\toprule Struktur/\emph{Field} & Tipe atau Nilai & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule Struktur/\emph{Field} & Tipe atau Nilai & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{contract} & pilihan kontrak & \code{raw-document}, \code{canonical-document}, \code{canonical-chunks}, \code{canonical-index}, atau \code{canonical-graph}.\\
+\code{schema_version} & literal \code{"1"} & Versi \emph{payload} \emph{artifact}.\\
+\code{object_key} & \emph{string} non-empty & Lokasi objek pada \emph{object storage}.\\
+\code{document_id} & \emph{string} non-empty & Dokumen asal \emph{artifact}.\\
+\code{profile_id} & \emph{string}, NULL & Pemilik proyeksi jika \emph{artifact} \emph{profile}-specific.\\
+\code{run_id} & \emph{string} non-empty & \emph{Run} penghasil/pengguna \emph{artifact}.\\
+\code{producer} & \code{PluginRef}, NULL & Nama dan versi \emph{plugin} pembentuk.\\
+\code{item_count} & \emph{integer} $\geq 0$, NULL & Jumlah \emph{block}/\emph{chunk}/\emph{document}/\emph{node} sesuai kontrak.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Skema pesan permintaan \emph{parser}}\label{tab:rancangan-node-message-parser}\\
+\toprule \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{idempotency_key} & \emph{string} & Kunci deduplikasi agar pengiriman ulang tidak menjalankan \emph{parser} dua kali.\\
+\code{event} & \code{NodeEventEnvelope} & Identitas \emph{run}, \emph{node} \emph{parser}, \emph{attempt}, dan korelasi.\\
+\code{datasource_id} & \emph{string} & Datasource asal dokumen.\\
+\code{filename} & \emph{string} & Nama berkas sumber.\\
+\code{document_metadata} & \emph{object} & \emph{Metadata} sumber, \emph{default} objek kosong.\\
+\code{source_artifact} & \code{ArtifactReference} & Referensi \emph{artifact} \code{raw-document} yang dibaca \emph{parser}.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Skema pesan permintaan \emph{chunker}}\label{tab:rancangan-node-message-chunker}\\
+\toprule \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{idempotency_key} & \emph{string} & Kunci deduplikasi untuk satu permintaan \emph{chunker}.\\
+\code{event} & \code{NodeEventEnvelope} & Identitas \emph{run}, \emph{node} \emph{chunker}, \emph{attempt}, dan korelasi.\\
+\code{profile_id} & \emph{string}, NULL & \emph{Profile} \emph{target} ketika pesan memerlukan identitas eksplisit.\\
+\code{document_artifact} & \code{ArtifactReference}, NULL & Referensi \code{canonical-document}.\\
+\code{document_object_key} & \emph{string}, NULL & Referensi kompatibilitas, minimal satu sumber dokumen harus tersedia.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Skema pesan permintaan \emph{indexer}}\label{tab:rancangan-node-message-indexer}\\
+\toprule \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{idempotency_key} & \emph{string} & Kunci deduplikasi untuk satu permintaan \emph{indexer}.\\
+\code{event} & \code{NodeEventEnvelope} & Identitas \emph{run}, \emph{node} \emph{indexer}, \emph{attempt}, dan korelasi.\\
+\code{chunk_artifact} & \code{ArtifactReference} & Referensi \code{canonical-chunks} yang menjadi \emph{input} \emph{indexer}.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Skema pesan permintaan \emph{knowledge graph}}\label{tab:rancangan-node-message-kg}\\
+\toprule \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{idempotency_key} & \emph{string} & Kunci deduplikasi untuk satu permintaan KG.\\
+\code{event} & \code{NodeEventEnvelope} & Identitas \emph{run}, \emph{node} KG, \emph{attempt}, dan korelasi.\\
+\code{chunk_artifact} & \code{ArtifactReference} & Referensi \code{canonical-chunks}, bukan indeks, untuk membentuk \emph{graph}.\\
+\code{kg_profile_node_id} & \emph{string}, NULL & Node KG eksplisit yang harus dijalankan.\\
+\code{source_profile_id} & \emph{string}, NULL & \emph{Profile} sumber \emph{chunks} immutable untuk mode KG-only.\\
+\end{longtable}
+
+\normalsize
+Sebelum menjalankan \emph{plugin}, \emph{handler} memeriksa bahwa \emph{profile} yang dirujuk masih
+aktif dan \emph{datasource} yang dipakai tersedia serta berstatus aktif. Handler juga
+memastikan dokumen dan \emph{pipeline} \emph{run} dapat ditemukan, status \emph{run} memungkinkan
+tahap dilanjutkan, serta permintaan belum dibatalkan. Setelah itu \emph{handler}
+memvalidasi kontrak \emph{input}. Jika salah satu pemeriksaan gagal, tahap tidak
+dijalankan dan hasil pemeriksaannya dicatat pada status \emph{run}.
+
+\subsubsection{Kontrak \emph{Canonical Artifact} pada \emph{Pipeline}}
+\label{subsubsec:rancangan-canonical-artifact}
+
+\emph{Canonical artifact} adalah format data yang menjadi batas bersama antar-\emph{worker}.
+Format ini memastikan keluaran satu tahap dapat dibaca tahap berikutnya tanpa
+mengetahui detail implementasi \emph{plugin}. \emph{Parser} menulis \code{CanonicalDocument},
+\emph{chunker} mengubahnya menjadi \code{CanonicalChunks}, \emph{indexer} membentuk
+\code{CanonicalIndex}, dan KG membentuk \code{CanonicalGraph}. Setiap format
+memiliki identitas dokumen, \emph{metadata}, dan \emph{provenance} sehingga \emph{worker} dapat
+memeriksa bahwa \emph{artifact} yang dibaca memang milik \emph{run} dan \emph{profile} yang sedang
+diproses.
+
+\scriptsize
+\begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{4.0cm}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{2.4cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.4cm-6\tabcolsep\relax}@{}}
+\caption{Kontrak \emph{canonical artifact} \emph{parser}}\label{tab:rancangan-canonical-parser}\\
+\toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{CanonicalDocument} & \code{document_id} & \emph{string} & Identitas dokumen kanonik.\\
+\code{CanonicalDocument} & \code{blocks} & \emph{array of} \code{Block} & Daftar elemen \code{Block} hierarkis yang ditulis \emph{parser} dan dibaca \emph{chunker}.\\
+\code{CanonicalDocument} & \code{metadata} & \emph{object} & \emph{Metadata} dokumen kanonik.\\
+\code{Block} & \code{block_id} & \emph{string} & Identitas \emph{block}.\\
+\code{Block} & \code{type} & \emph{string} & Jenis \emph{block} dokumen.\\
+\code{Block} & \code{text} & \emph{string} & Teks \emph{block}.\\
+\code{Block} & \code{metadata} & \emph{object} & \emph{Metadata} \emph{block}.\\
+\code{Block} & \code{children} & \emph{array of} \code{Block} & Daftar \code{Block} turunan yang menjaga hubungan induk dan turunan.\\
+\end{longtable}
+
+\begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{4.0cm}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{2.4cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.4cm-6\tabcolsep\relax}@{}}
+\caption{Kontrak \emph{canonical artifact} \emph{chunker}}\label{tab:rancangan-canonical-chunker}\\
+\toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{CanonicalChunks} & \code{document_id} & \emph{string} & Identitas dokumen asal kumpulan \emph{chunk}.\\
+\code{CanonicalChunks} & \code{chunker} & \emph{PluginRef} & Identitas \emph{plugin} \emph{chunker} pembentuk.\\
+\code{CanonicalChunks} & \code{chunks} & \emph{array of} \code{Canonical}\allowbreak\code{Chunk} & Daftar elemen \code{CanonicalChunk} hasil pemotongan.\\
+\code{CanonicalChunks} & \code{metadata} & \emph{object} & \emph{Metadata} kumpulan \emph{chunk}.\\
+\code{CanonicalChunk} & \code{chunk_id} & \emph{string} & Identitas \emph{chunk}.\\
+\code{CanonicalChunk} & \code{kind} & \emph{enum} & Kanal penggunaan \emph{chunk}, yaitu \emph{retrieval}, \emph{context}, atau \emph{both}.\\
+\code{CanonicalChunk} & \code{text} & \emph{string} & Teks \emph{chunk}.\\
+\code{CanonicalChunk} & \code{metadata} & \emph{object} & \emph{Metadata} \emph{chunk}.\\
+\code{CanonicalChunk} & \code{source_blocks} & \emph{array of} \code{string} & Referensi ID \emph{block} sumber \emph{chunk}.\\
+\code{relationships} & \code{parent_id} & \emph{string}, NULL & Referensi \emph{parent} \emph{chunk} jika tersedia.\\
+\code{relationships} & \code{previous_id} & \emph{string}, NULL & Referensi \emph{chunk} sebelumnya jika tersedia.\\
+\code{relationships} & \code{next_id} & \emph{string}, NULL & Referensi \emph{chunk} berikutnya jika tersedia.\\
+\end{longtable}
+
+\begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{4.0cm}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{2.4cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.4cm-6\tabcolsep\relax}@{}}
+\caption{Kontrak \emph{canonical artifact} \emph{indexer}}\label{tab:rancangan-canonical-indexer}\\
+\toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{CanonicalIndex} & \code{document_id} & \emph{string} & Identitas dokumen asal indeks.\\
+\code{CanonicalIndex} & \code{indexer} & \emph{PluginRef} & Identitas \emph{plugin} \emph{indexer} pembentuk.\\
+\code{CanonicalIndex} & \code{documents} & \emph{array of} \code{Canonical}\allowbreak\code{Index}\allowbreak\code{Document} & Daftar elemen \code{CanonicalIndexDocument} sebelum dikirim ke \emph{service} pencarian.\\
+\code{CanonicalIndex} & \code{metadata} & \emph{object} & \emph{Metadata} indeks.\\
+\code{CanonicalIndexDocument} & \code{chunk_id} & \emph{string} & Identitas \emph{chunk} yang diindeks.\\
+\code{CanonicalIndexDocument} & \code{text} & \emph{string} & Teks yang diindeks.\\
+\code{CanonicalIndexDocument} & \code{metadata} & \emph{object} & \emph{Metadata} dokumen indeks.\\
+\code{CanonicalIndexDocument} & \code{relationships} & \emph{object} & Relasi yang dipertahankan dari \emph{chunk} asal.\\
+\code{outputs} & \code{embedding} & \emph{vector} & Keluaran \emph{capability} \emph{dense}.\\
+\code{outputs} & \code{lexical} & \emph{object} & Keluaran \emph{capability} \emph{sparse}.\\
+\code{metadata} & \emph{field} yang dipilih \emph{profile} & \emph{array of} \code{string} & Daftar nama \emph{field} \emph{metadata} yang diizinkan untuk filter dan pencarian.\\
+\end{longtable}
+
+\begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{4.0cm}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{2.4cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.4cm-6\tabcolsep\relax}@{}}
+\caption{Kontrak \emph{canonical artifact} \emph{knowledge graph}}\label{tab:rancangan-canonical-kg}\\
+\toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule Kontrak/Elemen & \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{CanonicalGraph} & \code{document_id} & \emph{string} & Identitas dokumen asal \emph{graph}.\\
+\code{CanonicalGraph} & \code{source_id} & \emph{string} & Identitas sumber \emph{graph}.\\
+\code{CanonicalGraph} & \code{owned_node_ids} & \emph{array of} \code{string} & Daftar ID \emph{node} yang dimiliki \emph{profile}.\\
+\code{CanonicalGraph} & \code{graph_builder} & \emph{PluginRef} & Identitas \emph{plugin} pembentuk \emph{graph}.\\
+\code{CanonicalGraph} & \code{nodes} & \emph{array of} \code{Canonical}\allowbreak\code{Graph}\allowbreak\code{Node} & Daftar elemen \code{CanonicalGraphNode}.\\
+\code{CanonicalGraph} & \code{edges} & \emph{array of} \code{Canonical}\allowbreak\code{Graph}\allowbreak\code{Edge} & Daftar elemen \code{CanonicalGraphEdge}.\\
+\code{CanonicalGraph} & \code{metadata} & \emph{object} & \emph{Metadata} \emph{graph}.\\
+\code{CanonicalGraphNode} & \code{id} & \emph{string} & Identitas simpul yang stabil.\\
+\code{CanonicalGraphNode} & \code{type} & \emph{string} & Jenis simpul.\\
+\code{CanonicalGraphNode} & \code{properties} & \emph{object} & Properti simpul.\\
+\code{CanonicalGraphEdge} & \code{source} & \emph{string} & \emph{Endpoint} sumber relasi.\\
+\code{CanonicalGraphEdge} & \code{target} & \emph{string} & \emph{Endpoint} tujuan relasi.\\
+\code{CanonicalGraphEdge} & \code{type} & \emph{string} & Jenis relasi berarah.\\
+\code{CanonicalGraphEdge} & \code{properties} & \emph{object} & Properti relasi.\\
+\end{longtable}
+
+\endgroup
+
+\subsubsection{\emph{Plugin Manifest} dan Configuration Contracts}
+\label{subsubsec:rancangan-konfigurasi-plugin}
+
+\emph{Plugin Registry} memisahkan identitas implementasi dari konfigurasi \emph{instance}.
+\emph{Manifest} menjelaskan kemampuan dan kompatibilitas implementasi,
+sedangkan \code{config_schema_json} memvalidasi \code{config_json} pada \emph{node profile}. \emph{Manifest} yang dibaca \emph{runtime} memuat \emph{field} pada
+Tabel~\ref{tab:rancangan-plugin-manifest}.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
+\caption{Kontrak \emph{manifest plugin}}\label{tab:rancangan-plugin-manifest}\\
+\toprule \emph{Field} & Tipe & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tipe & Fungsi\\ \midrule \endhead
+\bottomrule \endfoot
+\code{manifest_version} & \emph{string}, opsional & Versi struktur \emph{manifest}, \emph{plugin} generasi baru memakai \code{"2"}.\\
+\code{name} & \emph{string} & Nama implementasi \emph{plugin}.\\
+\code{version} & \emph{string} & Versi implementasi yang dipasangkan dengan \emph{component type}.\\
+\code{type} & enum & \code{chunker}, \code{indexer}, \code{kg}, atau tipe integrasi lain.\\
+\code{entrypoint} & \emph{string} & Nama kelas implementasi.\\
+\code{config_schema} & \emph{path} & Berkas JSON \emph{Schema} relatif terhadap \emph{plugin}.\\
+\code{description} & \emph{string} & Penjelasan fungsi.\\
+\code{output_revision} & \emph{string}, opsional & Revisi semantik \emph{output}.\\
+\code{retrieval_channels} & \emph{array} & Kanal \code{dense} dan/atau \code{sparse} yang didukung \emph{indexer}.\\
+\code{output_capabilities} & \emph{array} & \emph{Capability output} seperti \code{embedding}, \code{lexical}, atau \code{regulation_graph}.\\
+\code{required_indexer_capabilities} & \emph{array} & \emph{Capability indexer} yang disyaratkan batas orkestrator.\\
+\code{kg_requirement} & enum & Kebijakan \code{disabled}, \code{optional}, atau \code{required}.\\
+\code{compatible_*_plugins} & \emph{array} nama atau nama@versi & Allow-list \emph{parser}, \emph{chunker}, \emph{indexer}, dan KG yang kompatibel. \emph{Array} kosong berarti tidak membatasi.\\
+\end{longtable}
+
+\normalsize
+\subsubsection{\emph{Chunker Plugin} Configuration}
+\label{subsubsec:rancangan-config-chunker}
+
+\emph{Chunker} mengubah \code{CanonicalDocument} menjadi potongan yang dapat dipakai
+untuk \emph{retrieval} atau \emph{context}. Setiap \emph{plugin} memiliki \emph{schema} sendiri dan hanya
+parameter yang terdaftar pada \emph{schema} yang dapat dikirim oleh \emph{profile}.
+
+\scriptsize
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{generic-sliding-window}}\label{tab:rancangan-config-chunker-generic-sliding}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule \endhead
+\bottomrule \endfoot
+\code{size_unit} & enum \code{character}, \code{word}, \code{token}, \emph{default} \code{character} & Satuan penghitung jendela. Mode \emph{token} memakai \emph{tokenizer} yang ditetapkan sistem.\\
+\code{window_size} & integer $\geq 1$, \emph{default} \code{512} & Panjang setiap jendela pada satuan yang dipilih.\\
+\code{overlap} & integer $\geq 0$, \emph{default} \code{51}, harus lebih kecil dari \code{window_size} & Jumlah satuan yang diulang pada awal jendela berikutnya.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{generic-recursive}}\label{tab:rancangan-config-chunker-generic-recursive}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule \endhead
+\bottomrule \endfoot
+\code{size_unit} & enum character/word/\emph{token}, \emph{default} \code{character} & Satuan penghitung ukuran \emph{chunk}.\\
+\code{max_size} & integer $\geq 1$, \emph{default} \code{512} & Ukuran maksimum \emph{chunk} setelah batas pemisahan dipilih.\\
+\code{overlap} & integer $\geq 0$, \emph{default} \code{51}, kurang dari \code{max_size} & Bagian akhir \emph{chunk} sebelumnya yang dipertahankan.\\
+\code{separators} & \emph{array} string non-empty, \emph{default} paragraf, baris baru, kalimat, klausa, dan spasi & Urutan batas pemisahan dari yang paling kuat ke paling lemah sebelum \emph{fallback} keras.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{generic-structure-aware}}\label{tab:rancangan-config-chunker-generic-structure}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule \endhead
+\bottomrule \endfoot
+\code{target_level} & enum \code{text_block}, \code{heading_1} sampai \code{heading_6}, \emph{default} \code{text_block} & Tingkat \emph{outline} yang dipilih sebagai \emph{target} \emph{chunk}.\\
+\code{include_parent_context} & boolean, \emph{default} \code{true} & Menambahkan jalur heading induk pada awal \emph{chunk}.\\
+\code{size_unit} & enum character/word/\emph{token}, \emph{default} \code{character} & Satuan pengukuran ukuran \emph{chunk}.\\
+\code{max_size} & integer $\geq 1$, \emph{default} \code{512} & Batas ukuran hasil setelah konteks induk disertakan.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{legal-structure-aware}}\label{tab:rancangan-config-chunker-legal-structure}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna\\ \midrule \endhead
+\bottomrule \endfoot
+\code{size_unit} & hanya \code{character}, \emph{default} \code{character} & Implementasi hukum saat ini menghitung ukuran dalam karakter.\\
+\code{max_size} & integer $\geq 1$, \emph{default} \code{512} & Batas karakter untuk \emph{child} \emph{chunk} \emph{retrieval}. \emph{Parent} \emph{chunk} tetap utuh.\\
+\code{ayat_overlap_count} & integer 0 sampai 3, \emph{default} \code{1} & Jumlah Ayat sebelumnya yang diulang pada batas kelompok \emph{child} \emph{chunk}.\\
+\end{longtable}
+
+\normalsize
+Validator \emph{runtime} memastikan ukuran minimal terpenuhi dan \emph{overlap} lebih
+kecil daripada ukuran jendela. Dengan aturan ini, setiap \emph{plugin} selalu membuat
+kemajuan dan tidak menghasilkan \emph{chunk} berulang tanpa batas.
+
+\subsubsection{\emph{Indexer Plugin} Configuration}
+\label{subsubsec:rancangan-config-indexer}
+
+\emph{Indexer} mengubah \emph{canonical chunks} menjadi dokumen indeks. \emph{Field} konfigurasi
+menentukan \emph{metadata} yang diproyeksikan, model \emph{embedding}, kanal \emph{sparse}, dan
+aturan pencocokan. Setiap \emph{plugin} berikut ditulis dalam tabel terpisah agar
+parameter dan keluaran masing-masing mudah dibedakan.
+
+\scriptsize
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{dense-semantic}}\label{tab:rancangan-config-indexer-dense}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{indexed_metadata} & array, \emph{default} kosong, maksimum 32 item & \emph{Metadata} yang diproyeksikan ke dokumen indeks. Setiap item memiliki nama, path \emph{metadata}, dan tipe.\\
+\code{embedding.provider} & enum local/openrouter/openai, \emph{default} \code{local} & \emph{Adapter} penyedia \emph{embedding}.\\
+\code{embedding.model} & \emph{default} \code{BAAI/bge-m3} & Identitas model \emph{embedding}.\\
+\code{embedding.api_key_ref} & opsional untuk \emph{provider} eksternal & Referensi kunci akses dari environment.\\
+\code{embedding.api_key} & opsional untuk \emph{provider} eksternal & Nilai kunci akses inline.\\
+\code{embedding.base_url} & \emph{default} URL \emph{provider} & Alamat \emph{service} \emph{embedding} eksternal.\\
+\code{embedding.timeout_seconds} & number, \emph{default} 30 & Batas waktu permintaan \emph{embedding}.\\
+\code{embedding.revision} & opsional & Revisi model \emph{embedding}.\\
+\code{embedding.local_backend} & opsional & Backend inferensi lokal.\\
+\code{embedding.batch_size} & \emph{default} 32 & Jumlah teks dalam satu batch inferensi.\\
+\code{embedding.device} & \emph{default} \code{auto} & Perangkat inferensi yang digunakan.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{sparse-keyword}}\label{tab:rancangan-config-indexer-sparse}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{indexed_metadata} & array, \emph{default} kosong, maksimum 32 item & \emph{Metadata} yang ikut dicari dan difilter.\\
+\code{sparse_fields} & \emph{default} \code{lexical_text^4}, \code{content^1.5} & Daftar \emph{field} teks dan boost untuk pencarian \emph{sparse}.\\
+\code{sparse_field_boosts} & object, nilai harus $>0$ & Override boost per nama \emph{field}.\\
+\code{sparse_match_type} & enum enam mode, \emph{default} \code{best_fields} & Strategi multi-match untuk pencocokan \emph{lexical}.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{hybrid-semantic-keyword}}\label{tab:rancangan-config-indexer-hybrid}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{indexed_metadata} & sama dengan \emph{dense} dan \emph{sparse} & \emph{Metadata} yang diproyeksikan ke kedua kanal.\\
+\code{embedding.provider} & \emph{provider} local & Penyedia \emph{embedding} untuk keluaran \emph{dense}.\\
+\code{embedding.model} & model \code{BAAI/bge-m3} & Model pembentuk vektor \emph{dense}.\\
+\code{embedding.base_url} & URL \emph{provider} & \emph{Endpoint} \emph{service} \emph{embedding}.\\
+\code{embedding.timeout_seconds} & 30 detik & Batas waktu permintaan \emph{embedding}.\\
+\code{sparse_fields} & \emph{default} \code{lexical_text^4}, \code{content^1.5} & \emph{Field} \emph{lexical} beserta boost.\\
+\code{sparse_field_boosts} & boost $>0$ & Bobot tiap \emph{field} \emph{lexical}.\\
+\code{sparse_match_type} & \emph{default} \code{best_fields} & Strategi pencocokan kanal \emph{sparse}.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{legal-dense}}\label{tab:rancangan-config-indexer-legal-dense}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{indexed_metadata} & daftar \emph{metadata} hukum, maksimum 32 item & Memetakan sumber, judul, nomor, tahun, status, Pasal, dan rentang karakter ke \emph{field} indeks.\\
+\code{embedding.*} & sama dengan dense-semantic & Membentuk representasi \emph{dense} dengan \emph{metadata} hukum.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{legal-sparse}}\label{tab:rancangan-config-indexer-legal-sparse}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{indexed_metadata} & daftar \emph{metadata} hukum, maksimum 32 item & \emph{Field} filter hukum seperti sumber, judul, nomor, tahun, status, Pasal, dan posisi karakter.\\
+\code{sparse_fields} & \emph{default} \code{lexical_text^5}, \code{content^1.5}, judul dan Pasal masing-masing boost 2 & \emph{Field} \emph{lexical} dengan prioritas \emph{metadata} hukum.\\
+\code{sparse_field_boosts} & object, \emph{default} kosong, nilai $>0$ & Override boost per \emph{field}.\\
+\code{sparse_match_type} & enum enam mode, \emph{default} \code{best_fields} & Strategi pencocokan \emph{lexical}.\\
+\end{longtable}
+
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{legal-hybrid}}\label{tab:rancangan-config-indexer-legal-hybrid}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{indexed_metadata} & daftar \emph{metadata} hukum, maksimum 32 item & \emph{Metadata} hukum yang tersedia pada \emph{dense} dan \emph{sparse} \emph{index}.\\
+\code{embedding.provider} & sama dengan legal-dense & Penyedia \emph{embedding} kanal \emph{dense}.\\
+\code{embedding.model} & sama dengan legal-dense & Model pembentuk kanal \emph{dense}.\\
+\code{embedding.base_url} & sama dengan legal-dense & \emph{Endpoint} \emph{embedding} kanal \emph{dense}.\\
+\code{embedding.timeout_seconds} & sama dengan legal-dense & Batas waktu permintaan \emph{embedding}.\\
+\code{sparse_fields} & \emph{default} \emph{lexical}, \emph{content}, judul, dan Pasal dengan boost hukum & Membentuk kanal \emph{sparse} revision-aware.\\
+\code{sparse_field_boosts} & boost $>0$ & Bobot tiap \emph{field} \emph{lexical}.\\
+\code{sparse_match_type} & \emph{default} \code{best_fields} & Strategi pencocokan \emph{sparse}.\\
+\end{longtable}
+
+\normalsize
+Objek \code{embedding} memiliki \code{provider=local},
+\code{model=BAAI/bge-m3}, \code{base_url}, dan
+\code{timeout_seconds=30} sebagai \emph{default}. Item \code{indexed_metadata}
+mendefinisikan \code{name}, \code{path}, dan \code{type}, tipe yang diterima
+mencakup \emph{keyword}, \emph{text}, \emph{integer}, \emph{float}, \emph{boolean}, dan \emph{date}. Nilai
+\code{sparse_match_type} dibatasi pada \code{best_fields},
+\code{most_fields}, \code{cross_fields}, \code{phrase},
+\code{phrase_prefix}, atau \code{bool_prefix}.
+
+\subsubsection{\emph{Knowledge Graph Plugin} Configuration}
+\label{subsubsec:rancangan-config-kg}
+
+\emph{Knowledge graph plugin} membentuk \emph{node} dan \emph{edge} dari \emph{canonical chunks}.
+Implementasi yang digunakan bersifat deterministik dan mengikuti relasi hukum
+yang telah ditentukan pada \emph{metadata} dokumen.
+
+\scriptsize
+\begin{longtable}{@{}p{3.2cm}p{3.2cm}p{\dimexpr\textwidth-3.2cm-3.2cm-4\tabcolsep\relax}@{}}
+\caption{Konfigurasi \emph{plugin} \texttt{legal-graph}}\label{tab:rancangan-config-kg-legal}\\
+\toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
+\bottomrule \endfoot
+\code{include_pasal_nodes} & boolean, \emph{default} \code{true} & Menghasilkan \emph{node} Pasal yang terhubung pada \emph{graph}.\\
+\code{include_revise_pasal_nodes} & boolean, \emph{default} \code{true} & Menghasilkan \emph{node} RevisePasal untuk relasi perubahan.\\
+\code{retrieval_relation_types} & \emph{array} huruf kapital, \emph{default} \code{REVOKES}, \code{AMENDS}, \code{ESTABLISHES} & Jenis relasi hukum yang boleh diambil saat \emph{retrieval}.\\
+\code{retrieval_relation_priority} & \emph{array} unik, \emph{default} sama dengan \emph{relation types} & Urutan prioritas relasi ketika hasil \emph{graph} disusun.\\
+\end{longtable}
+
+\normalsize
+\emph{Plugin} \code{legal-graph} mendeklarasikan \emph{capability}
+\code{regulation_graph} dan \emph{compatibility} dengan \emph{legal parser} serta \emph{chunker}
+yang tercantum pada \emph{manifest}. JSON \emph{Schema} menggunakan
+\code{additionalProperties=false} pada objek yang dibatasi sehingga typo \emph{field}
+tidak diterima diam-diam.
+\endgroup
+
+
+\begingroup
+\normalsize
+\setlength{\tabcolsep}{2pt}
+\subsubsection{\emph{Data Source API}}
+\label{subsubsec:rancangan-api-datasource}
+
+API \emph{Data Source} menyediakan \emph{datasource} dan \emph{datasource document}
+yang dapat digunakan bersama oleh beberapa \emph{profile}. Data yang dikelola berupa
+dokumen mentah beserta informasinya, yang disimpan dalam basis data untuk diproses
+pada tahap berikutnya.
+
+\emph{Endpoint} pada tabel berikut hanya dapat digunakan setelah pengguna \emph{login} melalui
+\code{/api/v1/auth/login}. Implementasi menyimpan JWT akses dan token refresh pada
+\emph{cookie} \code{omni_access_token} dan \code{omni_refresh_token}, bukan pada header
+\code{Bearer}. \emph{Endpoint} \emph{Data Source} dan \emph{Profile} hanya menerima pengguna
+dengan peran admin. Metode yang mengubah data juga harus mengirim \code{X-CSRF-Token}
+yang sesuai dengan \emph{cookie} \code{omni_csrf_token}.
+
+\scriptsize
+\begin{longtable}{@{}p{1.4cm}p{5.6cm}p{\dimexpr\textwidth-1.4cm-5.6cm-4\tabcolsep\relax}@{}}
+\caption{Kontrak HTTP API \emph{Data Source}}\label{tab:rancangan-api-datasource}\\
+\toprule Metode & \emph{Path} & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan Tabel~\ref{tab:rancangan-api-datasource})}}\\ \toprule Metode & \emph{Path} & Fungsi\\ \midrule \endhead
+\midrule \multicolumn{3}{r}{\footnotesize Bersambung ke halaman berikutnya}\\ \endfoot
+\bottomrule \endlastfoot
+GET & \code{/api/v1/datasources} & Mengembalikan daftar \emph{datasource} dengan \emph{pagination} dan \emph{filter status}.\\
+GET & \code{/api/v1/datasources/{datasource_id}/documents} & Mengembalikan daftar dokumen dengan \emph{filter status} dan \emph{pagination}.\\
+GET & \code{/api/v1/datasources/{datasource_id}/documents/{document_id}} & Mengembalikan detail dokumen, \emph{metadata}, dan \emph{status}.\\
+GET & \code{/api/v1/datasources/{datasource_id}/documents/{document_id}/download-url} & Menghasilkan \emph{presigned URL} berumur terbatas.\\
+POST & \code{/api/v1/datasources/{datasource_id}/documents/{document_id}/archive} & Mengarsipkan dokumen setelah pemeriksaan dependensi.\\
+POST & \code{/api/v1/datasources/{datasource_id}/documents/{document_id}/unarchive} & Mengaktifkan dokumen dan menjalankan \emph{fan-out} ulang ke \emph{profile} aktif.\\
+POST & \code{/api/v1/datasources/{datasource_id}/archive} & Mengarsipkan \emph{datasource} setelah melewati \emph{dependency guard}.\\
+POST & \code{/api/v1/datasources/{datasource_id}/unarchive} & Mengaktifkan kembali \emph{datasource}.\\
+\end{longtable}
+
+\normalsize
+\subsubsection{\emph{Profile API}}
+\label{subsubsec:rancangan-api-profile}
+
+API \emph{Profile} mengatur konfigurasi satu \emph{pipeline}, termasuk pemilihan
+\emph{plugin} dan sinkronisasi dokumen dari \emph{datasource} yang telah diikat ke
+\emph{profile}. API ini menyediakan observabilitas agar setiap tahap dapat dipantau
+dan dieksekusi dengan baik dalam sistem Omni-RAG. \emph{Endpoint} dokumen hanya
+mengelola proyeksi dokumen di dalam \emph{profile}, bukan baris dokumen sumber.
+
+\emph{Endpoint} pada tabel ini menggunakan sesi admin yang sama. Klien mengirim \emph{cookie} JWT
+akses, dan setiap metode yang mengubah data menyertakan \code{X-CSRF-Token} yang valid.
+
+\scriptsize
+\begin{longtable}{@{}p{1.4cm}p{5.6cm}p{\dimexpr\textwidth-1.4cm-5.6cm-4\tabcolsep\relax}@{}}
+\caption{Kontrak HTTP API \emph{Profile}}\label{tab:rancangan-api-profile}\\
+\toprule Metode & \emph{Path} & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan Tabel~\ref{tab:rancangan-api-profile})}}\\ \toprule Metode & \emph{Path} & Fungsi\\ \midrule \endhead
+\midrule \multicolumn{3}{r}{\footnotesize Bersambung ke halaman berikutnya}\\ \endfoot
+\bottomrule \endlastfoot
+POST & \code{/api/v1/profiles} & Membuat \emph{profile} dan \emph{node} setelah validasi.\\
+GET & \code{/api/v1/profiles} & Mengembalikan ringkasan \emph{profile} dengan \emph{filter status} dan \emph{pagination}.\\
+GET & \code{/api/v1/profiles/create-options} & Mengembalikan \emph{plugin} aktif beserta \emph{manifest}, skema konfigurasi, \emph{capability}, dan \emph{compatibility} untuk wizard.\\
+GET & \code{/api/v1/profiles/{profile_id}} & Mengembalikan detail \emph{profile}, \emph{node}, \emph{plugin}, datasource, dan konfigurasi.\\
+PATCH & \code{/api/v1/profiles/{profile_id}/ingestion-config} & Mengubah mode ingestion dan referensi \emph{profile} sumber yang diizinkan.\\
+POST & \code{/api/v1/profiles/{profile_id}/sync} & Memulai sinkronisasi dan merangkum hasil per dokumen.\\
+GET & \code{/api/v1/profiles/{profile_id}/documents} & Mengembalikan ringkasan dokumen dan status tahap pada \emph{profile}.\\
+GET & \code{/api/v1/profiles/{profile_id}/documents/{document_id}} & Mengembalikan detail \emph{pipeline} \emph{run} dan \emph{node} \emph{run}.\\
+POST & \code{/api/v1/profiles/{profile_id}/documents/retry} & Mengulang batch dokumen dari tahap yang dipilih.\\
+DELETE & \code{/api/v1/profiles/{profile_id}/documents/{document_id}} & Menghapus proyeksi satu dokumen dari \emph{profile}.\\
+POST & \code{/api/v1/profiles/{profile_id}/runs/cancel} & Membatalkan \emph{run} aktif pada \emph{profile}.\\
+POST & \code{/api/v1/profiles/{profile_id}/documents/{document_id}/runs/{run_id}/retry} & Mengulang satu \emph{run} dengan \emph{attempt} baru.\\
+GET & \code{/api/v1/profiles/{profile_id}/documents/{document_id}/runs/{run_id}/events} & Mengirimkan status \emph{run} melalui \emph{Server-Sent Events}.\\
+GET & \code{/api/v1/profiles/{profile_id}/overview} & Mengagregasikan jumlah dokumen dan status \emph{pipeline}.\\
+GET & \code{/api/v1/profiles/{profile_id}/graph/roots} & Mengembalikan akar \emph{graph} milik \emph{profile}.\\
+GET & \code{/api/v1/profiles/{profile_id}/graph/nodes/{node_id}/neighbors} & Mengembalikan tetangga \emph{graph} dalam cakupan \emph{profile}.\\
+GET & \code{/api/v1/profiles/{profile_id}/graph/search} & Mencari simpul \emph{graph}.\\
+GET & \code{/api/v1/profiles/{profile_id}/indexed} & Memeriksa dokumen terindeks milik \emph{profile}.\\
+DELETE & \code{/api/v1/profiles/{profile_id}} & Menghapus \emph{profile} beserta data turunannya setelah \emph{cleanup} selesai.\\
+\end{longtable}
+
+\normalsize
+\subsubsection{\emph{Chat Streaming API}}
+\label{subsubsec:rancangan-api-chat-stream}
+
+API ini menerima pertanyaan dari \emph{frontend} dan mengalirkan proses pembentukan
+jawaban sampai selesai. \emph{Endpoint} dapat digunakan oleh pengguna yang sudah \emph{login},
+implementasi mengambil JWT dari \emph{cookie} \code{omni_access_token}.
+Body \code{ChatRequest} memuat \code{message} (1 hingga 8000 karakter), serta
+\code{conversation_id}, dan \code{profile_id}.
+
+\scriptsize
+\begin{longtable}{@{}p{1.4cm}p{5.6cm}p{\dimexpr\textwidth-1.4cm-5.6cm-4\tabcolsep\relax}@{}}
+\caption{Kontrak HTTP API \emph{Chat Stream}}\label{tab:rancangan-api-chat-stream}\\
+\toprule Metode & \emph{Path} & Fungsi\\ \midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{(lanjutan Tabel~\ref{tab:rancangan-api-chat-stream})}}\\ \toprule Metode & \emph{Path} & Fungsi\\ \midrule \endhead
+\bottomrule \endlastfoot
+POST & \code{/api/v1/chat/stream} & Menerima \code{ChatRequest} dan mengalirkan respons \emph{Server-Sent Events} berupa \code{start}, \code{step}, \code{reasoning} (saat \code{detail=true}), \code{token}, \code{error}, atau \code{done}.\\
+\end{longtable}
+\endgroup
+
+\subsection{Rancangan \emph{Lifecycle} dan \emph{State}}
+\label{subsec:rancangan-lifecycle-state}
+
+\emph{Lifecycle} menetapkan transisi yang diperbolehkan dan operasi yang harus selesai
+sebelum suatu \emph{state} berubah. Dalam cakupan komponen pada Subbab~\ref{subsec:posisi-komponen},
+rancangan ini mencakup \emph{datasource}, dokumen, \emph{profile}, \emph{pipeline run},
+dan \emph{node run}.
+
+\Needspace{0.70\textheight}
+\subsubsection{\emph{Lifecycle} Data Source}
+\label{subsubsec:lifecycle-datasource}
+\leavevmode
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{generated/diagrams/rancangan-lifecycle-datasource.png}
+    \caption{\emph{Lifecycle} Data Source}
+    \label{fig:rancangan-lifecycle-datasource}
+\end{figure}
+
+Di basis data, \emph{datasource} hanya memiliki dua status, yaitu \code{active} dan
+\code{archived}. Saat dibuat, statusnya langsung \code{active}. Ketika operasi
+\emph{archive} dijalankan, status berubah menjadi \code{archived} dan
+\code{archived_at} diisi. Dokumen sumber tetap disimpan. Operasi ini hanya dapat
+dijalankan jika tidak ada \emph{profile} aktif yang masih memakai \emph{datasource},
+proses pembersihan \emph{profile} sudah selesai, dan tidak ada \emph{scrape run} yang
+sedang berjalan. Operasi \emph{unarchive} mengubah status kembali menjadi
+\code{active}, sehingga dokumen baru dapat diterima.
+
+\Needspace{0.70\textheight}
+\subsubsection{\emph{Document Lifecycle}}
+\label{subsubsec:lifecycle-dokumen}
+\leavevmode
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{generated/diagrams/rancangan-lifecycle-document-v2.png}
+    \caption{\emph{Lifecycle} Data Source Document}
+    \label{fig:rancangan-lifecycle-document}
+\end{figure}
+
+Dokumen juga memiliki status \code{active} dan \code{archived}. Dokumen baru
+berstatus \code{active} dan dapat dikirim ke setiap \emph{profile} yang
+berlangganan. Saat diarsipkan, seluruh data turunan dokumen pada setiap
+\emph{profile} dihapus lebih dulu. Data yang dibersihkan mencakup data pada vector
+basis data. Setelah data turunan bersih, status dokumen diubah menjadi
+\code{archived}. Baris sumber
+dan berkas aslinya tetap disimpan. Untuk mengaktifkannya kembali, \emph{datasource}
+induk harus berstatus \code{active}. Setelah itu, dokumen dikirim ulang ke setiap
+\emph{profile} aktif.
+
+\Needspace{0.70\textheight}
+\subsubsection{\emph{Lifecycle Profile}}
+\label{subsubsec:lifecycle-profile}
+\leavevmode
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{generated/diagrams/rancangan-lifecycle-profile.png}
+    \caption{\emph{Lifecycle} Profile}
+    \label{fig:rancangan-lifecycle-profile}
+\end{figure}
+
+\emph{Profile} hanya memiliki status \code{active} dan \code{disabled}. Setelah
+konfigurasi dan plugin lolos validasi, \emph{profile} dibuat dengan status
+\code{active} dan dapat menerima dokumen melalui proses \emph{fan-out}. Saat akan
+dihapus, statusnya diubah menjadi \code{disabled} agar pekerjaan baru berhenti
+selama proyeksi, penyimpanan, dan monitoring dibersihkan. Setelah tidak ada
+referensi yang masih memakai \emph{profile} dan pembersihan selesai, data
+\emph{profile} dapat dihapus.
+
+\Needspace{0.70\textheight}
+\subsubsection{\emph{Pipeline Run Lifecycle}}
+\label{subsubsec:lifecycle-pipeline-run}
+\leavevmode
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.50\textwidth]{generated/diagrams/rancangan-lifecycle-pipeline-run.png}
+    \caption{Siklus hidup \emph{pipeline run}}
+    \label{fig:rancangan-lifecycle-pipeline-run}
+\end{figure}
+
+Satu \emph{pipeline run} adalah satu percobaan memproses dokumen pada sebuah
+\emph{profile}. Statusnya dapat berupa \code{queued}, \code{running},
+\code{succeeded}, \code{failed}, atau \code{cancelled}. Proses baru dimulai dari
+\code{queued}, lalu berubah menjadi \code{running} ketika \emph{worker} mengambil
+pekerjaan. Jika seluruh tahap selesai dan artefak tersimpan, statusnya menjadi
+\code{succeeded}. Jika terjadi kesalahan, statusnya menjadi \code{failed}. Jika
+dibatalkan, statusnya menjadi \code{cancelled} dan tahap berikutnya dihentikan.
+Pengulangan hanya dapat dilakukan pada status akhir. Proses kemudian kembali ke
+\code{queued} dengan nilai \code{pipeline_attempt} yang bertambah.
+
+\Needspace{0.70\textheight}
+\subsubsection{\emph{Node Run Lifecycle}}
+\label{subsubsec:lifecycle-node-run}
+\leavevmode
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.50\textwidth]{generated/diagrams/rancangan-lifecycle-node-run.png}
+    \caption{Siklus hidup \emph{node run}}
+    \label{fig:rancangan-lifecycle-node-run}
+\end{figure}
+
+\emph{Node run} mencatat pelaksanaan satu komponen dalam sebuah \emph{pipeline run}.
+Statusnya sama, yaitu \code{queued}, \code{running}, \code{succeeded},
+\code{failed}, atau \code{cancelled}. \emph{Node} dibuat dengan status \code{queued} jika
+proses induknya masih aktif dan tahap tersebut dipilih. Saat \emph{worker} mengambil
+\emph{node}, statusnya berubah menjadi \code{running}. \emph{Node} menjadi \code{succeeded} jika
+artefak berhasil disimpan, dan menjadi \code{failed} jika komponen mengalami
+kesalahan. \emph{Node} yang dibatalkan oleh proses induk atau dilewati karena tahapnya tidak
+dipilih menjadi \code{cancelled}. Pengulangan membuat baris \emph{node} baru dengan nilai
+\code{attempt} berikutnya, sehingga riwayat percobaan sebelumnya tetap tersimpan.
+Jika \emph{heartbeat} hilang, \emph{node} ditandai \code{failed} dan dapat dicoba kembali.
+
+\subsection{Rancangan Interaction Architecture}
+\label{subsec:rancangan-alur-interaksi}
+
+Subbab ini merinci \emph{use case} yang terlihat dari Antarmuka Administrasi dan
+Antarmuka Percakapan. Setiap alur menyebut \emph{request}, validasi, penyimpanan,
+pesan, serta efek samping pada proyeksi. Dengan demikian, diagram tidak hanya
+menunjukkan perpindahan antarkomponen, tetapi juga batas transaksi dan kondisi
+yang menyebabkan operasi ditolak.
+
+Alur berikut memusatkan kasus penggunaan pada komponen dalam cakupan
+Subbab~\ref{subsec:posisi-komponen}, komponen lain hanya menjadi titik integrasi.
+
+\subsubsection{Pembuatan \emph{Profile} dan Pemilihan Komponen}
+\label{subsubsec:interaksi-profile}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{generated/diagrams/rancangan-sequence-uc1-profile.png}
+    \caption{Diagram urutan pembuatan \emph{profile} dan pemilihan komponen}
+    \label{fig:sequence-uc1-profile}
+\end{figure}
+
+Alur ini dimulai dari halaman daftar \emph{profile}. Setelah administrator berhasil
+masuk, antarmuka memanggil \code{GET /api/v1/profiles} untuk mengambil daftar
+\emph{profile} yang sudah ada. Respons tersebut digunakan untuk menampilkan
+identitas singkat, status, versi, dan \emph{datasource} setiap \emph{profile}. Dari
+halaman ini administrator dapat memilih \emph{Create Profile} untuk membuka formulir
+pembuatan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/profile.png}
+    \caption{Halaman daftar \emph{profile} dan aksi pembuatan \emph{profile} baru}
+    \label{fig:manual-profile-list}
+\end{figure}
+
+Ketika tombol tersebut dipilih, antarmuka menampilkan formulir pembuatan
+\emph{profile}. Formulir menyediakan kolom \code{name}, \code{description}, pilihan
+\emph{datasource}, serta pilihan komponen \emph{pipeline}. Tidak ada konfigurasi
+yang disimpan pada tahap ini. Nilai yang diisi masih berada di sisi antarmuka sampai
+administrator menekan tombol pembuatan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/create-profile.png}
+    \caption{Formulir pembuatan \emph{profile}}
+    \label{fig:manual-create-profile}
+\end{figure}
+
+Saat formulir dibuka, antarmuka mengambil dua jenis opsi. Pertama,
+\code{GET /api/v1/profiles/create-options} mengembalikan \emph{plugin} aktif beserta
+\emph{manifest}, versi, tipe komponen, skema konfigurasi, kapabilitas, dan
+aturan kompatibilitas. Kedua, \code{GET /api/v1/datasources} mengambil daftar
+\emph{datasource} yang dapat dipakai. Kedua respons ini dirender menjadi pilihan
+di dalam formulir. \emph{Datasource} yang dipilih hanya direferensikan melalui
+\code{datasource_id}, sehingga satu sumber tetap dapat digunakan oleh beberapa
+\emph{profile}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/datasource.png}
+    \caption{Daftar \emph{datasource} yang tersedia untuk dipilih}
+    \label{fig:manual-profile-datasource}
+\end{figure}
+
+Setelah \emph{datasource} dipilih, administrator memilih \emph{parser}. Antarmuka
+menyaring opsi pembuatan berdasarkan \code{component_type=parser} dan
+menampilkan \emph{plugin} yang tersedia. Ketika satu \emph{plugin} dipilih, antarmuka membuka
+panel konfigurasi. Kolom pada panel dibentuk dari skema konfigurasi \emph{plugin},
+sehingga konfigurasi yang dapat diisi selalu sesuai dengan kontraknya.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/parser.png}
+    \caption{Daftar \emph{plugin} \emph{parser} pada formulir pembuatan \emph{profile}}
+    \label{fig:manual-profile-parser}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/parser-config.png}
+    \caption{Panel konfigurasi \emph{plugin} \emph{parser}}
+    \label{fig:manual-profile-parser-config}
+\end{figure}
+
+Langkah yang sama dilakukan untuk \emph{chunker}. Daftar \emph{plugin} ditampilkan setelah
+administrator membuka pemilih \emph{chunker}, lalu pilihan konfigurasi dibuka dalam
+panel terpisah. Nilai yang diisi pada panel disimpan sebagai konfigurasi \emph{node}
+\emph{chunker}, bukan sebagai konfigurasi umum \emph{profile}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/chunker.png}
+    \caption{Daftar \emph{plugin} \emph{chunker}}
+    \label{fig:manual-profile-chunker}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/chunker-config.png}
+    \caption{Panel konfigurasi \emph{plugin} \emph{chunker}}
+    \label{fig:manual-profile-chunker-config}
+\end{figure}
+
+Berikutnya administrator memilih \emph{indexer}. Antarmuka kembali menggunakan daftar dari
+\code{create-options}, tetapi hanya menampilkan \emph{plugin} dengan tipe \emph{indexer}.
+Panel konfigurasi menampilkan parameter yang ditetapkan oleh skema \emph{plugin} tersebut.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/index.png}
+    \caption{Daftar \emph{plugin} \emph{indexer}}
+    \label{fig:manual-profile-indexer}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/index-config.png}
+    \caption{Panel konfigurasi \emph{plugin} \emph{indexer}}
+    \label{fig:manual-profile-indexer-config}
+\end{figure}
+
+Setelah itu administrator menentukan \emph{retrieval orchestrator}. Pemilih dan
+panel konfigurasi bekerja dengan cara yang sama: antarmuka menyaring \emph{manifest} sesuai
+tipe komponen, lalu membentuk kolom dari skema \emph{plugin} yang dipilih.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/orchestrator.png}
+    \caption{Daftar \emph{plugin} \emph{retrieval orchestrator}}
+    \label{fig:manual-profile-orchestrator}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/orchestrator-config.png}
+    \caption{Panel konfigurasi \emph{retrieval orchestrator}}
+    \label{fig:manual-profile-orchestrator-config}
+\end{figure}
+
+Terakhir, administrator dapat mengaktifkan \emph{knowledge graph} (KG). Jika KG
+dipilih, antarmuka menampilkan daftar \emph{plugin} KG dan panel konfigurasi khusus KG. Jika tidak
+dipilih, \emph{node} KG tidak dimasukkan ke dalam daftar \emph{node} \emph{pipeline}. Komponen lain
+tetap dapat dijalankan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/kg.png}
+    \caption{Daftar \emph{plugin} \emph{knowledge graph}}
+    \label{fig:manual-profile-kg}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/kg-config.png}
+    \caption{Panel konfigurasi \emph{plugin} \emph{knowledge graph}}
+    \label{fig:manual-profile-kg-config}
+\end{figure}
+
+Setelah semua komponen dipilih, antarmuka menyusun \emph{node} dalam urutan \emph{parser},
+\emph{chunker}, \emph{indexer}, \emph{retrieval orchestrator}, lalu KG bila diaktifkan. Tombol \emph{Create Profile}
+kemudian mengirim \code{POST /api/v1/profiles}. Payload berisi \code{name},
+\code{description}, \code{version}, \code{datasource_id}, dan daftar \emph{node}. Setiap
+\emph{node} membawa \code{node_id}, \code{component_type}, identitas \emph{plugin},
+\code{sort_order}, dan \code{config}. \emph{Profile Service} mengulangi validasi
+terhadap status \emph{datasource}, keberadaan \emph{plugin}, skema konfigurasi, dan
+kompatibilitas sebelum menyimpan \emph{profile} serta seluruh \emph{node} dalam satu
+transaksi. Dokumen lama tidak otomatis diproses pada tahap ini. Sinkronisasi dilakukan
+melalui operasi terpisah.
+
+Jika transaksi berhasil, respons pembuatan memberikan identitas \emph{profile} yang
+baru. Antarmuka kemudian membuka \code{GET /api/v1/profiles/{profile_id}} untuk mengambil
+detail terbaru dan mengarahkan administrator ke halaman detail \emph{profile}.
+Halaman ini menampilkan status, ikatan \emph{datasource}, daftar \emph{node}, dan konfigurasi
+yang tersimpan sehingga administrator dapat memeriksa hasil sebelum menjalankan
+sinkronisasi.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-1/profile-detail.png}
+    \caption{Halaman detail \emph{profile} setelah pembuatan berhasil}
+    \label{fig:manual-profile-detail}
+\end{figure}
+
+\subsubsection{Sinkronisasi Documents dari \emph{Data Source} ke \emph{Profile}}
+\label{subsubsec:interaksi-sinkronisasi-profile}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{generated/diagrams/rancangan-sequence-uc2-sync.png}
+    \caption{Diagram urutan sinkronisasi dokumen \emph{datasource} ke \emph{profile}}
+    \label{fig:sequence-uc2-sync}
+\end{figure}
+
+Alur ini dimulai ketika administrator membuka tab \emph{Processing} pada halaman
+detail \emph{profile}. Antarmuka memanggil
+\code{GET /api/v1/profiles/{profile_id}/documents} untuk mengambil daftar dokumen
+yang pernah diproses. Respons menampilkan nama dokumen, status proses, nilai
+\emph{attempt}, dan waktu pembaruan terakhir. Parameter \emph{pagination}, pencarian,
+dan filter status digunakan agar daftar yang besar tetap mudah dibaca.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/processing.png}
+    \caption{Daftar dokumen dan status proses pada tab \emph{Processing}}
+    \label{fig:manual-processing}
+\end{figure}
+
+Administrator dapat memilih beberapa baris sekaligus. Untuk \emph{retry} massal,
+antarmuka mengirim \code{POST /api/v1/profiles/{profile_id}/documents/retry} dengan
+daftar dokumen dan tahap awal yang akan diulang. Untuk penghapusan massal, antarmuka
+mengirim \code{DELETE /api/v1/profiles/{profile_id}/documents/{document_id}} untuk
+setiap dokumen yang dipilih. Setelah operasi selesai, daftar dimuat kembali melalui
+\code{GET /api/v1/profiles/{profile_id}/documents} agar status terbaru terlihat.
+Kegagalan pada satu dokumen ditampilkan pada dokumen tersebut dan tidak menghapus
+hasil proses dokumen lain.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/select-bulk.png}
+    \caption{Pemilihan beberapa dokumen untuk aksi \emph{retry} atau \emph{delete}}
+    \label{fig:manual-select-bulk}
+\end{figure}
+
+Jika administrator menekan tombol \emph{Open}, antarmuka memanggil
+\code{GET /api/v1/profiles/{profile_id}/documents/{document_id}}. Respons detail
+memuat status keseluruhan proses, persentase kemajuan, serta status setiap \emph{node}
+seperti \emph{parser}, \emph{chunker}, \emph{indexer}, dan KG. Setiap \emph{node} juga
+menyediakan referensi artefak yang dapat dibuka untuk memeriksa keluaran tahap
+tersebut.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/process-detail.png}
+    \caption{Detail proses satu dokumen dan kemajuan setiap \emph{node}}
+    \label{fig:manual-process-detail}
+\end{figure}
+
+Dengan menggulir halaman detail, administrator dapat memeriksa hasil materialisasi
+ke \emph{vector database} dan ringkasan representasi \emph{knowledge graph}. Informasi
+ini menunjukkan apakah dokumen sudah tersedia untuk \emph{retrieval} dan apakah hasil \emph{graph}
+berhasil dibentuk. Data tersebut berasal dari detail \emph{profile} dan tidak mengubah
+konfigurasi \emph{pipeline}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/process-detail-2.png}
+    \caption{Status materialisasi ke \emph{vector database} dan ringkasan \emph{knowledge graph}}
+    \label{fig:manual-process-detail-2}
+\end{figure}
+
+Bagian berikutnya menampilkan daftar \emph{run} dan statusnya. Administrator dapat
+melihat apakah suatu proses berhasil, gagal, dibatalkan, atau sedang berjalan. Untuk
+mengulang proses tertentu, tombol \emph{Retry} mengirim
+\code{POST /api/v1/profiles/{profile_id}/documents/{document_id}/runs/{run_id}/retry}.
+\emph{Endpoint} tersebut membuat \emph{attempt} baru tanpa menghapus riwayat \emph{attempt} sebelumnya.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/process-detail-3.png}
+    \caption{Daftar \emph{run} dan status proses pada detail dokumen}
+    \label{fig:manual-process-detail-3}
+\end{figure}
+
+Ketika salah satu \emph{run} dibuka, antarmuka menampilkan panel riwayat percobaan.
+Panel ini merinci setiap percobaan pada \emph{node} \emph{pipeline}, termasuk status dan waktu
+pembaruan. Data dapat diperbarui melalui
+\code{GET /api/v1/profiles/{profile_id}/documents/{document_id}/runs/{run_id}/events}
+yang mengirimkan perubahan status melalui \emph{Server-Sent Events}. Dengan demikian,
+administrator dapat membedakan \emph{attempt} yang gagal dari \emph{attempt} baru yang sedang
+berjalan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/run-attempt.png}
+    \caption{Panel riwayat percobaan untuk setiap \emph{node}}
+    \label{fig:manual-run-attempt}
+\end{figure}
+
+Setelah pemeriksaan selesai, administrator dapat kembali ke halaman detail
+\emph{profile}. Antarmuka memanggil \code{GET /api/v1/profiles/{profile_id}} untuk
+memuat ulang ringkasan status, versi, \emph{datasource}, dan konfigurasi \emph{pipeline}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/profile-detail.png}
+    \caption{Ringkasan detail \emph{profile} setelah pemeriksaan proses}
+    \label{fig:manual-sync-profile-detail}
+\end{figure}
+
+Pada bagian \emph{Ingestion Pipeline}, administrator dapat melihat komponen yang
+digunakan dan membuka konfigurasi masing-masing komponen. Tampilan ini hanya membaca
+konfigurasi yang tersimpan pada \emph{node} \emph{profile}. Tidak ada perubahan konfigurasi
+yang dilakukan dari halaman monitoring.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/profile-detail-2.png}
+    \caption{Bagian \emph{Ingestion Pipeline} pada detail \emph{profile}}
+    \label{fig:manual-sync-profile-detail-2}
+\end{figure}
+
+Ketika sebuah komponen dipilih, panel konfigurasi menampilkan parameter \emph{plugin},
+nilai yang tersimpan, dan identitas versinya. Informasi tersebut berasal dari respons
+detail \emph{profile} atau titik akhir konfigurasi yang dipanggil oleh halaman detail.
+Panel digunakan untuk evaluasi dan tidak mengirim permintaan perubahan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/UC-2/config-preview.png}
+    \caption{Preview konfigurasi komponen pada \emph{profile}}
+    \label{fig:manual-config-preview}
+\end{figure}
+\subsubsection{Pengarsipan \emph{Data Source} dan Documents}
+\label{subsubsec:interaksi-archive-datasource-document}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{generated/diagrams/rancangan-sequence-uc3-archive.png}
+    \caption{Diagram urutan pengarsipan \emph{datasource} dan dokumen}
+    \label{fig:sequence-uc3-archive}
+\end{figure}
+
+Pengarsipan dapat dilakukan pada dua tingkat. Tingkat pertama adalah \emph{datasource}
+secara keseluruhan. Tingkat kedua adalah dokumen tertentu di dalam \emph{datasource}.
+Keduanya memakai sesi admin yang sama dan memerlukan konfirmasi sebelum perubahan
+status dijalankan.
+
+Alur dimulai ketika administrator membuka halaman daftar \emph{datasource}. Antarmuka
+memanggil \code{GET /api/v1/datasources} untuk menampilkan sumber yang tersedia,
+statusnya, serta tombol aksi. Administrator memilih tombol \emph{Archive} pada sumber
+yang ingin dinonaktifkan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/datasource.png}
+    \caption{Daftar \emph{datasource} yang tersedia}
+    \label{fig:manual-archive-datasource-list}
+\end{figure}
+
+Antarmuka menampilkan dialog konfirmasi sebelum mengirim
+\code{POST /api/v1/datasources/{datasource_id}/archive}. Dialog ini memberi tahu
+administrator bahwa sumber dan dokumen di dalamnya akan berhenti menerima proses
+baru. Jika sumber masih dipakai oleh \emph{profile} aktif, permintaan ditolak oleh
+\emph{dependency guard}. Status sumber tetap \code{active} dan antarmuka menampilkan
+pesan kesalahan yang menyebut jumlah \emph{profile} aktif yang masih terhubung.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/data-source-alert.png}
+    \caption{Konfirmasi pengarsipan \emph{datasource}}
+    \label{fig:manual-archive-datasource-alert}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/datasource-failed.png}
+    \caption{Pesan ketika \emph{datasource} masih dipakai \emph{profile} aktif}
+    \label{fig:manual-archive-datasource-failed}
+\end{figure}
+
+Jika tidak ada \emph{profile} aktif yang menggunakan sumber tersebut dan seluruh
+pemeriksaan dependensi berhasil, seluruh materialisasi dokumen sumber pada
+\emph{profile} yang pernah berlangganan diturunkan terlebih dahulu. Pembersihan ini
+mencakup indeks pada OpenSearch dan entitas serta relasi pada \emph{knowledge graph}.
+Setelah pembersihan selesai, status \emph{datasource} berubah menjadi \code{archived}
+dan tombol aksi berubah menjadi \emph{Unarchive}. Pengaktifan kembali dilakukan
+melalui \code{POST /api/v1/datasources/{datasource_id}/unarchive}, yang mengubah status
+menjadi \code{active}. Setelah \emph{datasource} aktif kembali, mekanisme
+\emph{fan-out} menerbitkan dokumen ke setiap \emph{profile} yang berlangganan agar
+proses sinkronisasi dapat membangun kembali materialisasi tersebut.
+
+Administrator juga dapat mengarsipkan satu dokumen tanpa mengarsipkan seluruh sumber.
+Dengan menekan tombol \emph{View} pada daftar \emph{datasource}, antarmuka membuka
+detail sumber dan memanggil
+\code{GET /api/v1/datasources/{datasource_id}/documents}. Respons menampilkan daftar
+dokumen beserta status, waktu pembaruan, dan aksi setiap dokumen.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/datasource-detail.png}
+    \caption{Daftar dokumen pada detail \emph{datasource}}
+    \label{fig:manual-archive-datasource-detail}
+\end{figure}
+
+Ketika tombol \emph{Archive} pada satu dokumen dipilih, antarmuka menampilkan
+konfirmasi lalu mengirim
+\code{POST /api/v1/datasources/{datasource_id}/documents/{document_id}/archive}.
+\emph{service} memeriksa kecocokan kedua identitas pada \emph{path} dan memastikan operasi dapat
+dijalankan. Jika berhasil, seluruh materialisasi dokumen pada setiap \emph{profile}
+yang berlangganan diturunkan. Pembersihan mencakup indeks pada OpenSearch serta
+entitas dan relasi pada \emph{knowledge graph}. Setelah itu, status dokumen diubah
+menjadi \code{archived}, sedangkan baris sumber dan berkas aslinya tetap disimpan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/datasource-detail-alert.png}
+    \caption{Konfirmasi pengarsipan dokumen pada detail \emph{datasource}}
+    \label{fig:manual-archive-document-alert}
+\end{figure}
+
+Setelah berhasil, status dokumen dan tombol aksinya berubah pada daftar. Dokumen dapat
+diaktifkan kembali melalui
+\code{POST /api/v1/datasources/{datasource_id}/documents/{document_id}/unarchive}.
+Pengaktifan kembali hanya diizinkan jika \emph{datasource} induk berstatus
+\code{active}. Setelah status berubah menjadi \code{active}, mekanisme \emph{fan-out}
+menerbitkan dokumen ke setiap \emph{profile} aktif yang berlangganan. Proses sinkronisasi
+kemudian membangun kembali indeks pada OpenSearch dan representasi pada \emph{knowledge
+graph}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/datasource-detail-archived.png}
+    \caption{Status dokumen setelah berhasil diarsipkan}
+    \label{fig:manual-archive-document-archived}
+\end{figure}
+
+\subsubsection{Penghapusan Documents pada \emph{Profile}}
+\label{subsubsec:interaksi-delete-profile-document}
+
+Penghapusan dokumen pada tingkat \emph{profile} hanya menghapus proyeksi dokumen
+dari \emph{profile} yang dipilih. Baris dokumen sumber pada \emph{datasource} tetap
+tersimpan dan \emph{profile} lain yang berlangganan tidak ikut berubah. Administrator
+membuka tab \emph{Processing} pada detail \emph{profile}, lalu menekan tombol
+\emph{Delete} pada baris dokumen yang ingin dihapus.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/run.png}
+    \caption{Aksi penghapusan dokumen pada daftar proses \emph{profile}}
+    \label{fig:manual-delete-profile-document}
+\end{figure}
+
+Antarmuka menampilkan dialog konfirmasi sebelum mengirim
+\code{DELETE /api/v1/profiles/{profile_id}/documents/{document_id}}. \emph{service}
+memastikan bahwa dokumen memang terikat pada \emph{profile} tersebut dan tidak
+menghapus sumber aslinya. Konfirmasi diperlukan karena operasi ini menghapus hasil
+materialisasi yang telah dibangun oleh \emph{pipeline}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/run-alert.png}
+    \caption{Konfirmasi penghapusan dokumen dari \emph{profile}}
+    \label{fig:manual-delete-profile-document-alert}
+\end{figure}
+
+Jika operasi berhasil, entri dokumen hilang dari daftar \emph{Processing} dan antarmuka
+menampilkan notifikasi keberhasilan. \emph{service} juga menghapus seluruh data turunan dokumen
+di dalam \emph{profile}, termasuk indeks pada OpenSearch dan entitas serta relasi
+pada \emph{knowledge graph}. Data sumber pada \emph{datasource} tetap tersedia untuk
+disinkronkan kembali jika administrator membutuhkannya.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-3/run-success.png}
+    \caption{Notifikasi setelah dokumen berhasil dihapus dari \emph{profile}}
+    \label{fig:manual-delete-profile-document-success}
+\end{figure}
+
+Setelah notifikasi ditampilkan, antarmuka memuat ulang daftar melalui
+\code{GET /api/v1/profiles/{profile_id}/documents}. Jika dokumen ingin diproses
+kembali, administrator dapat menjalankan sinkronisasi pada \emph{profile} tersebut.
+
+\subsubsection{Penghapusan \emph{Profile}}
+\label{subsubsec:interaksi-delete-profile}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{generated/diagrams/rancangan-sequence-uc4-delete-profile.png}
+    \caption{Diagram urutan penghapusan \emph{profile}}
+    \label{fig:sequence-uc4-delete-profile}
+\end{figure}
+
+Kasus penggunaan ini dimulai dari halaman daftar \emph{profile}. Setelah masuk, antarmuka
+memanggil \code{GET /api/v1/profiles} dengan \emph{Bearer JWT} untuk menampilkan
+\emph{profile} yang tersedia, statusnya, dan aksi yang dapat dilakukan. Pengguna memilih
+\emph{profile} yang akan dihapus, lalu menekan tombol \emph{Delete}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-4/profile.png}
+    \caption{Daftar \emph{profile} dan aksi penghapusan}
+    \label{fig:manual-delete-profile-list}
+\end{figure}
+
+Antarmuka menampilkan dialog konfirmasi agar penghapusan tidak terjadi secara tidak
+sengaja. Dialog ini menjelaskan bahwa konfigurasi \emph{profile}, hasil pemrosesan,
+dan catatan eksekusinya akan dihapus, sedangkan \emph{datasource} serta dokumen
+sumber tetap dipertahankan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-4/profile-alert.png}
+    \caption{Konfirmasi penghapusan \emph{profile}}
+    \label{fig:manual-delete-profile-alert}
+\end{figure}
+
+Saat \emph{user} mengonfirmasi, antarmuka mengirim
+\code{DELETE /api/v1/profiles/{profile_id}}. \emph{service} kemudian membersihkan seluruh
+data milik \emph{profile}, yaitu proyeksi dokumen pada \emph{vector database}, entitas dan
+relasi pada \emph{knowledge graph}, \emph{artifact} pada \emph{object storage},
+serta catatan \emph{pipeline run} dan \emph{node run}. Setelah pembersihan selesai,
+konfigurasi, \emph{node}, dan catatan eksekusi \emph{profile} dihapus secara permanen.
+\emph{Datasource} dan dokumen sumber tetap dipertahankan karena masih dapat digunakan
+oleh \emph{profile} lain.
+
+Jika titik akhir mengembalikan status berhasil, entri \emph{profile} dihapus dari
+daftar dan antarmuka menampilkan notifikasi \emph{Profile deleted}. Antarmuka kemudian memuat
+ulang daftar dengan \code{GET /api/v1/profiles} agar tampilan mencerminkan data
+terbaru.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-4/profile-success.png}
+    \caption{Toast setelah \emph{profile} berhasil dihapus}
+    \label{fig:manual-delete-profile-success}
+\end{figure}
+
+\subsubsection{Interaksi \emph{Guardrail}}
+\label{subsubsec:interaksi-guardrail}
+
+Dalam lingkup komponen yang ditetapkan pada Subbab~\ref{subsec:posisi-komponen},
+use case ini menjelaskan interaksi \emph{guardrail} pada antarmuka percakapan.
+Diagram urutan berikut merangkum pesan yang masuk, pemeriksaan \emph{guardrail},
+dan respons kepada pengguna.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{generated/diagrams/rancangan-sequence-uc5-guardrail.png}
+    \caption{Diagram urutan interaksi \emph{guardrail} pada percakapan}
+    \label{fig:sequence-uc5-guardrail}
+\end{figure}
+
+Pengguna menulis pesan dan menekan tombol kirim, lalu antarmuka meneruskan permintaan
+ke titik akhir \code{/api/v1/chat/stream} dengan kredensial sesi yang berlaku. API
+menyampaikan pesan tersebut kepada \emph{Guardrail Module} untuk diperiksa berdasarkan
+aturan pada konfigurasi \emph{profile}. Pesan yang melanggar aturan dihentikan dan
+diganti dengan balasan aman, sedangkan pesan yang diizinkan diteruskan ke proses
+pembentukan jawaban. Jawaban yang dihasilkan juga diperiksa kembali agar hanya respons
+yang sesuai aturan yang dikirimkan kepada pengguna.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.40\textheight,keepaspectratio]{images/manual/uc-5/guardrail-chat.png}
+    \caption{Tampilan antarmuka ketika \emph{guardrail} menolak pesan yang tidak aman}
+    \label{fig:manual-uc5-guardrail}
+\end{figure}
+
+Gambar tersebut menunjukkan bahwa pengguna tetap menerima respons yang aman ketika
+pesan ditolak. Keputusan untuk mengizinkan atau menolak pesan berada pada \emph{service}
+\emph{guardrail}, sedangkan antarmuka menampilkan hasilnya.

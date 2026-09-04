@@ -1,0 +1,11 @@
+% Daftar lampiran ditempatkan sebelum daftar gambar.
+\clearpage
+\chapter*{DAFTAR LAMPIRAN}
+\addcontentsline{toc}{chapter}{DAFTAR LAMPIRAN}
+\makeatletter
+\providecommand*{\l@appendix}[2]{%
+    \@dottedtocline{0}{0em}{0em}{#1}{#2}%
+}
+\@starttoc{loa}
+\makeatother
+\clearpage
