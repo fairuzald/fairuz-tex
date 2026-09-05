@@ -24,3 +24,7 @@ src/**/*.log
 # Generated text extracts and transient saved error files
 src/main.txt
 src/main.bbl-SAVE-ERROR
+
+# Python bytecode caches
+**/__pycache__/
+*.pyc
