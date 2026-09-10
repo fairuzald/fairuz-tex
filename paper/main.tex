@@ -1,0 +1,38 @@
+\documentclass[10pt,a4paper,twocolumn]{article}
+\usepackage[margin=20mm,columnsep=7mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{amsmath,graphicx,booktabs,tabularx,ragged2e,microtype}
+\usepackage{flafter,balance}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=3,giveninits=true,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{../src/bib/manual.bib}
+\addbibresource{../src/bib/agent.bib}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
+\newcommand{\tech}[1]{\textit{#1}}
+\newcommand{\artifact}[1]{\textit{#1}}
+\setlength{\emergencystretch}{1em}
+\setlength{\parindent}{1em}
+\setlength{\textfloatsep}{10pt}
+\title{\bfseries Konstruksi Basis Pengetahuan Berbasis \tech{Plugin} pada Omni-RAG:\\Peraturan Perundang-Undangan dan \tech{User Manual}}
+\author{Moh Fairuz Alauddin Yahya\\\small Program Studi Informatika, Institut Teknologi Bandung}
+\date{}
+\begin{document}
+\twocolumn[\maketitle
+\begin{center}\textbf{Abstrak}\end{center}
+\begin{quote}\small
+Dokumen dengan struktur berbeda membutuhkan cara pemotongan dan pencarian yang berbeda pula. Pada sistem \tech{Retrieval-Augmented Generation} (RAG), pemotongan yang mengabaikan struktur dapat menghilangkan konteks, sedangkan komponen yang terikat pada satu \tech{domain} menyulitkan penambahan sumber baru. Penelitian ini mengembangkan \tech{pipeline} konstruksi basis pengetahuan pada Omni-RAG melalui tiga komponen berbasis \tech{plugin}, yaitu \tech{chunker}, \tech{indexer}, dan pembangun \tech{knowledge graph}. Kontrak \tech{canonical artifact} menjaga identitas dan keterlacakan sumber ketika strategi diganti. Evaluasi \tech{retrieval-only} menggunakan sembilan \tech{User Manual} Netgear dengan 1.400 halaman dan 200 pertanyaan dualbahasa, serta 255 peraturan perundang-undangan bidang pendidikan di Indonesia dengan 100 pertanyaan. Pada perbandingan \tech{chunker} dengan $K=25$, strategi \tech{structure-aware} mencapai \tech{recall} 0,740 untuk \tech{User Manual} dan 0,64 untuk peraturan. Pada perbandingan konfigurasi dalam setiap korpus, \tech{dense retrieval} mencapai 0,835 pada $K=45$ untuk \tech{User Manual}, sedangkan \tech{hybrid retrieval} mencapai 0,67 pada $K=25$ untuk peraturan. Pada 30 pertanyaan relasi hukum, \tech{sparse retrieval} menghasilkan \tech{KG recall} tertinggi, yaitu 0,517 pada $K=25$. Hasil ini mendukung pemilihan strategi sesuai struktur dokumen dan kebutuhan pencarian. Evaluasi belum mengukur kualitas jawaban akhir atau generalisasi ke korpus lain.
+
+\medskip\noindent\textbf{Kata kunci:} Omni-RAG, \tech{plugin}, \tech{chunking}, \tech{retrieval}, \tech{knowledge graph}.
+\end{quote}\vspace{3mm}]
+
+\input{sections/01-pendahuluan}
+\input{sections/02-metode}
+\input{sections/03-eksperimen}
+\input{sections/04-hasil}
+\input{sections/05-kesimpulan}
+\balance
+\printbibliography[title={Daftar Pustaka}]
+\end{document}

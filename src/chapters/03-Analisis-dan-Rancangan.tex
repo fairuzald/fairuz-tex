@@ -4,7 +4,7 @@
 \section{Analisis Masalah}
 \label{sec:analisis-masalah}
 
-Bab I.1 telah menjelaskan permasalahan dan ruang lingkup pengembangan Omni-RAG.
+Bab I.1 telah menjelaskan permasalahan dan ruang lingkup pengembangan OMNI-RAG.
 Pada bab ini, permasalahan tersebut dibahas lebih lanjut dengan melihat peran
 setiap komponen dan keterkaitannya dalam sistem. Hasil pembahasan ini menjadi
 dasar untuk menentukan kebutuhan dan rancangan solusi pada bagian berikutnya.
@@ -24,7 +24,7 @@ dapat dicari, pembuatan indeks untuk proses pencarian, serta pembentukan
 \begin{figure}[H]
     \centering
     \includegraphics[height=0.32\textheight,keepaspectratio]{images/manual/3.1.png}
-    \caption{Posisi komponen pada mode \emph{offline} Omni-RAG}
+    \caption{Posisi komponen pada mode \emph{offline} OMNI-RAG}
     \label{fig:posisi-offline}
 \end{figure}
 
@@ -51,7 +51,7 @@ RAG biasa masih memiliki keterbatasan dalam merepresentasikan hubungan antarenti
 dan antardokumen. Oleh karena itu, \emph{knowledge graph} digunakan untuk menangkap
 hubungan tersebut dan melengkapi konteks yang diperoleh dari proses \emph{retrieval}.
 
-Masalah lain muncul karena Omni-RAG digunakan pada berbagai \emph{domain}. Setiap
+Masalah lain muncul karena OMNI-RAG digunakan pada berbagai \emph{domain}. Setiap
 \emph{domain} dapat memiliki struktur dokumen, \emph{metadata}, dan representasi
 informasi yang berbeda, sehingga strategi \emph{chunking}, \emph{indexing}, dan
 representasi entitas yang dibutuhkan juga berbeda. Jika penambahan \emph{domain}
@@ -73,7 +73,7 @@ pembuatan jawaban.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{images/manual/3.2.png}
-    \caption{Posisi komponen pada mode \emph{online} Omni-RAG}
+    \caption{Posisi komponen pada mode \emph{online} OMNI-RAG}
     \label{fig:posisi-online}
 \end{figure}
 
@@ -116,12 +116,22 @@ Tubuh, Penutup, Penjelasan, dan Lampiran apabila diperlukan. Setiap bagian
 memiliki fungsi informasi yang berbeda (Republik Indonesia, 2011, Lampiran II,
 angka 1).
 
+Analisis domain hukum pada penelitian ini menggunakan peraturan bidang pendidikan.
+Bidang tersebut dipilih karena ketentuannya tersebar pada beberapa tingkat regulasi,
+mulai dari Undang-Undang Dasar, undang-undang, peraturan pemerintah, peraturan
+presiden, peraturan menteri, hingga peraturan daerah. Susunan yang bertingkat dan
+saling berkaitan ini menyediakan variasi dokumen yang memadai untuk menganalisis
+pemulihan struktur, pencarian ketentuan, serta penelusuran hubungan perubahan dan
+pencabutan antarperaturan \parencite{uuPembentukanPeraturan2011}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.82\textwidth]{images/legal-document-framework.png}
     \caption{Kerangka peraturan perundang-undangan}
     \label{fig:kerangka-peraturan-perundangan}
 \end{figure}
+
+Kerangka utama dokumen tersebut ditampilkan pada Gambar~\ref{fig:kerangka-peraturan-perundangan}.
 
 Pada bagian Batang Tubuh, informasi disusun melalui hierarki Bab, Bagian,
 Pasal, Ayat, Huruf, dan Angka. Satu Pasal dapat terdiri atas
@@ -135,6 +145,8 @@ beberapa Ayat, sedangkan Ayat dapat dirinci menggunakan Huruf dan Angka
     \label{fig:hierarki-rincian-pasal}
 \end{figure}
 
+Rincian hierarki di bawah Pasal dapat dilihat pada Gambar~\ref{fig:hierarki-rincian-pasal}.
+
 Pasal merupakan unit struktural utama dalam merepresentasi dokumen hukum.
 Pemahaman pada tingkat pasal memerlukan pemahaman pada unit struktural di
 bawahnya, yaitu ayat, huruf, dan angka yang menjadi rincian dari isi suatu
@@ -146,6 +158,8 @@ pasal (Republik Indonesia, 2011, Lampiran II, angka 77).
     \caption{Pasal sebagai unit struktural utama}
     \label{fig:definisi-pasal}
 \end{figure}
+
+Kedudukan Pasal sebagai unit utama diperlihatkan pada Gambar~\ref{fig:definisi-pasal}.
 
 Masalah muncul ketika struktur tersebut hilang atau diproses sebagai paragraf
 biasa. Pemisahan pada batas Pasal atau Ayat dapat memisahkan norma dari syarat,
@@ -167,6 +181,14 @@ susunan dokumen yang berbeda. Sebuah \emph{manual} dapat memiliki bab, bagian,
 subbagian, langkah bernomor, tabel, catatan, peringatan, dan gambar, sedangkan
 dokumen lain hanya menggunakan judul dan paragraf.
 
+NETGEAR dipilih sebagai sumber karena manual produknya tersedia secara publik dalam
+bentuk PDF digital dengan teks yang dapat diproses langsung tanpa OCR. Manual tersebut
+juga menyediakan \emph{document outline} atau \emph{bookmark} yang membantu menunjukkan
+susunan bagian dokumen. Isi manual mencakup pemasangan perangkat, konfigurasi jaringan,
+penggunaan fitur, spesifikasi, dan penanganan gangguan. Beberapa model router, modem,
+dan sistem \emph{Wi-Fi mesh} dapat digunakan bersama sehingga korpus tetap terkontrol,
+tetapi memiliki variasi struktur dan kebutuhan informasi pengguna.
+
 Perbedaan tersebut menjadi tantangan bagi proses parsing. Daftar isi atau
 \emph{bookmark} dapat membantu menunjukkan hierarki topik, tetapi tidak selalu
 tersedia atau menunjuk tepat pada awal isi yang sesuai. Selain itu, prosedur
@@ -179,14 +201,14 @@ pengelompokan topik dan batas antarbagian tetap konsisten.
 \label{subsec:kebutuhan-fungsional-nonfungsional}
 
 Bagian ini memuat kebutuhan yang menjadi acuan dalam perancangan komponen
-Omni-RAG. Kebutuhan setiap komponen disajikan dalam tabel terpisah agar fungsi
+OMNI-RAG. Kebutuhan setiap komponen disajikan dalam tabel terpisah agar fungsi
 dan tanggung jawabnya dapat dibedakan dengan jelas.
 
 \begingroup
 \renewcommand{\arraystretch}{1.08}
 \setlength{\tabcolsep}{4pt}
 
-Kebutuhan fungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:kf-chunker}.
+\noindent Kebutuhan fungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:kf-chunker}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan fungsional sistem \emph{chunker}}\label{tab:kf-chunker}\\
@@ -207,7 +229,7 @@ Kebutuhan fungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:kf-chun
     KF-04 & Sistem menyimpan hasil pemotongan beserta identitas dokumen, profil, dan \emph{run}, serta mencatat status dan kesalahan proses.\\
 \end{longtable}
 
-Kebutuhan nonfungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:knf-chunker}.
+\noindent Kebutuhan nonfungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:knf-chunker}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional sistem \emph{chunker}}\label{tab:knf-chunker}\\
@@ -227,7 +249,7 @@ Kebutuhan nonfungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:knf-
     KNF-03 & Keterlacakan hasil \emph{chunking}, yaitu setiap potongan dapat ditelusuri hingga dokumen sumber, profil, dan \emph{run} pembentuknya.\\
 \end{longtable}
 
-Kebutuhan fungsional sistem \emph{indexer} disajikan pada Tabel~\ref{tab:kf-indexer}.
+\noindent Kebutuhan fungsional sistem \emph{indexer} disajikan pada Tabel~\ref{tab:kf-indexer}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan fungsional sistem \emph{indexer}}\label{tab:kf-indexer}\\
@@ -248,7 +270,7 @@ Kebutuhan fungsional sistem \emph{indexer} disajikan pada Tabel~\ref{tab:kf-inde
     KF-08 & Sistem mencatat \emph{status run}, strategi yang digunakan, dan kesalahan \emph{indexer} untuk pemantauan dan penelusuran.\\
 \end{longtable}
 
-Kebutuhan nonfungsional sistem \emph{indexer} disajikan pada Tabel~\ref{tab:knf-indexer}.
+\noindent Kebutuhan nonfungsional sistem \emph{indexer} disajikan pada Tabel~\ref{tab:knf-indexer}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional sistem \emph{indexer}}\label{tab:knf-indexer}\\
@@ -267,7 +289,7 @@ Kebutuhan nonfungsional sistem \emph{indexer} disajikan pada Tabel~\ref{tab:knf-
     KNF-05 & Batas sumber daya pencarian, yaitu jumlah kandidat, jumlah hasil, dan penggunaan sumber daya \emph{retrieval} mengikuti konfigurasi yang ditetapkan.\\
 \end{longtable}
 
-Kebutuhan fungsional sistem \emph{knowledge graph} disajikan pada Tabel~\ref{tab:kf-knowledge-graph}.
+\noindent Kebutuhan fungsional sistem \emph{knowledge graph} disajikan pada Tabel~\ref{tab:kf-knowledge-graph}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan fungsional sistem \emph{knowledge graph}}\label{tab:kf-knowledge-graph}\\
@@ -288,7 +310,7 @@ Kebutuhan fungsional sistem \emph{knowledge graph} disajikan pada Tabel~\ref{tab
     KF-12 & Sistem menerima jenis \emph{knowledge graph} baru selama jenis tersebut memenuhi kontrak masukan dan keluaran yang disepakati.\\
 \end{longtable}
 
-Kebutuhan nonfungsional sistem \emph{knowledge graph} disajikan pada Tabel~\ref{tab:knf-knowledge-graph}.
+\noindent Kebutuhan nonfungsional sistem \emph{knowledge graph} disajikan pada Tabel~\ref{tab:knf-knowledge-graph}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional sistem \emph{knowledge graph}}\label{tab:knf-knowledge-graph}\\
@@ -307,7 +329,7 @@ Kebutuhan nonfungsional sistem \emph{knowledge graph} disajikan pada Tabel~\ref{
     KNF-07 & Keterlacakan hasil graf, yaitu simpul dan hubungan dapat ditelusuri hingga potongan, dokumen, profil, dan \emph{run} pembentuknya.\\
 \end{longtable}
 
-Kebutuhan fungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:kf-context-pii}.
+\noindent Kebutuhan fungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:kf-context-pii}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan fungsional sistem \emph{Context PII}}\label{tab:kf-context-pii}\\
@@ -328,7 +350,7 @@ Kebutuhan fungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:kf-
     KF-16 & Sistem menghentikan permintaan dan memberikan \emph{status} kegagalan ketika perlindungan PII tidak tersedia.\\
 \end{longtable}
 
-Kebutuhan nonfungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:knf-context-pii}.
+\noindent Kebutuhan nonfungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:knf-context-pii}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional sistem \emph{Context PII}}\label{tab:knf-context-pii}\\
@@ -347,7 +369,7 @@ Kebutuhan nonfungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:
     KNF-09 & Keandalan perlindungan PII, yaitu sistem menerapkan kebijakan gagal-tertutup ketika perlindungan PII tidak tersedia, kecuali mode degradasi diizinkan.\\
 \end{longtable}
 
-Kebutuhan fungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:kf-guardrail}.
+\noindent Kebutuhan fungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:kf-guardrail}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan fungsional sistem \emph{guardrail}}\label{tab:kf-guardrail}\\
@@ -367,7 +389,7 @@ Kebutuhan fungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:kf-gu
     KF-19 & Sistem menghentikan pencarian atau pembuatan jawaban ketika pemeriksaan menolak kueri, serta menerapkan kebijakan yang ditetapkan ketika \emph{service} pemeriksaan tidak tersedia.\\
 \end{longtable}
 
-Kebutuhan nonfungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:knf-guardrail}.
+\noindent Kebutuhan nonfungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:knf-guardrail}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional sistem \emph{guardrail}}\label{tab:knf-guardrail}\\
@@ -386,7 +408,7 @@ Kebutuhan nonfungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:kn
     KNF-11 & Keandalan kebijakan kegagalan, yaitu perilaku sistem ketika \emph{guardrail} gagal tetap mengikuti konfigurasi yang ditetapkan.\\
 \end{longtable}
 
-Kebutuhan fungsional sistem \emph{history compactor} disajikan pada Tabel~\ref{tab:kf-history-compactor}.
+\noindent Kebutuhan fungsional sistem \emph{history compactor} disajikan pada Tabel~\ref{tab:kf-history-compactor}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan fungsional sistem \emph{history compactor}}\label{tab:kf-history-compactor}\\
@@ -407,7 +429,7 @@ Kebutuhan fungsional sistem \emph{history compactor} disajikan pada Tabel~\ref{t
     KF-23 & Sistem tidak memasukkan kembali pesan yang telah tercakup pada pemadatan sebelumnya dan mempertahankan identitas percakapan.\\
 \end{longtable}
 
-Kebutuhan nonfungsional sistem \emph{history compactor} disajikan pada Tabel~\ref{tab:knf-history-compactor}.
+\noindent Kebutuhan nonfungsional sistem \emph{history compactor} disajikan pada Tabel~\ref{tab:knf-history-compactor}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional sistem \emph{history compactor}}\label{tab:knf-history-compactor}\\
@@ -427,7 +449,7 @@ Kebutuhan nonfungsional sistem \emph{history compactor} disajikan pada Tabel~\re
     KNF-14 & Idempotensi pemadatan, yaitu pemrosesan ulang tidak menggandakan ringkasan atau butir memori yang telah dibuat.\\
 \end{longtable}
 
-Kebutuhan nonfungsional lintas komponen disajikan pada Tabel~\ref{tab:knf-lintas-komponen}.
+\noindent Kebutuhan nonfungsional lintas komponen disajikan pada Tabel~\ref{tab:knf-lintas-komponen}.
 
 \begin{longtable}{>{\RaggedRight\arraybackslash}p{2.2cm} >{\RaggedRight\arraybackslash}p{10.65cm}}
     \caption{Kebutuhan nonfungsional lintas komponen}\label{tab:knf-lintas-komponen}\\
@@ -458,13 +480,13 @@ Analisis solusi menerjemahkan kebutuhan pada Subbab~\ref{sec:analisis-masalah} m
 
 \subsubsection{Arsitektur Berbasis \emph{Plugin}}
 \label{subsubsec:arsitektur-berbasis-plugin}
-Omni-RAG ditujukan untuk digunakan pada berbagai \emph{domain}. Setiap \emph{domain} dapat mempunyai bentuk dokumen dan aturan pengolahan yang berbeda. Dokumen hukum, misalnya, mengikuti hierarki peraturan, sedangkan dokumen \emph{User Manual} tidak memiliki struktur atau hierarki yang harus diikuti secara menyeluruh. Dengan kata lain, struktur dokumen \emph{User Manual} tidak memiliki standar yang seragam. Perbedaan ini perlu ditangani tanpa mengubah kode inti setiap kali \emph{domain} baru ditambahkan. Jika aturan setiap \emph{domain} ditulis langsung di dalam orkestrator, perubahan akan menyebar ke banyak bagian \emph{pipeline} dan pemeliharaan menjadi lebih sulit.
+OMNI-RAG ditujukan untuk digunakan pada berbagai \emph{domain}. Setiap \emph{domain} dapat mempunyai bentuk dokumen dan aturan pengolahan yang berbeda. Dokumen hukum, misalnya, mengikuti hierarki peraturan, sedangkan dokumen \emph{User Manual} tidak memiliki struktur atau hierarki yang harus diikuti secara menyeluruh. Dengan kata lain, struktur dokumen \emph{User Manual} tidak memiliki standar yang seragam. Perbedaan ini perlu ditangani tanpa mengubah kode inti setiap kali \emph{domain} baru ditambahkan. Jika aturan setiap \emph{domain} ditulis langsung di dalam orkestrator, perubahan akan menyebar ke banyak bagian \emph{pipeline} dan pemeliharaan menjadi lebih sulit.
 
 Solusi yang dipilih adalah arsitektur berbasis \emph{plugin}. \emph{Plugin} adalah komponen tambahan yang menangani satu tahap pengolahan, misalnya \emph{parser}, \emph{chunker}, \emph{indexer}, atau \emph{knowledge graph}. Setiap \emph{plugin} mengikuti kontrak \emph{input} dan \emph{output} yang sama. Dengan demikian, orkestrator cukup memanggil \emph{plugin} melalui antarmuka yang seragam tanpa perlu mengetahui detail implementasinya. Penyesuaian antar-\emph{domain} cukup dilakukan pada \emph{plugin} yang sesuai.
 
-Pemilihan \emph{plugin} dikelola melalui \emph{Plugin Registry}, yaitu katalog \emph{plugin} yang tersedia. Registry mencatat identitas \emph{plugin}, tipe komponen, versi, dan \emph{entry point} yang menunjukkan lokasi implementasinya. Saat sebuah \emph{profile} memilih komponen, registry menggunakan identitas tersebut untuk menemukan dan memuat implementasi \emph{plugin} yang tepat. Sistem kemudian membaca konfigurasi \emph{plugin}, memeriksa kesesuaiannya, dan meneruskannya ke \emph{plugin} jika valid. Setelah itu, \emph{plugin} dijalankan sesuai kontrak yang telah ditetapkan.
+Pemilihan \emph{plugin} dikelola melalui \emph{Plugin Registry}, yaitu katalog \emph{plugin} yang tersedia. \emph{Registry} mencatat identitas \emph{plugin}, tipe komponen, versi, dan \emph{entry point} yang menunjukkan lokasi implementasinya. Saat sebuah \emph{profile} memilih komponen, \emph{registry} menggunakan identitas tersebut untuk menemukan dan memuat implementasi \emph{plugin} yang tepat. Sistem kemudian membaca konfigurasi \emph{plugin}, memeriksa kesesuaiannya, dan meneruskannya ke \emph{plugin} jika valid. Setelah itu, \emph{plugin} dijalankan sesuai kontrak yang telah ditetapkan.
 
-Dengan pembagian ini, penambahan \emph{domain} atau strategi baru tidak memerlukan perubahan pada orkestrator. Pengembang cukup membuat \emph{plugin} yang mengikuti kontrak yang sama dan mendaftarkannya ke registry.
+Dengan pembagian ini, penambahan \emph{domain} atau strategi baru tidak memerlukan perubahan pada orkestrator. Pengembang cukup membuat \emph{plugin} yang mengikuti kontrak yang sama dan mendaftarkannya ke \emph{registry}.
 
 \subsubsection{Arsitektur \emph{Pipeline}, \emph{Artifact} Kanonik, dan \emph{Profile}}
 \label{subsubsec:arsitektur-pipeline-artifact-kanonik}
@@ -499,6 +521,8 @@ Pada sistem RAG \emph{multi-domain} berbasis \emph{plugin}, \emph{chunker} mener
     \caption{Strategi pemotongan pada \emph{chunker plugin}}
     \label{fig:analisis-chunker-strategies}
 \end{figure}
+
+Perbandingan strategi pemotongan diringkas pada Gambar~\ref{fig:analisis-chunker-strategies}.
 
 \subsubsection{Unitisasi dan Batas Ukuran}
 \label{subsubsec:unitisasi-chunker}
@@ -556,6 +580,8 @@ Hanya \emph{chunk} bertipe \emph{retrieval} atau \emph{both} yang diproses sebag
     \caption{Alur \emph{indexer plugin} dari \emph{CanonicalChunks} ke indeks}
     \label{fig:analisis-indexer-contract}
 \end{figure}
+
+Alur kontrak \emph{indexer} ditampilkan pada Gambar~\ref{fig:analisis-indexer-contract}.
 
 \subsubsection{Indeks \emph{Leksikal}}
 \label{subsubsec:index-leksikal}
@@ -615,6 +641,8 @@ memproyeksikan hasilnya setelah \emph{graph} terbentuk.
     \label{fig:analisis-kg-contract}
 \end{figure}
 
+Alur kontrak \emph{knowledge graph} ditampilkan pada Gambar~\ref{fig:analisis-kg-contract}.
+
 \subsubsection{Pembentukan \emph{Graph} Deterministik}
 \label{subsubsec:graph-deterministik}
 
@@ -629,6 +657,8 @@ mudah ditelusuri, dicari, dan diaudit.
     \caption{Relasi deterministik antara peraturan dan pasal}
     \label{fig:analisis-graph-deterministik-domain}
 \end{figure}
+
+Contoh relasi deterministik diperlihatkan pada Gambar~\ref{fig:analisis-graph-deterministik-domain}.
 
 Pada \emph{domain} hukum, strategi ini digunakan karena entitas dan relasi antarperaturan
 telah ditentukan dalam undang-undang. \emph{Graph} memiliki dua jenis simpul, yaitu simpul
@@ -812,3 +842,6 @@ kembali mendekati batas \emph{context window}, proses pemadatan diulangi.
 
 % Rancangan implementasi dipisahkan agar analisis solusi tetap konseptual.
 \input{chapters/03-Rancangan-Solusi}
+\input{chapters/03-Tabel-Rancangan-Lengkap}
+pencabutan antarperaturan (Badan Pemeriksa Keuangan Republik Indonesia, 2011).
+pencabutan antarperaturan \parencite{uuPembentukanPeraturan2011}.

@@ -21,17 +21,43 @@
 \usepackage{longtable}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{etoolbox}
+% This flag is disabled when the appendices begin.  It lets ordinary tables in
+% the report stay together while allowing intentionally long appendix lists to
+% split naturally across pages.
+\newif\ifmainreporttables
+\mainreporttablesfalse
+% Tables use a smaller type size in their local environments, but their rows
+% remain single-spaced as required by the report-writing guidelines.
+\AtBeginEnvironment{longtable}{\singlespacing}
+% Do not carry the document-wide paragraph-fill stretch into split table
+% cells; it can produce infinite-glue diagnostics when a longtable is broken
+% across pages.
+\AtBeginEnvironment{longtable}{\setlength{\parfillskip}{0pt}}
+% Keep ordinary-sized tables in the main chapters together when they can fit
+% on one page.  The question lists and any intentionally detailed appendix
+% material are allowed to split naturally without that page reservation.
+\AtBeginEnvironment{longtable}{%
+    \ifmainreporttables
+        \Needspace{0.58\textheight}%
+    \fi
+}
+\AtBeginEnvironment{tabular}{\singlespacing}
+\AtBeginEnvironment{tabularx}{\singlespacing}
 
 % Caption
 \usepackage{float}
 \usepackage{needspace}
-\usepackage[font=small,labelfont=bf,labelsep=colon]{caption}
+\usepackage[font=small,labelfont=bf,labelsep=period]{caption}
 \captionsetup{
     justification=justified,
     singlelinecheck=true,
     figurename=Gambar,
     tablename=Tabel
 }
+% Pedoman mensyaratkan jarak minimal tiga baris antara float dan teks.
+\setlength{\intextsep}{3\baselineskip}
+\setlength{\textfloatsep}{3\baselineskip}
 
 % Unicode font support
 \usepackage{fontspec}

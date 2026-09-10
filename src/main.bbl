@@ -19,6 +19,56 @@
 
 \refsection{0}
   \datalist[entry]{apa/apasortcite//global/global/global}
+    \entry{aaditkshirsagarEnhancingRAGPerformance2024}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=037cde3d95f0ce95fbdab0acd545065f}{%
+           family={{Aadit Kshirsagar}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{fullhash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{fullhashraw}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{bibnamehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authorbibnamehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authornamehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authorfullhash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authorfullhashraw}{037cde3d95f0ce95fbdab0acd545065f}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In the world of Generative Artificial Intelligence (GenAI) and Large Language Models (LLM), Retrieval-Augmented Generation (RAG) has transformed the way we interact with data. Using RAG, these models can leverage new data contexts to respond to user queries and gain valuable insights. Behind the outstanding capabilities of RAG, a fundamental pre-processing step is present known as chunking. This step plays a crucial role in the effectiveness of these RAG-enhanced models. Chunking involves the breaking down of large text or documents into smaller segments of a fixed size. This allows the retriever to focus on smaller units at a time, making it easier to process and analyse the text. Finding the ideal chunking strategy can be a challenging task. Experimenting and analysis play a decisive role here, as different chunking strategies cater to different use cases. This paper, mainly targeted for an audience that is exploring RAG tuning techniques for higher accuracy, explores the various chunking techniques and their practical implementation using code snippets. After analysing the results for various use cases, the paper also suggests the best use cases for the different chunking strategies. Finally, it concludes by discussing the future potential and extending scope of RAG-enhanced applications.}
+      \field{day}{1}
+      \field{issn}{2456-3307}
+      \field{journaltitle}{Int. J. Sci. Res. Comput. Sci. Eng. Inf. Technol}
+      \field{month}{11}
+      \field{number}{5}
+      \field{title}{Enhancing {{RAG Performance Through Chunking}} and {{Text Splitting Techniques}}}
+      \field{urlday}{5}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{volume}{10}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{151\bibrangedash 158}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.32628/CSEIT2410593
+      \endverb
+      \verb{file}
+      \verb /home/fairuz/Zotero/storage/M33VJSM9/Aadit Kshirsagar - 2024 - Enhancing RAG Performance Through Chunking and Text Splitting Techniques.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ijsrcseit.com/index.php/home/article/view/CSEIT2410593
+      \endverb
+      \verb{url}
+      \verb https://ijsrcseit.com/index.php/home/article/view/CSEIT2410593
+      \endverb
+    \endentry
     \entry{akarajaradwongNitiBenchComprehensiveStudy2025}{online}{}{}
       \name{author}{7}{}{%
         {{un=0,uniquepart=base,hash=77526be56072b2d6cc7b31cb5f683df5}{%
@@ -2832,6 +2882,56 @@
     \endentry
   \enddatalist
   \datalist[entry]{apa/global//global/global/global}
+    \entry{aaditkshirsagarEnhancingRAGPerformance2024}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=037cde3d95f0ce95fbdab0acd545065f}{%
+           family={{Aadit Kshirsagar}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{fullhash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{fullhashraw}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{bibnamehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authorbibnamehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authornamehash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authorfullhash}{037cde3d95f0ce95fbdab0acd545065f}
+      \strng{authorfullhashraw}{037cde3d95f0ce95fbdab0acd545065f}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In the world of Generative Artificial Intelligence (GenAI) and Large Language Models (LLM), Retrieval-Augmented Generation (RAG) has transformed the way we interact with data. Using RAG, these models can leverage new data contexts to respond to user queries and gain valuable insights. Behind the outstanding capabilities of RAG, a fundamental pre-processing step is present known as chunking. This step plays a crucial role in the effectiveness of these RAG-enhanced models. Chunking involves the breaking down of large text or documents into smaller segments of a fixed size. This allows the retriever to focus on smaller units at a time, making it easier to process and analyse the text. Finding the ideal chunking strategy can be a challenging task. Experimenting and analysis play a decisive role here, as different chunking strategies cater to different use cases. This paper, mainly targeted for an audience that is exploring RAG tuning techniques for higher accuracy, explores the various chunking techniques and their practical implementation using code snippets. After analysing the results for various use cases, the paper also suggests the best use cases for the different chunking strategies. Finally, it concludes by discussing the future potential and extending scope of RAG-enhanced applications.}
+      \field{day}{1}
+      \field{issn}{2456-3307}
+      \field{journaltitle}{Int. J. Sci. Res. Comput. Sci. Eng. Inf. Technol}
+      \field{month}{11}
+      \field{number}{5}
+      \field{title}{Enhancing {{RAG Performance Through Chunking}} and {{Text Splitting Techniques}}}
+      \field{urlday}{5}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{volume}{10}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{151\bibrangedash 158}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.32628/CSEIT2410593
+      \endverb
+      \verb{file}
+      \verb /home/fairuz/Zotero/storage/M33VJSM9/Aadit Kshirsagar - 2024 - Enhancing RAG Performance Through Chunking and Text Splitting Techniques.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ijsrcseit.com/index.php/home/article/view/CSEIT2410593
+      \endverb
+      \verb{url}
+      \verb https://ijsrcseit.com/index.php/home/article/view/CSEIT2410593
+      \endverb
+    \endentry
     \entry{akarajaradwongNitiBenchComprehensiveStudy2025}{online}{}{}
       \name{author}{7}{}{%
         {{un=0,uniquepart=base,hash=77526be56072b2d6cc7b31cb5f683df5}{%

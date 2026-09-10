@@ -1,7 +1,7 @@
 \chapter{Rancangan Sistem}
 \label{app:rancangan}
 
-Arsitektur sistem \emph{chatbot} hukum yang dikembangkan terdiri atas sejumlah komponen yang saling terhubung dan bekerja secara terintegrasi dalam satu \emph{workflow} pemrosesan \emph{end-to-end}. Setiap komponen berada dalam cakupan satu atau lebih modul utama sistem, yaitu Modul data \emph{ingestion} (\emph{scraping} dan \emph{parsing}) serta modul \emph{admin} dan \emph{landing page}, Modul \emph{Document Processing Orchestrator} (DPO) dan \emph{query pre-planning}, Lapisan \emph{Explainable AI} (XAI) serta modul \emph{chat}, dan Modul \emph{hybrid retrieval} dan \emph{Knowledge Graph} serta modul autentikasi. Berikut diagram arsitektur dari sistem hukum:
+Arsitektur sistem \emph{chatbot} hukum yang dikembangkan terdiri atas sejumlah komponen yang saling terhubung dan bekerja secara terintegrasi dalam satu \emph{workflow} pemrosesan \emph{end-to-end}. Setiap komponen berada dalam cakupan satu atau lebih modul utama sistem, yaitu Modul data \emph{ingestion} (\emph{scraping} dan \emph{parsing}) serta modul \emph{admin} dan \emph{landing page}, Modul \emph{Document Processing Orchestrator} (DPO) dan \emph{query pre-planning}, Lapisan \emph{Explainable AI} (XAI) serta modul \emph{chat}, dan Modul \emph{hybrid retrieval} dan \emph{Knowledge Graph} serta modul autentikasi. Berikut diagram arsitektur dari sistem hukum, sebagaimana ditunjukkan pada Gambar~\ref{fig:architecture-dpo} dan Gambar~\ref{fig:architecture-rag}.
 
 \begin{figure}[H]
     \centering
@@ -17,7 +17,7 @@ Arsitektur sistem \emph{chatbot} hukum yang dikembangkan terdiri atas sejumlah k
     \label{fig:architecture-rag}
 \end{figure}
 
-Berikut merupakan penjelasan dari masing-masing komponen yang akan dikembangkan:
+Berikut merupakan penjelasan dari masing-masing komponen yang akan dikembangkan. Komponen DPO dan RAG dirangkum pada Tabel~\ref{tab:dpo-components} dan Tabel~\ref{tab:rag-components}.
 
 \begin{table}[H]
 \centering
@@ -28,7 +28,7 @@ Berikut merupakan penjelasan dari masing-masing komponen yang akan dikembangkan:
 \hline \textbf{Komponen} & \textbf{Deskripsi} \\\hline
 \emph{Scraper} & Komponen yang bertugas mengambil dokumen peraturan perundang-undangan dari sumber resmi secara otomatis. \\\hline
 \emph{Parser} & Komponen yang mem-\emph{parsing} dokumen hukum ke dalam struktur hierarkis antara lain undang-undang, bab, bagian, pasal, dan ayat. \\\hline
-\emph{Chunker} & Komponen yang melakukan segmentasi dokumen hukum menjadi unit lebih kecil menggunakan Semantic Segmenter dan RCS Chunker. \\\hline
+\emph{Chunker} & Komponen yang melakukan segmentasi dokumen hukum menjadi unit lebih kecil menggunakan \emph{Semantic Segmenter} dan \emph{RCS Chunker}. \\\hline
 \emph{Knowledge Graph Construction} & Komponen yang membangun \emph{Knowledge Graph} berdasarkan relasi antara peraturan dan pasal yang teridentifikasi. \\\hline
 \emph{Vectorizer (Embedding Vector)} & Komponen yang membentuk representasi \emph{embedding vector} dari \emph{chunk} dokumen hukum untuk mendukung metode \emph{dense retrieval}. \\\hline
 \emph{Embedding Lexical} & Komponen yang membentuk \emph{embedding} berbasis leksikal untuk mendukung metode \emph{sparse retrieval}. \\\hline

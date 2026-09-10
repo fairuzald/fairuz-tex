@@ -5,7 +5,7 @@ Bab ini membahas konsep yang menjadi landasan konseptual bagi kajian RAG modular
 
 \section{Model Bahasa Besar dan Kebutuhan akan Sumber Eksternal}
 
-LLM modern umumnya dibangun menggunakan arsitektur \emph{Transformer}. Arsitektur ini memanfaatkan \emph{self-attention} untuk memodelkan hubungan antartoken tanpa memproses urutan secara rekuren \parencite{vaswaniAttentionAllYou2023}. Setelah menjalani pelatihan awal dan penyelarasan instruksi, model dapat digunakan untuk menjawab pertanyaan, merangkum teks, dan menghasilkan keluaran terstruktur.
+LLM modern umumnya dibangun menggunakan arsitektur \emph{Transformer}. Arsitektur ini memanfaatkan \emph{self-attention} untuk memodelkan hubungan antar-\emph{token} tanpa memproses urutan secara rekuren \parencite{vaswaniAttentionAllYou2023}. Setelah menjalani pelatihan awal dan penyelarasan instruksi, model dapat digunakan untuk menjawab pertanyaan, merangkum teks, dan menghasilkan keluaran terstruktur.
 
 Pengetahuan yang digunakan LLM tersimpan secara parametris. Bentuk penyimpanan ini memungkinkan model menghasilkan teks tanpa mengakses basis data pada setiap permintaan, tetapi mempunyai beberapa keterbatasan. Sumber sebuah pernyataan tidak selalu dapat ditunjukkan, pembaruan informasi membutuhkan proses tambahan, dan model dapat menghasilkan isi yang tidak didukung oleh fakta. Ji dkk. membedakan halusinasi yang bertentangan dengan sumber masukan dari halusinasi yang tidak dapat diverifikasi terhadap pengetahuan faktual \parencite{jiSurveyHallucinationNatural2023}.
 
@@ -15,7 +15,7 @@ Dalam sistem berbasis sumber eksternal, konsep \emph{grounding} digunakan untuk 
 
 \section{\emph{Retrieval-Augmented Generation}}
 
-RAG menggabungkan memori parametris pada model bahasa dengan memori nonparametris berupa koleksi eksternal \parencite{lewisRetrievalAugmentedGenerationKnowledgeIntensive2021}. Jika $q$ menyatakan pertanyaan, $D$ koleksi dokumen, $R_k$ fungsi pencarian yang menghasilkan $k$ konteks berperingkat, dan $G$ generator, prosesnya dapat disederhanakan menjadi:
+RAG menggabungkan memori parametris pada model bahasa dengan memori nonparametris berupa koleksi eksternal \parencite{lewisRetrievalAugmentedGenerationKnowledgeIntensive2021}. Jika $q$ menyatakan pertanyaan, $D$ koleksi dokumen, $R_k$ fungsi pencarian yang menghasilkan $k$ konteks berperingkat, dan $G$ \emph{generator}, prosesnya dapat disederhanakan menjadi:
 
 \begin{equation}
     y = G\bigl(q,R_k(q,D)\bigr).
@@ -38,17 +38,23 @@ RAG awal sering digambarkan sebagai alur linear. Ketika kebutuhan aplikasi berke
 
 Kontribusi utama \emph{Modular RAG} terletak pada cara melihat RAG sebagai komposisi kemampuan, bukan satu rangkaian yang tidak dapat diubah. Pemisahan ini memudahkan penggunaan \emph{routing}, \emph{scheduling}, dan fusi pada titik yang berbeda. Namun, kerangka konseptual tersebut tidak menentukan satu bentuk kontrak perangkat lunak. Skema data, versi komponen, aturan kompatibilitas, dan pencatatan \emph{artifact} tetap menjadi keputusan setiap implementasi.
 
-\section{Arsitektur \emph{Pipeline}, \emph{Plugin}, dan Representasi Kanonik}
+\section{Arsitektur \emph{Pipeline} dan Representasi Kanonik}
 
 Arsitektur \emph{pipeline} memandang pemrosesan sebagai rangkaian komponen yang menerima masukan, melakukan satu tanggung jawab utama, lalu menghasilkan keluaran untuk komponen berikutnya. Pada gaya \emph{pipes and filters}, setiap \emph{filter} tidak perlu mengetahui cara kerja komponen lain selama bentuk data di antara keduanya dipertahankan \parencite{garlanIntroductionSoftware1994}. Pemisahan ini penting pada sistem dokumen karena perubahan cara memperoleh atau membaca dokumen tidak seharusnya memaksa perubahan pada pencarian dan generasi.
 
-\emph{Plugin} memberikan titik perluasan bagi variasi yang memang tidak dapat digeneralisasi. Sebuah \emph{plugin} biasanya membawa identitas, versi, titik masuk, konfigurasi, dan kontrak keluaran. Registri atau katalog kemudian memilih implementasi berdasarkan identitas tersebut. Keuntungan utamanya adalah penambahan sumber atau strategi baru dapat dilakukan tanpa menanamkan percabangan khusus ke dalam orkestrator. Namun, \emph{plugin} hanya dapat dipertukarkan jika skema data, kemampuan keluaran, dan aturan kompatibilitasnya dinyatakan secara eksplisit.
+Arsitektur yang dapat diperluas perlu menyediakan titik pertukaran bagi variasi
+yang tidak dapat digeneralisasi. Setiap komponen perlu memiliki identitas, versi,
+konfigurasi, dan kontrak keluaran yang jelas. Katalog komponen dapat digunakan
+untuk memilih implementasi berdasarkan identitas dan kemampuan yang dinyatakan.
+Dengan cara ini, strategi baru dapat ditambahkan tanpa menanamkan percabangan
+khusus ke dalam orkestrator. Pertukaran komponen tetap memerlukan skema data,
+kemampuan keluaran, dan aturan kompatibilitas yang eksplisit.
 
 Pada pemrosesan dokumen, kontrak antartahap sering diwujudkan sebagai representasi kanonik. Representasi ini mempertahankan identitas dokumen, teks, struktur, lokasi, \emph{metadata}, dan asal pembentuknya dalam bentuk yang sama untuk semua jalur. Dokumen kanonik berperan sebagai batas yang memisahkan cara membaca sumber dari cara membentuk unit pencarian. Dengan batas tersebut, komponen hilir tidak perlu mengetahui format atau mekanisme sumber yang menghasilkan teks.
 
 \section{\emph{Document Chunking}}
 
-\emph{Document chunking} membagi dokumen menjadi unit yang akan dicari. Batas unit menentukan informasi apa yang dinilai sebagai satu kesatuan. Potongan yang terlalu besar dapat membawa konteks lengkap, tetapi menambahkan bagian yang tidak relevan. Potongan yang terlalu kecil meningkatkan ketepatan lokasi, tetapi dapat memisahkan subjek, syarat, atau pengecualian dari isi yang dijelaskannya.
+\emph{Document chunking} membagi dokumen menjadi unit yang akan dicari. Batas unit menentukan informasi apa yang dinilai sebagai satu kesatuan. Potongan yang terlalu besar dapat membawa konteks lengkap, tetapi menambahkan bagian yang tidak relevan. Potongan yang terlalu kecil meningkatkan ketepatan lokasi, tetapi dapat memisahkan subjek, syarat, atau pengecualian dari isi yang dijelaskannya. Studi tentang pemotongan dokumen pada sistem RAG menunjukkan bahwa pilihan strategi perlu disesuaikan dengan karakteristik dokumen dan tujuan pencarian \parencite{aaditkshirsagarEnhancingRAGPerformance2024,stablerImpactChunkingDomainSpecific2025}.
 
 Untuk dokumen $d$ dengan panjang $L$, fungsi \emph{chunking} dapat ditulis sebagai:
 
@@ -60,19 +66,19 @@ dengan $\theta$ memuat metode, satuan ukuran, batas panjang, dan kebijakan \emph
 
 \subsection{\emph{Sliding Window}}
 
-\emph{Sliding window} memotong urutan dengan panjang tetap $w$ dan \emph{overlap} $o$. Jendela berikutnya dimulai setelah pergeseran $w-o$. Jika $t_1,\ldots,t_L$ menyatakan unit teks, potongan ke-$i$ dapat ditulis sebagai:
+\emph{Sliding window} memotong urutan dengan panjang tetap $w$ dan \emph{overlap} $o$. Jendela berikutnya dimulai setelah pergeseran $w-o$. Jika $t_1,\ldots,t_L$ menyatakan unit teks, potongan ke-$i$ dapat ditulis sebagai berikut \parencite{aaditkshirsagarEnhancingRAGPerformance2024}:
 
 \begin{equation}
     c_i=t_{1+(i-1)(w-o)}\ldots t_{w+(i-1)(w-o)}.
 \end{equation}
 
-Metode ini deterministik, murah, dan mudah digunakan sebagai \emph{baseline}. \emph{Overlap} membantu mengurangi kehilangan informasi pada batas potongan, tetapi meningkatkan duplikasi dan ukuran indeks. Karena batasnya tidak memahami struktur teks, judul dapat terpisah dari isi dan ketentuan dapat terpisah dari pengecualiannya.
+Metode ini deterministik, murah, dan mudah digunakan sebagai \emph{baseline}. \emph{Overlap} membantu mengurangi kehilangan informasi pada batas potongan, tetapi meningkatkan duplikasi dan ukuran indeks. Karena batasnya tidak memahami struktur teks, judul dapat terpisah dari isi dan ketentuan dapat terpisah dari pengecualiannya. Ukuran jendela dan \emph{overlap} tetap perlu diuji terhadap kebutuhan tugas, bukan ditetapkan sebagai nilai universal.
 
 \subsection{\emph{Recursive Chunking}}
 
-\emph{Recursive chunking} mencoba pemisah dari batas yang lebih kuat menuju batas yang lebih lemah, misalnya paragraf, baris, kalimat, spasi, lalu pemisahan keras. Sebuah bagian hanya dipecah lagi ketika panjangnya masih melampaui batas. Cara ini berusaha mempertahankan bentuk alami teks tanpa memerlukan model semantik untuk setiap dokumen.
+\emph{Recursive chunking} mencoba pemisah dari batas yang lebih kuat menuju batas yang lebih lemah, misalnya paragraf, baris, kalimat, spasi, lalu pemisahan keras. Sebuah bagian hanya dipecah lagi ketika panjangnya masih melampaui batas. Cara ini berusaha mempertahankan bentuk alami teks tanpa memerlukan model semantik untuk setiap dokumen \parencite{narimissaExploringInformationRetrieval2024}.
 
-Keunggulan pendekatan rekursif adalah kompromi antara kesederhanaan dan koherensi. Paragraf yang pendek dapat dipertahankan sebagai satu unit, sedangkan bagian panjang tetap mempunyai \emph{fallback}. Kinerjanya tetap dipengaruhi oleh kualitas pemisah dan karakteristik dokumen. Narimissa dan Raithel menunjukkan bahwa metode pemisahan serta karakteristik dokumen memengaruhi kualitas pencarian, sehingga nilai ukuran dan \emph{overlap} tidak dapat dianggap universal \parencite{narimissaExploringInformationRetrieval2024}.
+Keunggulan pendekatan rekursif adalah kompromi antara kesederhanaan dan koherensi. Paragraf yang pendek dapat dipertahankan sebagai satu unit, sedangkan bagian panjang tetap mempunyai \emph{fallback}. Kinerjanya tetap dipengaruhi oleh kualitas pemisah dan karakteristik dokumen, sehingga nilai ukuran dan \emph{overlap} tidak dapat dianggap universal.
 
 \subsection{\emph{Structure-Aware Chunking}}
 
@@ -91,7 +97,7 @@ Hasil NitiBench menunjukkan adanya perbaikan dari komponen khusus \emph{domain},
 
 \subsection{\emph{Parent--Child Chunking}}
 
-Pada \emph{parent--child chunking}, pencarian dilakukan terhadap unit anak yang lebih kecil, sedangkan unit induk yang lebih lengkap dikembalikan sebagai konteks. Pola ini juga disebut \emph{small-to-large retrieval}. Tujuannya adalah mempertahankan ketepatan pencarian tanpa mengorbankan kelengkapan konteks yang dibaca model. Hubungan tersebut dapat ditulis sebagai pemetaan $p(c_i)=u_j$, dengan $c_i$ sebagai unit anak dan $u_j$ sebagai unit induk yang memuatnya.
+Pada \emph{parent--child chunking}, pencarian dilakukan terhadap unit anak yang lebih kecil, sedangkan unit induk yang lebih lengkap dikembalikan sebagai konteks. Pola ini juga disebut \emph{small-to-large retrieval}. Tujuannya adalah mempertahankan ketepatan pencarian tanpa mengorbankan kelengkapan konteks yang dibaca model. Hubungan tersebut dapat ditulis sebagai pemetaan $p(c_i)=u_j$, dengan $c_i$ sebagai unit anak dan $u_j$ sebagai unit induk yang memuatnya. Pendekatan dengan beberapa tingkat granularitas menunjukkan bahwa unit yang dipakai untuk pencarian tidak selalu harus sama dengan unit yang dikembalikan sebagai konteks \parencite{chenDenseXRetrieval2023}.
 
 Metode ini berbeda dari \emph{structure-aware chunking}. \emph{Structure-aware chunking} menentukan batas potongan berdasarkan struktur dokumen, sedangkan \emph{parent--child chunking} menentukan dua tingkat representasi untuk tujuan pencarian dan penyusunan konteks. Keduanya dapat dipakai bersamaan: struktur hukum membentuk induk dan anak, kemudian anak digunakan untuk pencarian sementara induknya digunakan untuk \emph{context hydration}. Risiko utamanya adalah duplikasi ketika banyak anak dari induk yang sama masuk dalam kandidat serta penambahan konteks yang melampaui anggaran \emph{token}. Karena itu, penggabungan induk perlu melakukan deduplikasi dan mempertahankan identitas sumber.
 
@@ -140,7 +146,7 @@ Setelah vektor dibentuk, sistem membutuhkan struktur indeks untuk mencari tetang
 
 \subsection{\emph{Hybrid Retrieval} sebagai Representasi Multikanal}
 
-\emph{Hybrid retrieval} dapat dipahami sebagai penyimpanan representasi leksikal dan semantik pada unit dokumen yang sama. Satu \texttt{chunk\_id} dapat mempunyai proyeksi \emph{BM25-compatible} untuk kecocokan istilah dan vektor untuk kecocokan semantik. Pemisahan kanal memungkinkan setiap representasi diuji secara terkontrol dan mencegah perubahan strategi pemeringkatan dianggap sebagai perubahan pada proses pengindeksan.
+\emph{Hybrid retrieval} dapat dipahami sebagai penyimpanan representasi leksikal dan semantik pada unit dokumen yang sama. Satu \texttt{chunk\_id} dapat mempunyai proyeksi \emph{BM25-compatible} untuk kecocokan istilah dan vektor untuk kecocokan semantik. Pemisahan kanal memungkinkan setiap representasi diuji secara terkontrol dan mencegah perubahan strategi pemeringkatan dianggap sebagai perubahan pada proses pengindeksan. Penggabungan beberapa daftar hasil dapat dilakukan dengan metode fusi peringkat seperti Reciprocal Rank Fusion \parencite{cormackReciprocalRankFusion2009}.
 
 Pendekatan multikanal relevan untuk dokumen hukum karena pertanyaan dapat memuat nomor peraturan, Pasal, tanggal, atau istilah tertentu yang membutuhkan kecocokan leksikal, tetapi juga dapat ditulis sebagai parafrasa yang membutuhkan kecocokan semantik. Perbandingan kanal perlu menggunakan korpus, pertanyaan, unit bukti, dan batas $k$ yang sama. Mekanisme pemilihan kandidat dan pemeringkatan merupakan bagian terpisah dari pembentukan representasi indeks.
 
@@ -161,7 +167,7 @@ struktur dokumen, dan \emph{metadata} yang telah dipercaya. Pendekatan ini mengh
 yang stabil dan mudah diaudit karena setiap relasi mengikuti informasi yang tersedia pada
 dokumen sumber.
 
-GraphRAG menggunakan graf sebagai bagian dari pencarian atau penyusunan konteks. Han dkk. memetakan GraphRAG ke dalam pemroses kueri, pencari, pengatur konteks, dan generator, serta membedakan berbagai sumber graf dan teknik konstruksinya \parencite{hanRetrievalAugmentedGenerationGraphs2025}. Kerangka tersebut ditunjukkan pada Gambar \ref{fig:graphrag-framework-literature}.
+GraphRAG menggunakan graf sebagai bagian dari pencarian atau penyusunan konteks. Han dkk. memetakan GraphRAG ke dalam pemroses kueri, pencari, pengatur konteks, dan \emph{generator}, serta membedakan berbagai sumber graf dan teknik konstruksinya \parencite{hanRetrievalAugmentedGenerationGraphs2025}. Kerangka tersebut ditunjukkan pada Gambar \ref{fig:graphrag-framework-literature}.
 
 \begin{figure}[htbp]
     \centering
@@ -202,7 +208,7 @@ atau respons aman \parencite{nvidiaNeMoGuardrailsCatalog2025,liangSafeRAG2025,zo
 
 Evaluasi RAG perlu memisahkan pencarian, pembentukan graf, penyusunan konteks, dan generasi.
 Jawaban yang salah dapat disebabkan oleh bukti yang tidak ditemukan, konteks yang terpotong,
-atau generator yang mengabaikan bukti. Karena itu, setiap tahap perlu dinilai dengan metrik yang
+atau \emph{generator} yang mengabaikan bukti. Karena itu, setiap tahap perlu dinilai dengan metrik yang
 sesuai.
 
 \subsection{\emph{One Factor at a Time} dan \emph{Full Factorial}}
@@ -212,6 +218,8 @@ Pada desain \emph{one factor at a time} (OFAT), satu faktor diubah sementara fak
 Pada desain \emph{full factorial}, seluruh kombinasi level dari seluruh faktor diuji. Jika terdapat $a$, $b$, dan $c$ level pada tiga faktor, jumlah sel adalah $a\times b\times c$. Desain ini memungkinkan pengukuran pengaruh utama sekaligus interaksi, tetapi jumlah eksekusi, penyimpanan, dan biaya bertambah secara multiplikatif \parencite{nistFullFactorialDesign}. Dengan demikian, \emph{full factorial} lebih informatif untuk eksplorasi interaksi, tetapi tidak selalu proporsional dengan ruang lingkup penelitian.
 
 Dalam praktiknya, OFAT dapat digunakan terlebih dahulu untuk menyaring kandidat atau memperoleh konfigurasi pembanding, kemudian desain faktorial digunakan ketika interaksi antarfaktor menjadi pertanyaan utama. Pemilihan urutan tersebut perlu dilaporkan secara eksplisit karena memengaruhi interpretasi hasil dan jumlah kombinasi yang diuji.
+
+Perbandingan kedua desain eksperimen tersebut diringkas pada Tabel~\ref{tab:ofat-full-factorial}.
 
 \begin{table}[H]
     \centering
@@ -239,7 +247,7 @@ Metrik pencarian harus membedakan tingkat dokumen dan tingkat unit bukti. Prakti
     \mathbb{1}\left[R_k(q)\cap G(q)\neq\varnothing\right].
 \end{equation}
 
-\emph{Recall} cocok untuk menilai apakah pencari membuka jalan bagi generator. Namun, \emph{Recall} tidak menunjukkan berapa banyak hasil yang tidak relevan. Untuk menilai kemurnian hasil, \emph{Precision@k} dapat dirumuskan sebagai:
+\emph{Recall} cocok untuk menilai apakah pencari membuka jalan bagi \emph{generator}. Namun, \emph{Recall} tidak menunjukkan berapa banyak hasil yang tidak relevan. Untuk menilai kemurnian hasil, \emph{Precision@k} dapat dirumuskan sebagai:
 
 \begin{equation}
     \operatorname{Precision@k}=\frac{1}{|Q|}\sum_{q\in Q}
@@ -268,7 +276,7 @@ dengan kontribusi nol ketika bukti tidak ditemukan. MRR dan \emph{hit rate} berg
 
 \subsection{Metrik \emph{Knowledge Graph}}
 
-Kualitas graf dapat dinilai pada tingkat relasi berarah. Sebuah relasi dianggap benar jika tripel $(source\_id,relation\_type,target\_id)$ yang dihasilkan sama dengan tripel pada anotasi emas. Metrik utama yang digunakan adalah \emph{recall}, dengan $TP$ sebagai jumlah positif benar dan $FN$ sebagai jumlah negatif salah:
+Kualitas graf dapat dinilai pada tingkat relasi berarah. Sebuah relasi dianggap benar jika tripel $(source\_id,relation\_type,target\_id)$ yang dihasilkan sama dengan tripel pada anotasi acuan. Evaluasi \emph{knowledge graph} untuk domain hukum juga menggunakan ukuran berbasis ketepatan dan cakupan relasi atau jawaban, sehingga kualitas graf perlu dinilai bersama keterlacakan sumbernya \parencite{muninggarLexIDMetadataSemantic2023}. Metrik utama yang digunakan adalah \emph{recall}, dengan $TP$ sebagai jumlah positif benar dan $FN$ sebagai jumlah negatif salah:
 
 \begin{equation}
     \operatorname{Recall}=\frac{TP}{TP+FN}.

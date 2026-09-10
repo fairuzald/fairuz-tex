@@ -47,7 +47,7 @@ secara adil dan perubahan yang diamati dapat dikaitkan dengan komponen yang diuj
 \label{subsec:dataset-user-manual}
 
 \emph{Dataset} \emph{User Manual} dibangun menggunakan sembilan manual produk Netgear yang
-tersedia, sebagaimana ditunjukkan pada tabel berikut.
+tersedia, sebagaimana diringkas pada Tabel~\ref{tab:customer-corpus-coverage}.
 
 \begin{table}[htbp]
 \centering
@@ -150,6 +150,9 @@ bahasa Inggris mengukur pencarian dalam bahasa yang sama, sedangkan pertanyaan b
 menguji kemampuan pencarian lintas bahasa. Keduanya diberi bobot yang sama dalam evaluasi,
 bahasa Inggris tidak dijadikan satu-satunya acuan.
 
+Rincian kondisi, \emph{chunker}, dan \emph{indexer} yang dibandingkan disajikan pada
+Tabel~\ref{tab:customer-config}.
+
 \begin{table}[htbp]
 \centering
 \scriptsize
@@ -230,6 +233,9 @@ angka tersebut hanya memberi kenaikan kecil, \(K=25\) dipilih sebagai \emph{swee
 \label{fig:customer-chunker-ndcg}
 \end{figure}
 
+Kurva \emph{precision} dan \emph{nDCG} pada Gambar~\ref{fig:customer-chunker-precision} dan
+Gambar~\ref{fig:customer-chunker-ndcg} melengkapi pembacaan perubahan \emph{recall}.
+
 \begin{table}[htbp]
 \centering
 \scriptsize
@@ -267,6 +273,8 @@ bahasa Inggris.
 \caption{\emph{Recall}, \emph{precision}, dan \emph{nDCG} profil \emph{chunker} pada \emph{sweet spot} \(K=25\)}
 \label{fig:customer-chunker-sweet-spot}
 \end{figure}
+
+Ringkasan ketiga metrik pada titik tersebut ditampilkan pada Gambar~\ref{fig:customer-chunker-sweet-spot}.
 
 \subsubsection{Strategi \emph{Indexing}}
 \label{subsubsec:user-manual-indexing}
@@ -323,6 +331,9 @@ muncul lebih awal.
 \label{fig:customer-indexer-ndcg}
 \end{figure}
 
+Perubahan \emph{precision} dan \emph{nDCG} pada strategi \emph{indexer} ditunjukkan pada
+Gambar~\ref{fig:customer-indexer-precision} dan Gambar~\ref{fig:customer-indexer-ndcg}.
+
 \begin{table}[htbp]
 \centering
 \scriptsize
@@ -365,6 +376,9 @@ Indonesia.
 \label{fig:customer-indexer-sweet-spot}
 \end{figure}
 
+Perbandingan ketiga metrik pada \emph{sweet spot} \emph{indexer} ditampilkan pada
+Gambar~\ref{fig:customer-indexer-sweet-spot}.
+
 \subsection{Evaluasi Sistem \emph{Retrieval}}
 \label{subsec:user-manual-system-retrieval}
 
@@ -372,7 +386,7 @@ Evaluasi sistem membandingkan seluruh kondisi pada satu \emph{cutoff} bersama, y
 \(K=45\). Nilai ini dipilih karena kurva \emph{recall} sudah mulai mendatar pada sebagian besar
 kondisi, tetapi masih memberikan cakupan yang memadai. Dengan \emph{cutoff} yang sama, hasil setiap
 kondisi dapat dibandingkan secara langsung tanpa memasukkan kandidat tambahan yang tidak perlu.
-Ringkasan metrik pada \(K=45\) disajikan pada Tabel~\ref{tab:customer-system-results},
+\noindent Ringkasan metrik pada \(K=45\) disajikan pada Tabel~\ref{tab:customer-system-results},
 sedangkan kurva lengkap ditampilkan pada gambar berikut.
 
 Gambar~\ref{fig:customer-system-recall} menunjukkan perbandingan \emph{recall} seluruh metode.
@@ -455,7 +469,7 @@ Perbedaan bahasa tetap perlu diperhatikan karena pencocokan leksikal lebih sensi
 perubahan istilah antara bahasa Inggris dan bahasa Indonesia. Nilai pada tabel merupakan
 nilai gabungan dualbahasa, sehingga hasil per bahasa dapat sedikit berbeda.
 
-Eksperimen ini hanya menilai \emph{retrieval}. Kualitas jawaban LLM, \emph{reranking}, \emph{intent} classification,
+Eksperimen ini hanya menilai \emph{retrieval}. Kualitas jawaban LLM, \emph{reranking}, \emph{intent classification},
 dan \emph{knowledge graph} tidak diuji. \emph{Dataset} juga terbatas pada 9 dokumen produk, sehingga hasilnya
 belum dapat digeneralisasi ke \emph{corpus} lain atau dianggap sebagai ukuran kualitas jawaban akhir.
 
@@ -515,6 +529,8 @@ PSU yang dipilih & 217 \\
 \end{tabularx}
 \end{table}
 
+\noindent Ringkasan tahapan dan cakupan korpus tersebut disajikan pada Tabel~\ref{tab:legal-corpus-scope}.
+
 \subsubsection{Pembentukan \emph{Dataset} Pertanyaan}
 \label{subsubsec:legal-pembentukan-dataset}
 
@@ -556,6 +572,9 @@ mengambil dokumen secara acak dari satu kelompok.
 \label{fig:legal-classification-dashboard-part1}
 \end{figure}
 
+Panel status dan relasi pada Gambar~\ref{fig:legal-classification-dashboard-part1} menjadi dasar
+analisis proporsi strata korpus.
+
 Panel pertama menunjukkan bahwa 83,9\% korpus berstatus berlaku dan 16,1\% berstatus
 tidak berlaku. Jika dilihat dari relasi antarperaturan, 79,6\% tidak memiliki relasi
 perubahan, 5,5\% berada pada relasi pencabutan, 8,6\% pada relasi perubahan, dan 6,3\%
@@ -571,6 +590,9 @@ perubahan dan pencabutan.
 \label{fig:legal-classification-dashboard-part2}
 \end{figure}
 
+Panel bentuk dan tahun pada Gambar~\ref{fig:legal-classification-dashboard-part2} menunjukkan
+keragaman periode serta jenis peraturan dalam sampel.
+
 Panel kedua menunjukkan variasi bentuk dan tahun peraturan. Kelompok terbesar adalah
 peraturan kabupaten atau kota dengan proporsi 55,3\%, sedangkan peraturan daerah
 provinsi mencapai 18,4\%. Kelompok bentuk lainnya masing-masing berada pada kisaran
@@ -585,6 +607,9 @@ dan periode ketika kinerja \emph{retrieval} dibandingkan.
 \caption{Panjang dokumen korpus}
 \label{fig:legal-classification-dashboard-part3}
 \end{figure}
+
+Panel panjang dokumen pada Gambar~\ref{fig:legal-classification-dashboard-part3} digunakan untuk
+membaca keterwakilan ukuran dokumen.
 
 Panel ketiga membagi dokumen menurut panjangnya: 43,1\% termasuk dokumen pendek
 dengan 1--9 halaman, 27,1\% termasuk dokumen sedang dengan 10--17 halaman, dan
@@ -609,15 +634,17 @@ dilakukan pada komponen yang sedang diuji.
 \toprule
 \textbf{Kondisi} & \textbf{\emph{Embedding}} & \textbf{\emph{Chunker}} & \textbf{\emph{Indexer}} & \textbf{Perubahan} \\
 \midrule
-\emph{Baseline BGE-M3} & BAAI/BGE-M3 & \emph{Legal structure-aware} & Dense & Referensi \\
-\emph{OAT Indo-LegalBERT} & Indo-LegalBERT & \emph{Legal structure-aware} & Dense & \emph{Embedding} \\
-\emph{OFAT Recursive} & BAAI/BGE-M3 & Recursive & Dense & \emph{Chunker} \\
-\emph{OFAT Sliding window} & BAAI/BGE-M3 & Sliding window & Dense & \emph{Chunker} \\
-\emph{OFAT Sparse} & BAAI/BGE-M3 & \emph{Legal structure-aware} & Sparse & \emph{Indexer} \\
-\emph{OFAT Hybrid} & BAAI/BGE-M3 & \emph{Legal structure-aware} & Hybrid & \emph{Indexer} \\
+\emph{Baseline BGE-M3} & BAAI/BGE-M3 & \emph{Legal structure-aware} & \emph{Dense} & Referensi \\
+\emph{OAT Indo-LegalBERT} & Indo-LegalBERT & \emph{Legal structure-aware} & \emph{Dense} & \emph{Embedding} \\
+\emph{OFAT Recursive} & BAAI/BGE-M3 & \emph{Recursive} & \emph{Dense} & \emph{Chunker} \\
+\emph{OFAT Sliding window} & BAAI/BGE-M3 & \emph{Sliding window} & \emph{Dense} & \emph{Chunker} \\
+\emph{OFAT Sparse} & BAAI/BGE-M3 & \emph{Legal structure-aware} & \emph{Sparse} & \emph{Indexer} \\
+\emph{OFAT Hybrid} & BAAI/BGE-M3 & \emph{Legal structure-aware} & \emph{Hybrid} & \emph{Indexer} \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+Susunan komponen pada setiap kondisi diringkas pada Tabel~\ref{tab:legal-configuration}.
 
 \emph{Retrieval} dijalankan pada \(K=5,10,15,\ldots,60\). \emph{Sweet spot} tidak ditentukan
 dengan mengambil nilai \(K\) terkecil yang mendekati nilai maksimum. \emph{Sweet spot}
@@ -661,6 +688,8 @@ Indo-LegalBERT & 0,45 & 0,017 & 0,215 \\
 \end{tabularx}
 \end{table}
 
+Nilai pada Tabel~\ref{tab:legal-embedding-results} menjadi acuan perbandingan kedua model.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-oat.png}
@@ -682,6 +711,10 @@ Indo-LegalBERT & 0,45 & 0,017 & 0,215 \\
 \label{fig:legal-ndcg-oat}
 \end{figure}
 
+Kurva \emph{recall}, \emph{precision}, dan \emph{nDCG} pemilihan \emph{embedding} ditampilkan
+berturut-turut pada Gambar~\ref{fig:legal-recall-oat}, Gambar~\ref{fig:legal-precision-oat}, dan
+Gambar~\ref{fig:legal-ndcg-oat}.
+
 Ketiga kurva menunjukkan BAAI/BGE-M3 konsisten berada di atas Indo-LegalBERT pada
 sebagian besar \(K\). Setelah \(K=45\), kenaikan \emph{recall} BGE-M3 menjadi kecil, sehingga
 nilai tersebut dipakai sebagai \emph{sweet spot}. Pada titik ini BGE-M3 memperoleh \emph{recall}
@@ -696,6 +729,9 @@ Perbandingan kedua model pada bagian ini difokuskan pada \emph{recall}, \emph{pr
 \caption{Ringkasan metrik pemilihan model \emph{embedding} pada \emph{sweet spot}}
 \label{fig:legal-metrics-oat}
 \end{figure}
+
+Ringkasan metrik pada \emph{sweet spot} pemilihan \emph{embedding} ditampilkan pada
+Gambar~\ref{fig:legal-metrics-oat}.
 
 \subsubsection{Strategi \emph{Chunking}}
 \label{subsubsec:legal-evaluasi-chunking}
@@ -714,11 +750,13 @@ ini BAAI/BGE-M3 dan \emph{dense indexer} dipertahankan.
 \textbf{Strategi} & \textbf{\emph{Recall}} & \textbf{\emph{Precision}} & \textbf{\emph{nDCG}} \\
 \midrule
 \emph{Legal structure-aware} & \textbf{0,64} & 0,047 & \textbf{0,445} \\
-Recursive & 0,60 & 0,038 & 0,381 \\
-Sliding window & 0,61 & 0,040 & 0,407 \\
+\emph{Recursive} & 0,60 & 0,038 & 0,381 \\
+\emph{Sliding window} & 0,61 & 0,040 & 0,407 \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+Hasil numerik strategi \emph{chunking} dirangkum pada Tabel~\ref{tab:legal-chunker-results}.
 
 \begin{figure}[H]
 \centering
@@ -741,6 +779,9 @@ Sliding window & 0,61 & 0,040 & 0,407 \\
 \label{fig:legal-ndcg-chunker}
 \end{figure}
 
+Kurva ketiga metrik strategi \emph{chunking} ditampilkan pada Gambar~\ref{fig:legal-recall-chunker},
+Gambar~\ref{fig:legal-precision-chunker}, dan Gambar~\ref{fig:legal-ndcg-chunker}.
+
 Pada \(K=25\), \emph{legal structure-aware} menghasilkan \emph{recall} 0,64 dan \emph{nDCG} 0,445,
 lebih tinggi daripada \emph{recursive} dan \emph{sliding window}. Keunggulan ini berasal
 dari cara \emph{chunker} mempertahankan batas struktur, identitas sumber, dan konteks
@@ -759,6 +800,9 @@ yang cukup luas tanpa menambahkan terlalu banyak hasil kurang relevan.
 \caption{Ringkasan metrik strategi \emph{chunking} pada \emph{sweet spot}}
 \label{fig:legal-metrics-chunker}
 \end{figure}
+
+Ringkasan metrik strategi \emph{chunking} pada \emph{sweet spot} ditampilkan pada
+Gambar~\ref{fig:legal-metrics-chunker}.
 
 \subsubsection{Strategi \emph{Indexing}}
 \label{subsubsec:legal-evaluasi-indexing}
@@ -782,6 +826,8 @@ dipertahankan. \emph{Sparse} mengandalkan kecocokan kata dan \emph{identifier}, 
 \end{tabularx}
 \end{table}
 
+Hasil numerik strategi \emph{indexing} dirangkum pada Tabel~\ref{tab:legal-indexer-results}.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-indexer.png}
@@ -803,6 +849,9 @@ dipertahankan. \emph{Sparse} mengandalkan kecocokan kata dan \emph{identifier}, 
 \label{fig:legal-ndcg-indexer}
 \end{figure}
 
+Kurva ketiga metrik strategi \emph{indexing} ditampilkan pada Gambar~\ref{fig:legal-recall-indexer},
+Gambar~\ref{fig:legal-precision-indexer}, dan Gambar~\ref{fig:legal-ndcg-indexer}.
+
 Pada \(K=25\), \emph{hybrid} memperoleh \emph{recall} tertinggi, yaitu 0,67. \emph{Sparse}
 memiliki \emph{precision} tertinggi, yaitu 0,071, karena lebih selektif terhadap istilah dan
 \emph{identifier} hukum. \emph{Dense} menghasilkan \emph{nDCG} tertinggi, yaitu 0,445, sehingga posisinya
@@ -817,6 +866,9 @@ yang menyebut istilah atau identitas peraturan secara eksplisit.
 \caption{Ringkasan metrik strategi \emph{indexing} pada \emph{sweet spot}}
 \label{fig:legal-metrics-indexer}
 \end{figure}
+
+Ringkasan metrik strategi \emph{indexing} pada \emph{sweet spot} ditampilkan pada
+Gambar~\ref{fig:legal-metrics-indexer}.
 
 \subsection{Evaluasi Sistem \emph{Retrieval}}
 \label{subsec:legal-evaluasi-retrieval}
@@ -843,6 +895,8 @@ tambahan serta posisi \emph{context reference}.
 \end{tabularx}
 \end{table}
 
+Hasil perbandingan seluruh konfigurasi dirangkum pada Tabel~\ref{tab:legal-retrieval-results}.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/recall-all-retrieval.png}
@@ -864,6 +918,10 @@ tambahan serta posisi \emph{context reference}.
 \label{fig:legal-ndcg-all}
 \end{figure}
 
+Kurva keseluruhan \emph{recall}, \emph{precision}, dan \emph{nDCG} ditampilkan pada
+Gambar~\ref{fig:legal-recall-all}, Gambar~\ref{fig:legal-precision-all}, dan
+Gambar~\ref{fig:legal-ndcg-all}.
+
 Kurva keseluruhan memperlihatkan pola yang sama: \emph{recall} bertambah ketika \(K\)
 diperbesar, sedangkan \emph{precision} berkurang karena lebih banyak \emph{chunk} yang tidak
 menjadi acuan ikut dikembalikan. Pada \(K=25\), \emph{hybrid} memiliki \emph{recall} tertinggi
@@ -879,33 +937,93 @@ yang lebih selektif.
 \label{fig:legal-metrics-all}
 \end{figure}
 
+Ringkasan metrik sistem pada titik optimal ditampilkan pada Gambar~\ref{fig:legal-metrics-all}.
+
 \subsubsection{Evaluasi Relasi pada \emph{Knowledge Graph}}
 \label{subsubsec:legal-evaluasi-kg}
 
-Evaluasi berikut dikhususkan untuk pertanyaan yang memerlukan penelusuran relasi
-antarperaturan. Metrik utama yang digunakan adalah \emph{recall}@K untuk mengukur
-kemampuan sistem menemukan bukti yang memuat hubungan tersebut.
+Evaluasi \emph{knowledge graph} dilakukan setelah proses \emph{retrieval} menghasilkan
+daftar \emph{chunk}. Seluruh 100 pertanyaan digunakan dalam pengukuran. Metrik utama
+adalah \emph{recall} relasi standar, yaitu proporsi relasi yang berhasil ditemukan dari
+relasi yang seharusnya tersedia pada konteks pertanyaan. \emph{Precision} dan F1 menjadi
+diagnostik sekunder: keduanya membantu menunjukkan banyaknya relasi yang tidak relevan,
+tetapi belum menjadi dasar pemilihan konfigurasi karena tahap ini mengukur \emph{retrieval}
+plain tanpa \emph{reranker}. Pada tahap \emph{downstream}, \emph{reranker} diharapkan
+menyaring kandidat sehingga \emph{precision} dan F1 dapat meningkat.
+
+Sebelum membandingkan metrik pada titik terpilih, batas jumlah relasi yang dikembalikan
+ditentukan melalui Gambar~\ref{fig:legal-kg-recall-k-relations}. Heatmap ini memperlihatkan
+\emph{recall} relasi standar untuk berbagai nilai $K$ dan batas relasi $W$ pada kedalaman
+penelusuran $H=2$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/kg-standard-recall-k-vs-relations.png}
+\caption{\emph{KG recall} relasi standar menurut \emph{top-$K$ chunk} dan batas relasi $W$}
+\label{fig:legal-kg-recall-k-relations}
+\end{figure}
+
+Pada seluruh panel, kenaikan dari $W=50$ ke $W=100$ dan tak terbatas hampir tidak
+mengubah \emph{recall}. Artinya, $W=50$ sudah mencapai bagian \emph{plateau} dan menjadi
+\emph{sweet spot} untuk batas relasi. Nilai $K$ tetap mengikuti \emph{sweet spot}
+\emph{retrieval}, yaitu $K=25$, karena graf hanya dapat menelusuri relasi dari \emph{chunk}
+yang berhasil ditemukan oleh tahap sebelumnya.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/kg-recall-all-retrieval.png}
-\caption{Kurva \emph{KG recall}}
+\caption{Kurva \emph{KG recall} relasi standar untuk seluruh konfigurasi}
 \label{fig:legal-recall-kg}
 \end{figure}
 
-Pada kurva \emph{KG recall} pada Gambar~\ref{fig:legal-recall-kg}, pada \(K=25\) konfigurasi \emph{sparse} mencapai
-nilai tertinggi, yaitu 0,517. Konfigurasi \emph{hybrid} mencapai 0,417, \emph{sliding window}
-0,350, \emph{baseline} dan \emph{recursive} masing-masing 0,300, sedangkan OAT dengan
-Indo-LegalBERT mencapai 0,150. Hasil ini menunjukkan perbedaan kemampuan tiap konfigurasi
-dalam menemukan bukti yang memuat hubungan antarperaturan. Hasil tersebut masuk akal karena
-\emph{subset} evaluasi ini hanya terdiri atas 30 pertanyaan yang memang memerlukan penelusuran relasi.
-Pertanyaan-pertanyaan tersebut menyebut entitas, istilah, atau penanda peraturan secara
-eksplisit, sehingga kecocokan leksikal memberi \emph{sparse retrieval} peluang lebih besar
-untuk menemukan \emph{chunk} yang memuat \emph{entity} dan relasi target. Dengan demikian,
-\emph{recall} \emph{sparse} yang lebih tinggi mencerminkan karakteristik subset pertanyaan
-relasi dan tidak berarti bahwa strategi tersebut selalu unggul pada pertanyaan lain. \emph{recall} digunakan sebagai ukuran utama
-dan dilengkapi pemeriksaan validitas skema, duplikasi entitas, resolusi identitas, serta
-keterlacakan setiap relasi ke potongan sumber.
+Gambar~\ref{fig:legal-recall-kg} menggunakan $W=50$ dan menandai $K=25$ sebagai
+\emph{sweet spot} yang diwarisi dari evaluasi \emph{retrieval}. Pada titik tersebut,
+\emph{indexer hybrid} memperoleh \emph{recall} tertinggi, yaitu 0,846, diikuti
+\emph{sparse} 0,838, \emph{sliding window} 0,650, \emph{baseline} BGE-M3 0,607,
+\emph{recursive} 0,573, dan OAT IndoLegalBERT 0,188. Pola ini mengikuti hasil
+\emph{retrieval}: konfigurasi yang menemukan lebih banyak konteks pada tahap awal juga
+menyediakan lebih banyak titik awal untuk penelusuran relasi.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/kg-precision-all-retrieval.png}
+\caption{Kurva \emph{KG precision} relasi standar untuk seluruh konfigurasi}
+\label{fig:legal-precision-kg}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/kg-f1-all-retrieval.png}
+\caption{Kurva F1 relasi standar untuk seluruh konfigurasi}
+\label{fig:legal-f1-kg}
+\end{figure}
+
+Kurva \emph{precision} pada Gambar~\ref{fig:legal-precision-kg} cenderung turun ketika
+$K$ bertambah karena sistem mengembalikan lebih banyak relasi tambahan. F1 pada
+Gambar~\ref{fig:legal-f1-kg} mengikuti keseimbangan antara \emph{recall} dan \emph{precision};
+karena itu F1 tidak digunakan untuk mengganti konfigurasi yang memiliki \emph{recall}
+lebih tinggi pada tahap \emph{retrieval} plain.
+
+Nilai ketiga metrik pada $K=25$ dirangkum pada Gambar~\ref{fig:legal-kg-metrics-sweet-spot}.
+Diagram ini menampilkan konfigurasi \emph{recall-first} dari EDA pada \emph{sweet spot}
+\emph{retrieval}. \emph{Hybrid} menghasilkan \emph{recall} tertinggi (0,846), sedangkan
+\emph{sparse} memiliki \emph{precision} dan F1 tertinggi (masing-masing 0,105 dan 0,186).
+Dengan demikian, \emph{hybrid} dipilih sebagai konfigurasi \emph{indexer} karena tujuan
+utama tahap ini adalah memperluas cakupan relasi; \emph{precision} dan F1 tetap dilaporkan
+sebagai diagnostik untuk tahap penyaringan berikutnya.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.52\textheight,keepaspectratio]{images/experiments/legal_revision/final_eda/kg-metrics-at-sweet-spot.png}
+\caption{Metrik relasi standar pada \emph{sweet spot} \emph{retrieval} ($K=25$)}
+\label{fig:legal-kg-metrics-sweet-spot}
+\end{figure}
+
+Baris pertanyaan tanpa relasi standar tetap dipertahankan dalam perhitungan. Jika sistem
+menghasilkan relasi pada baris tersebut, prediksi itu ditandai sebagai \emph{reject} atau
+tidak didukung dan dihitung sebagai \emph{false positive}; barisnya tidak dihapus dari
+evaluasi. Aturan ini mencegah skor tampak lebih tinggi karena pertanyaan yang tidak
+memiliki relasi diabaikan.
 
 \subsection{Analisis dan Keterbatasan Eksperimen}
 \label{subsec:legal-analisis-keterbatasan}

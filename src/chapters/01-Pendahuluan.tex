@@ -115,12 +115,13 @@ lebih baik pada dokumen hukum dan matematika
 konfigurasi \emph{chunking} tidak dapat ditentukan secara universal. Jika seluruh
 komponen terikat langsung pada kode inti, penambahan \emph{domain} baru akan
 menuntut perubahan kode, pemrosesan ulang dokumen, pembangunan ulang \emph{artifact}, dan
-pengujian ulang. Oleh karena itu, diperlukan \emph{sistem plugin} yang
-memungkinkan \emph{chunker}, \emph{indexer}, dan pembangun \emph{knowledge graph}
-dipilih atau ditukar sesuai kebutuhan melalui kontrak masukan dan keluaran yang
-jelas. Sistem tersebut juga perlu mempertahankan identitas, versi, kapabilitas,
-aturan kompatibilitas, dan keterlacakan \emph{artifact} agar fleksibilitas tetap menjaga
-konsistensi proses \parencite{hanRetrievalAugmentedGenerationGraphs2025,
+pengujian ulang. Oleh karena itu, diperlukan arsitektur yang modular sehingga
+strategi \emph{chunking}, pengindeksan, dan pembentukan \emph{knowledge graph}
+dapat disesuaikan dengan kebutuhan setiap \emph{domain}. Arsitektur tersebut
+perlu memisahkan tanggung jawab komponen, menetapkan kontrak masukan dan keluaran
+yang jelas, serta mempertahankan identitas, versi, aturan kompatibilitas, dan
+keterlacakan \emph{artifact} agar fleksibilitas tetap menjaga konsistensi proses
+\parencite{hanRetrievalAugmentedGenerationGraphs2025,
 gaoModularRAG2024,garlanIntroductionSoftware1994}.
 
 Pada tahap percakapan, masukan pengguna dan konteks hasil \emph{retrieval} perlu
@@ -161,11 +162,13 @@ pada tahap \emph{retrieval}, sekaligus menyediakan arsitektur yang dapat
 diperluas ke sumber pengetahuan atau \emph{domain} baru tanpa mengubah kode inti.
 
 Dalam penelitian ini, konstruksi basis pengetahuan didefinisikan sebagai rangkaian
-proses pembentukan representasi pengetahuan yang mencakup tiga tahap utama, yaitu
-(1) membagi representasi pengetahuan menjadi unit-unit informasi yang lebih kecil
-dengan tetap mempertahankan konteksnya, (2) mengindeks atau memproyeksikan unit
-tersebut ke dalam \emph{vector database} agar dapat dicari, dan (3) membentuk
-entitas, informasi, serta relasi dalam bentuk triplet ke dalam \emph{knowledge graph}.
+proses pembentukan representasi pengetahuan yang mencakup tiga tahap utama:
+
+\begin{enumerate}
+    \item Membagi representasi pengetahuan menjadi unit-unit informasi yang lebih kecil dengan tetap mempertahankan konteksnya.
+    \item Mengindeks atau memproyeksikan unit tersebut ke dalam \emph{vector database} agar dapat dicari.
+    \item Membentuk entitas, informasi, serta relasi dalam bentuk triplet ke dalam \emph{knowledge graph}.
+\end{enumerate}
 
 Secara lebih rinci, tujuan penelitian ini adalah sebagai berikut.
 
@@ -207,7 +210,7 @@ Ketercapaian setiap tujuan diukur melalui kriteria berikut.
 
 Agar penelitian dapat dilaksanakan secara terarah, ruang lingkup penelitian perlu
 dibatasi secara eksplisit. Pembatasan ini bertujuan untuk menjaga fokus penelitian
-pada pengembangan sistem \emph{plugin}, \emph{chunker}, \emph{indexer},
+pada pengembangan arsitektur modular, \emph{chunker}, \emph{indexer},
 \emph{knowledge graph}, dan prapemrosesan kueri sebagai kontribusi utama.
 Pembatasan ini juga membedakan komponen yang dievaluasi dari komponen pendukung
 serta menetapkan konteks korpus dan eksperimen yang menjadi dasar penilaian
@@ -215,9 +218,9 @@ ketercapaian tujuan. Adapun batasan penelitian yang ditetapkan adalah sebagai
 berikut.
 
 \begin{enumerate}
-    \item Omni-RAG dirancang sebagai arsitektur \emph{multi-domain}, dengan evaluasi utama menggunakan korpus peraturan perundang-undangan bidang pendidikan di Indonesia serta \emph{User Manual} yang dibatasi pada produk Netgear.
-    \item Kontribusi penelitian berfokus pada sistem \emph{plugin}, \emph{chunker}, \emph{indexer}, \emph{knowledge graph}, dan prapemrosesan kueri yang meliputi \emph{guardrail}, \emph{context PII}, serta \emph{history compactor}. Komponen lain dikerjakan oleh anggota penelitian yang berbeda.
-    \item Sistem \emph{plugin} hanya ditujukan untuk memungkinkan pengguna melakukan kustomisasi logika komponen melalui \emph{adapter} tanpa mengubah kode inti. Kebutuhan yang berkaitan dengan perubahan infrastruktur, akses basis data, atau integrasi eksternal berada di luar cakupan \emph{plugin} dan dapat memerlukan perubahan pada kode inti.
+    \item OMNI-RAG dirancang sebagai arsitektur \emph{multi-domain}, dengan evaluasi utama menggunakan korpus peraturan perundang-undangan bidang pendidikan di Indonesia serta \emph{User Manual} yang dibatasi pada produk Netgear.
+    \item Kontribusi penelitian berfokus pada arsitektur modular, \emph{chunker}, \emph{indexer}, \emph{knowledge graph}, dan prapemrosesan kueri yang meliputi \emph{guardrail}, \emph{context PII}, serta \emph{history compactor}. Komponen lain dikerjakan oleh anggota penelitian yang berbeda.
+    \item Modularitas dibatasi pada pertukaran strategi pemrosesan melalui kontrak masukan dan keluaran yang tetap. Perubahan infrastruktur, akses basis data, atau integrasi eksternal berada di luar cakupan kontribusi penelitian ini dan dapat memerlukan perubahan pada kode inti.
     \item Representasi dokumen yang digunakan dalam penelitian hanya berbentuk teks. Gambar dan tabel tidak menjadi bagian dari representasi yang diproses.
     \item Aspek keamanan tidak mencakup perancangan keamanan infrastruktur, autentikasi, otorisasi, pengujian penetrasi, pemenuhan standar kepatuhan, atau aspek keamanan menyeluruh lainnya. Pembahasan dibatasi pada perlindungan PII dan pemeriksaan \emph{guardrail} dalam prapemrosesan RAG.
     \item \emph{PII}, \emph{guardrail}, dan pemadatan histori bukan fokus utama penelitian. Ketiganya hanya berfungsi sebagai komponen pendukung kebutuhan RAG secara umum dan tidak menjadi objek eksperimen.
@@ -229,7 +232,7 @@ Pelaksanaan penelitian ini menempuh beberapa tahapan umum sebagai berikut:
 
 \begin{enumerate}
     \item Mengidentifikasi permasalahan dan kebutuhan sistem berdasarkan latar belakang, rumusan masalah, serta kondisi implementasi yang telah tersedia. Tahap ini menetapkan fokus kontribusi penelitian dan ruang lingkup komponen yang dikaji.
-    \item Merancang arsitektur Omni-RAG beserta hubungan antarkomponennya, terutama \emph{plugin}, \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph}. Rancangan juga mencakup komponen pendukung prapemrosesan kueri.
+    \item Merancang arsitektur OMNI-RAG beserta hubungan antarkomponennya, terutama \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph}. Rancangan juga mencakup kontrak antarkomponen dan komponen pendukung prapemrosesan kueri.
     \item Mengimplementasikan komponen yang telah dirancang dan melakukan verifikasi melalui pengujian serta pemeriksaan integrasi. Tahap ini memastikan setiap komponen dapat digunakan sesuai perannya dalam alur sistem.
     \item Menyiapkan data, konfigurasi, dan skenario eksperimen, kemudian menguji beberapa alternatif \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph} pada kondisi yang ditetapkan.
     \item Menganalisis hasil eksperimen berdasarkan ukuran keberhasilan yang telah dirumuskan.
@@ -238,16 +241,11 @@ Pelaksanaan penelitian ini menempuh beberapa tahapan umum sebagai berikut:
 
 \section{Sistematika Pembahasan}
 
-Laporan tugas akhir ini disusun ke dalam lima bab. Bab I memuat latar belakang,
-rumusan masalah, tujuan beserta ukuran keberhasilannya, batasan penelitian, dan
-metodologi yang menjadi dasar pelaksanaan penelitian. Bab II menguraikan kajian
-pustaka yang menjadi landasan pemilihan arsitektur, sistem \emph{plugin}, unit
-dokumen, strategi pengindeksan, \emph{knowledge graph}, pengelolaan konteks, dan
-metode evaluasi. Bab III membahas analisis masalah serta rancangan solusi
-Omni-RAG, termasuk arsitektur komponen, kontrak \emph{plugin}, \emph{lifecycle},
-alur pemrosesan dokumen, alur kueri, dan rancangan penyimpanan. Bab IV menjelaskan
-rancangan eksperimen atas komponen \emph{chunker}, \emph{indexer}, dan
-\emph{knowledge graph}, menyajikan hasilnya, serta mengevaluasi ketercapaiannya
-terhadap ukuran keberhasilan yang telah dirumuskan. Bab V menyimpulkan keterjawaban
-rumusan masalah dan menyampaikan saran bagi pengembangan selanjutnya. Spesifikasi
-kebutuhan, rancangan sistem, dan pengujian tambahan disajikan pada lampiran.
+Laporan ini terdiri atas lima bab. Bab I menjelaskan latar belakang, rumusan
+masalah, tujuan, batasan, dan metodologi penelitian. Bab II memaparkan kajian
+pustaka tentang arsitektur, unit dokumen, pengindeksan, \emph{knowledge graph},
+pengelolaan konteks, dan evaluasi. Bab III menjelaskan analisis masalah dan
+rancangan solusi OMNI-RAG, sedangkan Bab IV menyajikan eksperimen, hasil, dan
+evaluasi komponen \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph}.
+Bab V merangkum kesimpulan dan saran. Spesifikasi kebutuhan, rancangan sistem,
+dan pengujian tambahan disajikan pada lampiran.

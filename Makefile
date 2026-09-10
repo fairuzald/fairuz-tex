@@ -11,9 +11,15 @@ MMDC := node_modules/@mermaid-js/mermaid-cli/src/cli.js
 DIAGRAM_SRC := $(wildcard src/diagrams/*.mmd)
 DIAGRAM_OUT := $(patsubst src/diagrams/%.mmd,src/generated/diagrams/%.png,$(DIAGRAM_SRC))
 
-.PHONY: all pdf diagrams watch clean help
+.PHONY: all pdf paper poster diagrams watch clean help
 
 all: pdf
+
+paper:
+	$(MAKE) -C paper pdf
+
+poster:
+	$(MAKE) -C poster preview
 
 pdf: diagrams
 	cd $(TEXDIR) && $(LATEX) -interaction=nonstopmode -halt-on-error -file-line-error $(MAIN).tex
@@ -55,6 +61,8 @@ clean:
 
 help:
 	@printf '%s\n' 'Available targets:'
+	@printf '%s\n' '  make poster Create the A1 research poster PDF and PNG'
+	@printf '%s\n' '  make paper  Compile the short article in paper/'
 	@printf '%s\n' '  make        Compile the proposal PDF'
 	@printf '%s\n' '  make pdf    Compile the proposal PDF to src/IF4092_Laporan_SidangTA_13522057.pdf'
 	@printf '%s\n' '  make diagrams Render Mermaid diagram sources to PNG assets'

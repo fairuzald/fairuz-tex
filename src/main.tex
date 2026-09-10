@@ -49,6 +49,7 @@
 
 \pagestyle{plain}
 \mainmatter
+\mainreporttablestrue
 \include{chapters/01-Pendahuluan}
 \include{chapters/02-Kajian-Pustaka}
 \include{chapters/03-Analisis-dan-Rancangan}
@@ -61,10 +62,12 @@
 % Lampiran ditempatkan setelah daftar pustaka agar menjadi bagian paling akhir
 % dari dokumen. Isinya mendokumentasikan query/prompt yang benar-benar dipakai
 % oleh implementasi memori percakapan dan guardrail.
+\mainreporttablesfalse
 \input{appendices/A-Query-Rolling-Summary}
 \input{appendices/B-Query-Memory-Items}
 \input{appendices/C-Query-Guardrail}
 \input{appendices/D-Pertanyaan-User-Manual}
 \input{appendices/E-Pertanyaan-Legal}
+\input{appendices/G-Daftar-Istilah}
 
 \end{document}

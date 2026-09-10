@@ -28,3 +28,6 @@ src/main.bbl-SAVE-ERROR
 # Python bytecode caches
 **/__pycache__/
 *.pyc
+
+# Separate paper build intermediates
+paper/build/

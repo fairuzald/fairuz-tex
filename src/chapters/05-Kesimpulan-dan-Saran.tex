@@ -1,7 +1,7 @@
 \chapter[KESIMPULAN DAN SARAN]{Kesimpulan dan Saran}
 \label{chap:kesimpulan-saran}
 
-Bab ini merangkum hasil perancangan dan evaluasi Omni-RAG pada dua konteks, yaitu
+Bab ini merangkum hasil perancangan dan evaluasi OMNI-RAG pada dua konteks, yaitu
 \emph{User Manual} dan dokumen hukum. Kesimpulan disusun untuk menjawab tiga
 rumusan masalah penelitian.
 
@@ -9,32 +9,35 @@ rumusan masalah penelitian.
 \label{sec:kesimpulan}
 
 \begin{enumerate}
-  \item \textbf{Pembentukan unit informasi.} Sistem menyediakan beberapa strategi
-  \emph{chunking} melalui kontrak \emph{plugin} yang sama, sehingga unit hasil
-  \emph{chunking} tetap memiliki identitas sumber, struktur, dan \emph{context reference}.
-  Pada \emph{User Manual}, \emph{structure-aware chunker} memperoleh \emph{recall}
-  gabungan 0,740 pada \(K=25\) karena membawa konteks induk bersama blok yang dicari.
+  \item \textbf{Arsitektur modular dan keterlacakan.} Omni-RAG menggunakan kontrak
+  masukan dan keluaran yang sama untuk setiap komponen. Karena itu, strategi
+  \emph{chunking}, \emph{indexing}, dan \emph{knowledge graph} dapat diganti melalui
+  \emph{plugin} tanpa mengubah orkestrator inti. \emph{Canonical chunk} menyimpan
+  identitas sumber, struktur, dan \emph{context reference}, sehingga hasil pencarian
+  dapat ditelusuri kembali ke dokumen asal.
+
+  \item \textbf{Hasil \emph{retrieval} pada dua kasus penggunaan.} Pada \emph{User
+  Manual}, \emph{generic structure-aware chunker} menjadi strategi \emph{chunking}
+  terbaik dengan \emph{recall} gabungan 0,740 pada \(K=25\). \emph{Dense indexer}
+  berbasis BAAI/BGE-M3 menjadi strategi indeks terbaik dengan \emph{recall} 0,830
+  pada \(K=40\), dan tetap tertinggi pada perbandingan sistem di \(K=45\) dengan nilai
+  0,835. Pada \(K=45\), \emph{dense} memperoleh \emph{recall} 0,850 untuk pertanyaan
+  bahasa Inggris dan 0,820 untuk bahasa Indonesia. Selisih yang kecil ini menunjukkan
+  bahwa BAAI/BGE-M3 tetap dapat mencari konteks pada pertanyaan lintas bahasa.
   Pada dokumen hukum, \emph{legal structure-aware chunker} memperoleh \emph{recall}
-  0,64 pada \(K=25\). Strategi ini paling sesuai untuk hukum karena mempertahankan batas
-  Pasal dan Ayat serta pemetaan kembali ke \emph{context reference}.
-  Dengan kontrak tersebut, strategi baru dapat ditambahkan tanpa mengubah orkestrator inti.
+  0,64, sedangkan \emph{hybrid indexer} berbasis BAAI/BGE-M3 memperoleh nilai tertinggi,
+  yaitu 0,67 pada \(K=25\). Dengan demikian, struktur dokumen menjadi faktor penting
+  pada hukum, sementara penggabungan kecocokan istilah dan makna memberi cakupan
+  pencarian terbaik.
 
-  \item \textbf{Strategi pencarian.} Sistem mendukung pencarian \emph{sparse},
-  \emph{dense}, dan \emph{hybrid} dengan konfigurasi \emph{chunker}, \emph{indexer},
-  dan model \emph{embedding} yang dapat dibandingkan secara terpisah. Pada
-  \emph{User Manual}, \emph{dense indexer} memperoleh \emph{recall} gabungan
-  0,830 pada \(K=40\) dan tetap menjadi konfigurasi terbaik pada bahasa Inggris maupun
-  Indonesia. Pada dokumen hukum, \emph{hybrid indexer} memperoleh \emph{recall} 0,67
-  pada \(K=25\). Hasil ini menunjukkan bahwa strategi pencarian perlu disesuaikan dengan
-  karakteristik pertanyaan: kemiripan makna lebih membantu pada \emph{User Manual},
-  sedangkan kombinasi istilah dan makna lebih sesuai untuk pertanyaan hukum.
-
-  \item \textbf{Knowledge graph dan keterlacakan hubungan.} \emph{Knowledge graph}
-  dibangun dari \emph{canonical artifact} yang sama dengan yang digunakan oleh
-  \emph{indexer}, sehingga entitas dan relasi dapat ditelusuri kembali ke sumbernya.
-  Pada pertanyaan hukum yang memerlukan penelusuran relasi, mekanisme ini membantu
-  mengambil informasi hubungan dari sumber yang sesuai. Secara arsitektur, mekanisme KG
-  dapat diganti atau ditambahkan melalui \emph{plugin} tanpa mengubah komponen inti.
+  \item \textbf{Knowledge graph dan metrik evaluasi.} Pada evaluasi hubungan hukum,
+  \(K=25\) digunakan karena merupakan titik \emph{sweet spot retrieval}, sedangkan
+  batas relasi \(W=50\) dipilih karena kurva sudah memasuki \emph{plateau}. Pada titik
+  ini, \emph{hybrid} memperoleh \emph{recall} relasi standar tertinggi, yaitu 0,846.
+  \emph{Sparse} memiliki \emph{precision} dan F1 tertinggi, sehingga kedua metrik
+  tersebut tetap berguna sebagai diagnostik, tetapi pemilihan konfigurasi didasarkan
+  pada \emph{recall}. Baris tanpa relasi dipertahankan dan prediksi relasi yang tidak
+  didukung dihitung sebagai \emph{reject} agar skor tidak meningkat secara semu.
 \end{enumerate}
 
 \section{Saran}
@@ -47,7 +50,7 @@ memperluas cakupan pengujian sebagai berikut.
   \item \textbf{Mengevaluasi konfigurasi komponen RAG secara terpadu.}
   Gunakan rancangan \emph{full factorial} untuk menguji seluruh kombinasi strategi
   \emph{chunker}, \emph{indexer}, model \emph{embedding}, ukuran \emph{chunk},
-  \emph{overlap}, dan cutoff \(K\). Setiap strategi perlu disertai konfigurasi
+  \emph{overlap}, dan \emph{cutoff} \(K\). Setiap strategi perlu disertai konfigurasi
   parameternya secara jelas, seperti jenis \emph{plugin}, ukuran \emph{chunk}, metode
   pemisah, serta pengaturan indeks. Laporkan pengaruh utama setiap komponen dan
   interaksi antarkomponen, bukan hanya hasil pengujian satu faktor pada satu waktu.
@@ -60,7 +63,7 @@ memperluas cakupan pengujian sebagai berikut.
   hasil dapat dibandingkan secara adil.
 
   \item \textbf{Meningkatkan kesiapan operasional \emph{plugin}.} Sediakan paket
-  instalasi yang memuat manifest, implementasi, dependensi, versi kontrak, dan pengujian.
+  instalasi yang memuat \emph{manifest}, implementasi, dependensi, versi kontrak, dan pengujian.
   Sistem perlu memvalidasi kompatibilitas serta keamanan paket sebelum strategi baru
   diaktifkan.
 \end{enumerate}

@@ -15,6 +15,12 @@
 \titlespacing*{\chapter}{0pt}{0pt}{1.5em}
 \titleformat{\section}{\normalfont\bfseries\fontsize{12}{14}\selectfont\parfillskip=0pt plus 1fil}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalfont\bfseries\fontsize{12}{14}\selectfont\parfillskip=0pt plus 1fil}{\thesubsection}{1em}{}
+% Keep vertical spacing around headings fixed.  Without explicit values,
+% report.cls combines stretchable skips with \flushbottom, which makes the
+% gap before a subbab vary with the amount of text on the page.
+\titlespacing*{\section}{0pt}{2.0em}{0.8em}
+\titlespacing*{\subsection}{0pt}{1.5em}{0.6em}
+\titlespacing*{\subsubsection}{0pt}{1.0em}{0.4em}
 % Number the bold fourth-level headings as III.x.y.z so their position in the
 % chapter hierarchy is explicit rather than relying on an unnumbered run-in
 % paragraph heading.
@@ -32,7 +38,10 @@
 \setlength{\tabcolsep}{7pt}
 \renewcommand{\arraystretch}{1.22}
 \setlength{\headheight}{0pt}
-\raggedbottom
+% Fill the text block to the bottom margin on ordinary pages, as required by
+% the report-writing guidelines. A final page may naturally end with remaining
+% white space.
+\flushbottom
 \pagestyle{plain}
 \setlist[enumerate]{
     before={\justifying\rightskip=0pt plus 0.5em\parfillskip=0pt plus 1fil},

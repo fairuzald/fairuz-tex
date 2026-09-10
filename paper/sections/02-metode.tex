@@ -1,0 +1,39 @@
+\section{Metode dan Rancangan Sistem}
+\subsection{Kontrak dan Alur Pemrosesan}
+Konstruksi basis pengetahuan mencakup tiga tahap, yaitu membagi representasi dokumen menjadi unit yang lebih kecil, membentuk indeks pencarian, dan membentuk entitas serta relasi dalam \tech{knowledge graph}. \tech{Parser} menyediakan \artifact{CanonicalDocument} sebagai masukan yang memuat teks dan struktur dokumen. \tech{Chunker} menghasilkan \artifact{CanonicalChunks}, lalu \tech{indexer} dan pembangun graf mengolahnya menjadi \artifact{CanonicalIndex} dan \artifact{CanonicalGraph}.
+
+\begin{table}[tb]
+\centering\small
+\caption{Kontrak utama konstruksi basis pengetahuan.}
+\label{tab:kontrak}
+\begin{tabularx}{\columnwidth}{@{}l>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+Komponen & Masukan dan keluaran\\\midrule
+\tech{Chunker} & \artifact{CanonicalDocument} menjadi \artifact{CanonicalChunks}\\
+\tech{Indexer} & \artifact{CanonicalChunks} menjadi \artifact{CanonicalIndex}\\
+\tech{Knowledge graph} & \artifact{CanonicalChunks} menjadi \artifact{CanonicalGraph}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Setiap \tech{artifact} mempertahankan identitas dokumen, posisi sumber, \tech{metadata}, dan \tech{provenance}. Karena indeks dan graf berasal dari kumpulan \tech{chunk} yang sama, hasil pencarian dapat dipetakan kembali ke sumber tanpa pemotongan ulang. Identitas ini juga menjadi dasar pencocokan hasil \tech{retrieval} dengan \tech{context reference} dalam evaluasi.
+
+Pengguna menentukan sumber data dan komponen melalui \tech{profile}. \tech{Manifest} mendeskripsikan identitas, versi, konfigurasi, dan kapabilitas \tech{plugin}. Pemeriksaan kompatibilitas menjaga agar komponen yang dipilih memenuhi kontrak masukan dan keluaran. Penambahan strategi dilakukan melalui \tech{adapter}. Jaminan perluasan ini terbatas pada logika komponen yang sesuai kontrak. Perubahan infrastruktur atau integrasi eksternal tetap dapat memerlukan perubahan kode inti.
+
+\subsection{Pembentukan Unit Informasi}
+\tech{Structure-aware chunker} menggunakan batas struktur dokumen untuk menentukan unit informasi. Pada \tech{User Manual}, \tech{block} teks tetap membawa \tech{parent context} sehingga bagian yang berisi prosedur dapat dibaca bersama judul atau konteks induknya. Pada peraturan, \tech{legal structure-aware chunker} mempertahankan batas pasal dan ayat serta pemetaan ke identitas unit sumber.
+
+Sebagai pembanding, \tech{recursive chunker} membagi teks menggunakan pemisah bertingkat, sedangkan \tech{sliding-window chunker} menggunakan jendela dengan \tech{overlap}. Kontrak keluaran tetap sama walaupun cara pemotongannya berbeda. Relasi struktur dan urutan seperti \tech{previous} dan \tech{next} dipertahankan untuk membantu penelusuran antarpotongan. Representasi yang dievaluasi hanya berupa teks. Isi visual gambar dan tabel tidak dievaluasi sebagai representasi multimodal.
+
+\subsection{Indeks dan Materialisasi}
+\tech{Sparse indexer} menyiapkan representasi untuk pencocokan istilah. \tech{Dense indexer} membentuk representasi melalui model \tech{embedding}. \tech{Hybrid retrieval} menggabungkan peringkat kandidat dari kedua jalur melalui \tech{Reciprocal Rank Fusion}. Dengan kontrak yang sama, perbandingan dapat memusatkan perubahan pada strategi pencarian tanpa membentuk ulang definisi unit sumber.
+
+\artifact{CanonicalIndex} disimpan di \tech{object storage} sebelum dimaterialisasi ke OpenSearch. Pemisahan hasil transformasi dari materialisasi memungkinkan pengiriman ulang ketika penyimpanan indeks gagal. Sistem menggunakan PostgreSQL untuk data operasional, RabbitMQ untuk pemrosesan asinkron, dan Neo4j untuk materialisasi graf. Penyimpanan graf juga diawali dengan penyimpanan \tech{artifact} agar percobaan ulang tidak selalu membutuhkan konstruksi ulang.
+
+\subsection{Pembentukan dan Validasi Graf}
+\tech{Knowledge graph} bersifat opsional sesuai \tech{profile}. Pada korpus peraturan, strategi deterministik membentuk simpul peraturan dan pasal dari struktur serta \tech{metadata} eksplisit. Relasi merepresentasikan kepemilikan pasal serta hubungan mengubah, menetapkan, dan mencabut antarperaturan. Pendekatan ini menjaga arah hubungan dan sumber yang mendukungnya.
+
+\tech{Canonicalization} menyeragamkan identitas, tipe, properti, dan label relasi untuk mengurangi duplikasi. Validasi memeriksa asal dan tujuan sisi, arah relasi, cakupan dokumen, dan \tech{provenance}. Relasi tanpa simpul yang sesuai atau tanpa dukungan sumber ditolak. Penghapusan dokumen atau \tech{profile} juga mencakup materialisasi terkait agar pencarian tidak mengembalikan relasi dari sumber yang telah dihapus.
+
+\subsection{Pengelolaan Konteks Percakapan}
+\tech{Context PII} mendeteksi informasi pribadi, menggantinya dengan penanda, dan menyimpan pemetaan untuk pemulihan pada keluaran yang berwenang. \tech{Guardrail} memeriksa masukan dan konteks untuk mengendalikan instruksi yang tidak sesuai. \tech{History compactor} mengelola ringkasan dan informasi percakapan agar histori yang dibawa tetap sesuai kapasitas konteks. Ketiganya melengkapi pemanfaatan basis pengetahuan, tetapi hasil \tech{retrieval} di artikel ini tidak membuktikan efektivitas keamanan atau pemadatan histori.
