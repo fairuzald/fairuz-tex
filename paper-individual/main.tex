@@ -17,7 +17,6 @@
 \newcommand{\kg}{\textit{knowledge graph}\xspace}
 \newcommand{\plugin}{\textit{plugin}\xspace}
 \newcommand{\artifact}{\textit{artifact}\xspace}
-\newcommand{\profile}{\textit{profile}\xspace}
 \newcommand{\retrieval}{\textit{retrieval}\xspace}
 \newcommand{\omnirag}{OMNI-RAG\xspace}
 \newcommand{\code}[1]{\texttt{#1}}
@@ -37,7 +36,7 @@ Bandung, Indonesia\\
 \maketitle
 
 \begin{abstract}
-Pipeline \textit{Retrieval-Augmented Generation} (RAG) harus mengubah dokumen yang beragam menjadi unit informasi yang dapat dicari sebelum model bahasa menyusun jawaban. Paper ini menyajikan rancangan dan evaluasi kontribusi individual untuk konstruksi basis pengetahuan pada \omnirag, yaitu arsitektur multi-domain berbasis \plugin. Fokus penelitian adalah tiga proyeksi dari dokumen kanonik yang sama: \chunker, \indexer, dan \kg. Kontrak \textit{CanonicalDocument}, \textit{CanonicalChunks}, \textit{CanonicalIndex}, dan \textit{CanonicalGraph} memisahkan orkestrator dari strategi pemrosesan, sedangkan \textit{profile}, manifest, dan provenance menjaga pemilihan komponen serta keterlacakan hasil. Eksperimen \textit{one factor at a time} menggunakan sembilan manual Netgear (1.400 halaman, 200 pertanyaan bilingual) dan korpus hukum (256 dokumen, 25 pertanyaan terverifikasi). Pada $K=30$, \textit{structure-aware} menghasilkan \textit{recall} 0,740 pada manual, sedangkan \textit{legal-structure dense} menghasilkan 0,6854 pada korpus hukum. Dense indexer BAAI/BGE-M3 memperoleh \textit{recall} 0,785 pada manual dan 0,6854 pada hukum; hybrid memiliki MRR hukum tertinggi, 0,5439. Traversal graf hingga kedalaman dua mencapai \textit{neighborhood recall} 1,0000 pada konfigurasi \textit{sliding}. Hasil menunjukkan bahwa pemeliharaan struktur dan pencocokan semantik meningkatkan cakupan konteks, tetapi konfigurasi terbaik bergantung pada domain serta metrik yang diprioritaskan.
+Pipeline \textit{Retrieval-Augmented Generation} (RAG) harus mengubah dokumen yang beragam menjadi unit informasi yang dapat dicari sebelum model bahasa menyusun jawaban. Paper ini menyajikan pendekatan modular berbasis representasi kanonik dan antarmuka \plugin umum untuk konstruksi basis pengetahuan pada \omnirag. Fokus evaluasi bukan rincian mekanisme plugin, melainkan perbandingan strategi \chunker, \indexer, dan \kg ketika hanya satu komponen diubah. Eksperimen \textit{one factor at a time} menggunakan sembilan manual Netgear (1.400 halaman, 200 pertanyaan bilingual) dan korpus hukum (256 dokumen, 25 pertanyaan terverifikasi). Pada $K=30$, \textit{structure-aware hybrid} menghasilkan \textit{recall} 0,740 pada manual, sedangkan \textit{structure-aware dense} menghasilkan 0,785. Pada korpus hukum, \textit{legal-structure dense} menghasilkan 0,6854 dan hybrid memiliki MRR tertinggi, 0,5439. Traversal graf hingga kedalaman dua mencapai \textit{neighborhood recall} 1,0000 pada konfigurasi \textit{sliding}. Hasil menunjukkan bahwa pemeliharaan struktur dan pencocokan semantik meningkatkan cakupan konteks, tetapi konfigurasi terbaik bergantung pada domain serta metrik yang diprioritaskan.
 \end{abstract}
 
 \begin{IEEEkeywords}

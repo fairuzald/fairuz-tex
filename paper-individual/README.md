@@ -8,11 +8,11 @@ pengetahuan.
 
 Ruang lingkup paper meliputi:
 
-- kontrak artefak kanonik dan arsitektur berbasis plugin;
+- pendekatan modular berbasis plugin sebagai batas pertukaran strategi dan pengendali eksperimen;
 - empat strategi chunker;
 - sparse, dense, dan hybrid indexer;
 - legal knowledge graph deterministik; serta
-- eksperimen retrieval, generation, dan neighborhood recall pada dua korpus.
+- perbandingan terkontrol retrieval, generation, dan neighborhood recall pada dua korpus.
 
 ## Build
 

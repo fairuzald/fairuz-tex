@@ -1,5 +1,7 @@
 \section{Hasil dan Pembahasan}
 
+Hasil berikut dibaca sebagai perbandingan terkontrol, bukan sebagai satu peringkat universal untuk semua strategi. Dalam setiap kelompok, artefak masukan dan tahap hilir dipertahankan; hanya strategi yang menjadi faktor uji yang berubah. Recall mengukur kelengkapan context reference, sedangkan MRR dan NDCG menangkap perbedaan posisi serta kualitas ranking. Cara baca ini penting karena tujuan pipeline adalah memilih komponen sesuai domain dan tujuan tahap, bukan mencari satu plugin yang selalu terbaik.
+
 \subsection{Hasil pada User Manual}
 
 \begin{table}[t]
@@ -99,5 +101,7 @@ Nilai 1,0000 pada sliding tidak bertentangan dengan recall context reference yan
 \subsection{Pembahasan dan Keterbatasan}
 
 Hasil dua korpus menunjukkan pola yang konsisten tetapi tidak identik. Structure-aware membantu ketika struktur sumber membawa informasi semantik, terutama pada legal-structure yang mempertahankan identitas Pasal dan parent context. Dense retrieval paling baik untuk coverage pada kedua domain, tetapi hybrid lebih baik untuk MRR hukum. Dengan demikian, tidak ada konfigurasi yang unggul pada seluruh metrik; tujuan tahap harus ditetapkan sebelum memilih komponen.
+
+Pada level pendekatan, abstraksi plugin berfungsi sebagai pengendali eksperimen sekaligus batas rekayasa. Karena semua strategi menerima representasi kanonik dan mengembalikan proyeksi yang dikonsumsi tahap berikutnya, perbedaan pada tabel dapat dibahas sebagai perbedaan chunking, indexing, atau perluasan graf. Detail mekanisme pemuatan plugin tidak menjadi sumber temuan; nilai pendekatannya adalah memungkinkan perbandingan dan penggantian strategi tanpa menulis ulang jalur inti.
 
 Kesimpulan ini bersifat kondisional pada corpus, pertanyaan, parser native-text, model BGE-M3, dan cutoff yang digunakan. Manual hanya mencakup sembilan produk Netgear dan 200 pertanyaan bilingual, sedangkan corpus hukum mencakup satu bidang dan 25 pertanyaan terverifikasi. OFAT tidak mengukur interaksi semua kombinasi parameter. Neighborhood recall juga tidak dapat dipakai sebagai pengganti context-reference recall. Perluasan corpus, anotasi relasi per pertanyaan, full factorial, dan pengujian model embedding hukum menjadi pekerjaan lanjutan yang wajar.

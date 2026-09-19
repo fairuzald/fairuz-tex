@@ -2,7 +2,7 @@
 
 \subsection{Lingkungan dan Korpus}
 
-Pipeline dijalankan dengan Python 3.13 pada worker asinkron. PostgreSQL menyimpan status dan metadata eksekusi, object storage menyimpan artefak, RabbitMQ membawa handoff antartahap, OpenSearch 3.3.0 menyediakan lexical dan vector search, dan Neo4j 5.26 menyimpan graf. Embedding menggunakan BAAI/BGE-M3 pada CPU. Infrastruktur, parser, model, dan jumlah kandidat dibuat sama untuk setiap perbandingan komponen.
+Pipeline dijalankan dengan Python 3.13 dengan lingkungan eksekusi, parser, dan model embedding BAAI/BGE-M3 pada CPU yang sama untuk seluruh run. Infrastruktur dan jumlah kandidat juga dikunci pada setiap perbandingan komponen sehingga perubahan skor dibaca sebagai dampak strategi yang diuji, bukan perubahan lingkungan.
 
 \begin{table}[t]
 \centering
@@ -23,7 +23,9 @@ Pada corpus manual, sembilan dokumen meliputi CM2000, LM1200, R6350, R7000, RAX1
 
 \subsection{Protokol Perbandingan}
 
-Eksperimen memakai \textit{one factor at a time} (OFAT). Pada kelompok chunker, datasource, parser, embedding, dan indexer dikunci; hanya strategi segmentasi yang berubah. Pada kelompok indexer, chunker dan seluruh input dikunci; hanya representasi lexical, dense, atau hybrid yang berubah. Jalur direct retrieval mematikan reranker dan \kg agar metrik retrieval tidak tercampur dengan tahap hilir. Sweep cutoff menggunakan $K=5,10,\ldots,60$; $K=30$ dipilih sebagai cutoff kandidat bersama untuk membaca trade-off coverage dan beban downstream. Generation menggunakan sepuluh evidence teratas ($K=10$).
+Eksperimen memakai \textit{one factor at a time} (OFAT) sebagai pendekatan utama. Pada kelompok chunker, datasource, parser, embedding, dan indexer dikunci; hanya strategi segmentasi yang berubah. Pada kelompok indexer, chunker dan seluruh input dikunci; hanya representasi lexical, dense, atau hybrid yang berubah. Pada kelompok graf, seed retrieval dan aturan traversal dikunci; hanya hasil perluasan lingkungan yang dibaca. Dengan demikian, antarmuka plugin menjadi alat pengendalian eksperimen: komponen dapat diganti, tetapi masukan dan keluaran yang dibandingkan tetap memiliki bentuk yang sama.
+
+Jalur direct retrieval mematikan reranker dan \kg agar metrik retrieval tidak tercampur dengan tahap hilir. Sweep cutoff menggunakan $K=5,10,\ldots,60$; $K=30$ dipilih sebagai cutoff kandidat bersama untuk membaca trade-off coverage dan beban downstream. Generation menggunakan sepuluh evidence teratas ($K=10$).
 
 Pertanyaan manual dihitung gabungan serta terpisah menurut bahasa. Pertanyaan hukum mencakup pendirian dan status institusi, kewenangan, akses mahasiswa, kualifikasi staf, penjaminan mutu, serta kepatuhan. Semua hasil dicatat per konfigurasi; hasil kandidat dari konfigurasi berbeda tidak digabungkan.
 

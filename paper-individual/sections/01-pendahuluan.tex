@@ -12,7 +12,7 @@ Tiga masalah penelitian dirumuskan sebagai berikut.
     \item Bagaimana \kg dibangun dari unit yang sama dan digunakan untuk memperluas jangkauan dokumen tanpa mengaburkan provenance sumber?
 \end{enumerate}
 
-Kontribusi paper ini adalah (1) rancangan kontrak artefak kanonik yang menghubungkan parser, \chunker, \indexer, dan \kg; (2) implementasi arsitektur \plugin dan \profile yang memungkinkan strategi diganti tanpa mengubah orkestrator; (3) legal \kg deterministik yang merepresentasikan hubungan perubahan peraturan; dan (4) evaluasi terkontrol pada korpus manual produk dan peraturan pendidikan Indonesia. Evaluasi tidak menggabungkan hasil lintas konfigurasi: setiap konfigurasi memakai korpus, pertanyaan, parser, dan model embedding yang sama ketika satu faktor sedang dibandingkan.
+Kontribusi paper ini adalah (1) pendekatan modular yang memakai representasi kanonik dan antarmuka \plugin untuk menukar strategi tanpa mengubah tahap hilir; (2) protokol perbandingan \textit{one factor at a time} yang mengisolasi perubahan \chunker, \indexer, atau \kg; (3) legal \kg deterministik sebagai proyeksi pelengkap; dan (4) evaluasi terkontrol pada korpus manual produk dan peraturan pendidikan Indonesia. Evaluasi tidak menggabungkan hasil lintas konfigurasi: setiap konfigurasi memakai korpus, pertanyaan, parser, dan model embedding yang sama ketika satu faktor sedang dibandingkan.
 
 Ruang lingkup paper adalah konstruksi basis pengetahuan dan dampaknya pada \retrieval serta generation. Tahap akuisisi dan parsing diperlakukan sebagai pemasok dokumen kanonik, sedangkan komponen percakapan berada di luar klaim penelitian ini. Dengan batas tersebut, bagian berikutnya membahas landasan teknis, rancangan pipeline, metode eksperimen, hasil, dan implikasinya.
 
