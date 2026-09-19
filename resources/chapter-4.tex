@@ -930,10 +930,10 @@ PP-DocLayoutV3 menurunkan \textit{clean rate} pada kedua model, meskipun memperc
 PaddleOCR tanpa \textit{layout} merupakan konfigurasi tercepat, tetapi mutu struktur yang dihasilkan lebih rendah.
 Dengan demikian, eksperimen memilih GLM-OCR tanpa \textit{layout} untuk prioritas keutuhan struktur dan mencatat batas 4.096 token sebagai penyebab seluruh kegagalan OCR.
 
-\section{Evaluasi \textit{Generic Outline Parser} pada Domain \textit{Customer Service}}
+\section{Evaluasi \textit{Generic Outline Parser} pada Domain \textit{User Manual}}
 \label{sec:evaluasi-generic-outline-customer-service}
 
-Evaluasi ini menguji \textit{generic outline parser} pada manual produk NETGEAR yang digunakan sebagai sumber pengetahuan domain \textit{customer service}.
+Evaluasi ini menguji \textit{generic outline parser} pada manual produk NETGEAR yang digunakan sebagai sumber pengetahuan domain \textit{User Manual}.
 Berbeda dari eksperimen \textit{legal parser}, evaluasi ini merupakan \textit{coverage check} dengan satu konfigurasi default dan tidak membandingkan beberapa model atau nilai parameter.
 
 \subsection{Tujuan dan Pertanyaan Evaluasi}
@@ -1058,5 +1058,5 @@ Median waktu pemrosesan adalah 0,93 detik per dokumen, sedangkan biaya tambahan 
 Dengan demikian, \textit{generic outline parser} berhasil memulihkan hierarki manual produk menjadi dokumen kanonik pada seluruh 9 dokumen yang diuji.
 Anchoring \textit{bookmark} ke judul berhasil pada seluruh 1.566 \textit{bookmark}.
 Pengecualian bagian \textit{Contents} bekerja sesuai konfigurasi dan tidak diperlakukan sebagai cacat struktur.
-Hasil ini mendukung penggunaan kontrak \textit{parser plugin} yang sama untuk domain \textit{customer service} dengan strategi ekstraksi berbasis \textit{outline}.
+Hasil ini mendukung penggunaan kontrak \textit{parser plugin} yang sama untuk domain \textit{User Manual} dengan strategi ekstraksi berbasis \textit{outline}.
 Evaluasi ini tidak digeneralisasikan ke seluruh PDF ber-\textit{bookmark} karena korpus hanya berasal dari satu produsen dan satu \textit{toolchain}.

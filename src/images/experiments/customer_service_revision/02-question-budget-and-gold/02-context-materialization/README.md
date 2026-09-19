@@ -1,6 +1,6 @@
 # 02.02 — Context materialization
 
-Tahap ini membuat satu packet konteks per intent dari anchor yang sudah dipilih di 02.01.
+Tahap ini membuat satu packet konteks per slot dari anchor yang sudah dipilih di 02.01.
 Packet bukan hasil top-K retrieval dan bukan gold. Ia adalah seluruh candidate context yang
 akan dibaca authoring LLM.
 
@@ -14,7 +14,7 @@ akan dibaca authoring LLM.
 
 `question_outline_frame.csv` menentukan section dan anchor. `question_source_frame.csv`
 menyediakan teks canonical, page, sequence, character offset, dan hash. `question-slots.csv`
-menyediakan 100 intent; pasangan English–Indonesia memakai packet yang sama.
+menyediakan 100 slot; pasangan English–Indonesia memakai packet yang sama.
 
 ## Aturan materialisasi
 
@@ -36,7 +36,7 @@ retrieval, reranker, intent classifier, atau LLM pada tahap ini.
 ```text
 runs/selection-v2-multiblock/
 ├── context-selection.csv       # satu row per candidate block
-├── context-packets.jsonl       # satu row per intent
+├── context-packets.jsonl       # satu row per slot
 └── context-manifest.json
 ```
 
@@ -47,10 +47,10 @@ Setiap record `context-packets.jsonl` memiliki:
 - `context_text`: string lengkap berlabel `[CONTEXT BLOCK ...]` yang dikirim utuh ke LLM.
 
 Istilah “seluruh context” di sini berarti seluruh candidate block di packet parent-subtree
-intent tersebut, bukan sembilan manual sekaligus. Batas ini menjaga konteks tetap relevan dan
+slot tersebut, bukan sembilan manual sekaligus. Batas ini menjaga konteks tetap relevan dan
 muat dalam satu request model.
 
-Jumlah candidate berbeda antar intent. LLM kemudian memilih `evidence_block_ids` sendiri;
+Jumlah candidate berbeda antar slot. LLM kemudian memilih `evidence_block_ids` sendiri;
 jumlah gold boleh satu atau beberapa block dan tidak dipaksa menjadi dua.
 
 ## Gate

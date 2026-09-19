@@ -25,24 +25,24 @@ informasi produk dan prosedur yang tersebar di berbagai dokumen. Pengguna
 perlu menelusuri kembali dokumen tersebut untuk memperoleh jawaban yang
 sesuai \parencite{liQuestionAnsweringTechnical2018}.
 
-Perkembangan LLM dapat membantu pengguna memperoleh informasi tanpa harus memahami struktur
-atau kata kunci yang digunakan dalam dokumen. Meskipun demikian, LLM masih
+Perkembangan \emph{LLM} dapat membantu pengguna memperoleh informasi tanpa harus memahami struktur
+atau kata kunci yang digunakan dalam dokumen. Meskipun demikian, \emph{LLM} masih
 memiliki keterbatasan karena jawaban yang dihasilkan bergantung pada pengetahuan
-parametris yang tersimpan di dalam model. Informasi tersebut tidak selalu
+parametris yang tersimpan di dalam \emph{model}. Informasi tersebut tidak selalu
 terbaru dan dapat diverifikasi sehingga dapat menyebabkan
-\emph{hallucination} \parencite{jiSurveyHallucinationNatural2023}. Pendekatan RAG kemudian
+\emph{hallucination} \parencite{jiSurveyHallucinationNatural2023}. Pendekatan \emph{RAG} kemudian
 digunakan untuk mengatasi keterbatasan tersebut dengan mengambil informasi yang
-relevan dari sumber eksternal sebelum jawaban dibentuk oleh LLM
+relevan dari sumber eksternal sebelum jawaban dibentuk oleh \emph{LLM}
 \parencite{lewisRetrievalAugmentedGenerationKnowledgeIntensive2021}.
 
-Namun, LLM tidak selalu mampu memanfaatkan seluruh informasi yang tersedia dalam
+Namun, \emph{LLM} tidak selalu mampu memanfaatkan seluruh informasi yang tersedia dalam
 dokumen eksternal. Kapasitas \emph{context window} membatasi jumlah informasi yang
 dapat diproses dalam satu permintaan. Selain itu, penambahan konteks yang lebih
-panjang tidak selalu meningkatkan kualitas jawaban karena model dapat mengabaikan
+panjang tidak selalu meningkatkan kualitas jawaban karena \emph{model} dapat mengabaikan
 informasi penting yang berada di dalam konteks tersebut
-\parencite{liuLostMiddle2024}. Oleh karena itu, \emph{pipeline} RAG diperlukan untuk
+\parencite{liuLostMiddle2024}. Oleh karena itu, \emph{pipeline} \emph{RAG} diperlukan untuk
 mengolah dokumen, menemukan bagian yang relevan, dan memberikan bagian tersebut
-kepada LLM sebagai konteks
+kepada \emph{LLM} sebagai konteks
 \parencite{lewisRetrievalAugmentedGenerationKnowledgeIntensive2021}.
 
 Pemrosesan utama tersebut diawali dengan \emph{chunking}, yaitu membagi dokumen
@@ -53,7 +53,7 @@ terlalu kecil dapat kehilangan konteks dan memutus makna semantis informasi.
 Pemotongan pada batas yang tidak tepat juga dapat memisahkan definisi,
 pengecualian, atau rujukan yang seharusnya dipahami secara bersamaan. Akibatnya,
 informasi yang benar dapat lebih sulit ditemukan atau tidak cukup lengkap untuk
-digunakan oleh LLM. Penelitian NitiBench menunjukkan bahwa teknik yang
+digunakan oleh \emph{LLM}. Penelitian NitiBench menunjukkan bahwa teknik yang
 mempertimbangkan hierarki dan rujukan silang pada dokumen hukum dapat memberikan
 hasil yang berbeda dibandingkan pendekatan yang tidak memperhatikan struktur
 dokumen \parencite{akarajaradwongNitiBenchComprehensiveStudy2025}. Oleh karena itu,
@@ -74,12 +74,12 @@ penelitian mengenai \emph{retrieval granularity} menunjukkan bahwa pilihan unit
 yang diindeks, seperti dokumen, paragraf, kalimat, atau proposisi, dapat
 memengaruhi performa pencarian dan kualitas jawaban yang dihasilkan
 \parencite{chenDenseXRetrieval2023}. Performa sistem \emph{retrieval} juga dapat berubah
-ketika model diterapkan pada \emph{domain} yang berbeda. BEIR menunjukkan bahwa model
+ketika \emph{model} diterapkan pada \emph{domain} yang berbeda. BEIR menunjukkan bahwa \emph{model}
 \emph{retrieval} perlu diuji pada berbagai jenis tugas dan koleksi dokumen karena
 performanya pada satu \emph{domain} tidak selalu mencerminkan performanya pada \emph{domain}
 lain \parencite{thakurBEIRHeterogeneousBenchmark2021}. Dengan demikian,
 \emph{indexer} perlu dirancang dengan mempertimbangkan strategi pencarian, unit
-informasi, model representasi, dan karakteristik \emph{domain}.
+informasi, \emph{model} representasi, dan karakteristik \emph{domain}.
 
 Meskipun \emph{indexer} dapat menemukan \emph{chunk} yang relevan, pencarian
 berbasis teks belum selalu mampu menghubungkan informasi yang tersebar di
@@ -126,23 +126,23 @@ gaoModularRAG2024,garlanIntroductionSoftware1994}.
 
 Pada tahap percakapan, masukan pengguna dan konteks hasil \emph{retrieval} perlu
 dijaga. \emph{Guardrail} diperlukan karena keduanya dapat mengandung instruksi
-yang tidak seharusnya memengaruhi perilaku model. Penelitian mengenai
+yang tidak seharusnya memengaruhi perilaku \emph{model}. Penelitian mengenai
 \emph{indirect prompt injection} menunjukkan bahwa informasi eksternal dapat
-diperlakukan sebagai instruksi oleh LLM dan digunakan untuk mengubah perilaku
+diperlakukan sebagai instruksi oleh \emph{LLM} dan digunakan untuk mengubah perilaku
 aplikasi \parencite{greshakeIndirectPromptInjection2023}. Basis pengetahuan juga
 dapat dimanipulasi melalui penyisipan teks berbahaya yang memengaruhi hasil
-\emph{retrieval} dan jawaban model \parencite{zouPoisonedRAG2025}. PII dalam kueri,
-histori, dan dokumen konteks perlu dilindungi karena RAG dapat membuka risiko
+\emph{retrieval} dan jawaban \emph{model} \parencite{zouPoisonedRAG2025}. \emph{PII} dalam kueri,
+riwayat, dan dokumen konteks perlu dilindungi karena \emph{RAG} dapat membuka risiko
 kebocoran data privat \parencite{mccallisterGuideProtectingPII2010,
 zengGoodBadPrivacyRAG2024}. LongMemEval menunjukkan bahwa percakapan panjang
 dapat menyebabkan sistem kehilangan informasi, sedangkan ringkasan rekursif dapat
 mempertahankan informasi dan meningkatkan konsistensi respons
 \parencite{wuLongMemEval2025,wangRecursivelySummarizingLongTerm2023}. Karena itu,
-sistem memerlukan \emph{guardrail}, perlindungan PII, dan \emph{history compactor}.
+sistem memerlukan \emph{guardrail}, perlindungan \emph{PII}, dan \emph{history compactor}.
 
 \section{Rumusan Masalah}
 
-Berdasarkan latar belakang tersebut, rumusan masalah penelitian adalah sebagai
+\noindent Berdasarkan latar belakang tersebut, rumusan masalah penelitian adalah sebagai
 berikut.
 
 \begin{enumerate}
@@ -170,7 +170,7 @@ proses pembentukan representasi pengetahuan yang mencakup tiga tahap utama:
     \item Membentuk entitas, informasi, serta relasi dalam bentuk triplet ke dalam \emph{knowledge graph}.
 \end{enumerate}
 
-Secara lebih rinci, tujuan penelitian ini adalah sebagai berikut.
+\noindent Secara lebih rinci, tujuan penelitian ini adalah sebagai berikut.
 
 \begin{enumerate}
     \item Mengembangkan strategi \emph{chunking} yang membagi dokumen dengan karakteristik beragam menjadi unit informasi dengan tetap mempertahankan konteks struktural dan hubungan antarbagiannya, serta dapat diperluas ke sumber pengetahuan atau \emph{domain} baru tanpa mengubah kode inti.
@@ -178,22 +178,22 @@ Secara lebih rinci, tujuan penelitian ini adalah sebagai berikut.
     \item Mengembangkan mekanisme pembentukan \emph{knowledge graph} yang merepresentasikan dan menelusuri hubungan antarentitas dari satu atau beberapa dokumen, serta dapat diperluas ke sumber pengetahuan atau \emph{domain} baru tanpa mengubah kode inti.
 \end{enumerate}
 
-Ketercapaian setiap tujuan diukur melalui kriteria berikut.
+\noindent Ketercapaian setiap tujuan diukur melalui kriteria berikut.
 
 \begin{enumerate}
     \item Ketercapaian tujuan pertama diukur melalui:
     \begin{enumerate}[label=\alph*.]
         \item Setiap hasil \emph{chunking} memiliki identitas yang jelas dan dapat ditelusuri kembali ke dokumen, bagian dokumen, posisi sumber, serta struktur yang menjadi dasar pembentukannya, termasuk hubungan antar-\emph{chunk} seperti relasi \emph{previous} dan \emph{next}.
         \item \emph{Chunker} menghasilkan unit informasi yang dapat digunakan oleh \emph{indexer} dan \emph{knowledge graph}.
-        \item Hasil terbaik dari perbandingan beberapa strategi \emph{chunking} pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
+        \item Hasil terbaik dari perbandingan beberapa strategi \emph{chunking} pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{Recall@K}.
         \item Penambahan strategi \emph{chunking} untuk sumber atau \emph{domain} baru dapat dilakukan melalui komponen tambahan tanpa mengubah kode inti.
     \end{enumerate}
 
     \item Ketercapaian tujuan kedua diukur melalui:
     \begin{enumerate}[label=\alph*.]
         \item Sistem dapat menyediakan beberapa strategi pencarian, yaitu pencarian berbasis istilah atau \emph{sparse retrieval}, pencarian berbasis representasi vektor atau \emph{dense retrieval}, serta kombinasi keduanya melalui \emph{hybrid retrieval}.
-        \item Setiap hasil indeks mempertahankan identitas \emph{chunk}, identitas dokumen, \emph{metadata}, konfigurasi, model, dan informasi asal yang diperlukan untuk penelusuran.
-        \item Hasil terbaik dari perbandingan strategi pencarian pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
+        \item Setiap hasil indeks mempertahankan identitas \emph{chunk}, identitas dokumen, \emph{metadata}, konfigurasi, \emph{model}, dan informasi asal yang diperlukan untuk penelusuran.
+        \item Hasil terbaik dari perbandingan strategi pencarian pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{Recall@K}.
         \item Penambahan strategi \emph{indexer} untuk sumber atau \emph{domain} baru dapat dilakukan melalui komponen tambahan tanpa mengubah kode inti.
     \end{enumerate}
 
@@ -201,7 +201,7 @@ Ketercapaian setiap tujuan diukur melalui kriteria berikut.
     \begin{enumerate}[label=\alph*.]
         \item \emph{Knowledge graph} dapat dibangun dari \emph{artifact} \emph{chunk} yang sama dengan yang digunakan oleh \emph{indexer} tanpa melakukan pemotongan ulang atau menggunakan sumber yang berbeda.
         \item \emph{Knowledge graph} menghasilkan hubungan antarentitas yang dapat ditelusuri dari satu atau beberapa dokumen.
-        \item Hasil terbaik pembentukan hubungan pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{recall@K}.
+        \item Hasil terbaik pembentukan hubungan pada \emph{domain} \emph{User Manual} Netgear dan peraturan perundang-undangan bidang pendidikan di Indonesia ditentukan berdasarkan nilai \emph{Recall@K}.
         \item Penambahan mekanisme pembentukan \emph{knowledge graph} untuk sumber atau \emph{domain} baru dapat dilakukan melalui komponen tambahan tanpa mengubah kode inti.
     \end{enumerate}
 \end{enumerate}
@@ -212,29 +212,29 @@ Agar penelitian dapat dilaksanakan secara terarah, ruang lingkup penelitian perl
 dibatasi secara eksplisit. Pembatasan ini bertujuan untuk menjaga fokus penelitian
 pada pengembangan arsitektur modular, \emph{chunker}, \emph{indexer},
 \emph{knowledge graph}, dan prapemrosesan kueri sebagai kontribusi utama.
-Pembatasan ini juga membedakan komponen yang dievaluasi dari komponen pendukung
+Pembatasan ini juga membedakan komponen yang diuji dari komponen pendukung
 serta menetapkan konteks korpus dan eksperimen yang menjadi dasar penilaian
 ketercapaian tujuan. Adapun batasan penelitian yang ditetapkan adalah sebagai
 berikut.
 
 \begin{enumerate}
-    \item OMNI-RAG dirancang sebagai arsitektur \emph{multi-domain}, dengan evaluasi utama menggunakan korpus peraturan perundang-undangan bidang pendidikan di Indonesia serta \emph{User Manual} yang dibatasi pada produk Netgear.
+    \item OMNI-RAG dirancang sebagai arsitektur \emph{multi-domain}, dengan eksperimen utama menggunakan korpus peraturan perundang-undangan bidang pendidikan di Indonesia serta \emph{User Manual} yang dibatasi pada produk Netgear.
     \item Kontribusi penelitian berfokus pada arsitektur modular, \emph{chunker}, \emph{indexer}, \emph{knowledge graph}, dan prapemrosesan kueri yang meliputi \emph{guardrail}, \emph{context PII}, serta \emph{history compactor}. Komponen lain dikerjakan oleh anggota penelitian yang berbeda.
     \item Modularitas dibatasi pada pertukaran strategi pemrosesan melalui kontrak masukan dan keluaran yang tetap. Perubahan infrastruktur, akses basis data, atau integrasi eksternal berada di luar cakupan kontribusi penelitian ini dan dapat memerlukan perubahan pada kode inti.
     \item Representasi dokumen yang digunakan dalam penelitian hanya berbentuk teks. Gambar dan tabel tidak menjadi bagian dari representasi yang diproses.
-    \item Aspek keamanan tidak mencakup perancangan keamanan infrastruktur, autentikasi, otorisasi, pengujian penetrasi, pemenuhan standar kepatuhan, atau aspek keamanan menyeluruh lainnya. Pembahasan dibatasi pada perlindungan PII dan pemeriksaan \emph{guardrail} dalam prapemrosesan RAG.
-    \item \emph{PII}, \emph{guardrail}, dan pemadatan histori bukan fokus utama penelitian. Ketiganya hanya berfungsi sebagai komponen pendukung kebutuhan RAG secara umum dan tidak menjadi objek eksperimen.
+    \item Aspek keamanan tidak mencakup perancangan keamanan infrastruktur, autentikasi, otorisasi, pengujian penetrasi, pemenuhan standar kepatuhan, atau aspek keamanan menyeluruh lainnya. Pembahasan dibatasi pada perlindungan \emph{PII} dan pemeriksaan \emph{guardrail} dalam prapemrosesan \emph{RAG}.
+    \item \emph{PII}, \emph{guardrail}, dan pemadatan riwayat bukan fokus utama penelitian. Ketiganya hanya berfungsi sebagai komponen pendukung kebutuhan \emph{RAG} secara umum dan tidak menjadi objek eksperimen.
 \end{enumerate}
 
 \section{Metodologi Penelitian}
 
-Pelaksanaan penelitian ini menempuh beberapa tahapan umum sebagai berikut:
+\noindent Pelaksanaan penelitian ini menempuh beberapa tahapan umum sebagai berikut:
 
 \begin{enumerate}
     \item Mengidentifikasi permasalahan dan kebutuhan sistem berdasarkan latar belakang, rumusan masalah, serta kondisi implementasi yang telah tersedia. Tahap ini menetapkan fokus kontribusi penelitian dan ruang lingkup komponen yang dikaji.
     \item Merancang arsitektur OMNI-RAG beserta hubungan antarkomponennya, terutama \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph}. Rancangan juga mencakup kontrak antarkomponen dan komponen pendukung prapemrosesan kueri.
     \item Mengimplementasikan komponen yang telah dirancang dan melakukan verifikasi melalui pengujian serta pemeriksaan integrasi. Tahap ini memastikan setiap komponen dapat digunakan sesuai perannya dalam alur sistem.
-    \item Menyiapkan data, konfigurasi, dan skenario eksperimen, kemudian menguji beberapa alternatif \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph} pada kondisi yang ditetapkan.
+    \item Menyiapkan data, konfigurasi, dan skenario eksperimen, kemudian menguji beberapa alternatif \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph} pada konfigurasi yang ditetapkan.
     \item Menganalisis hasil eksperimen berdasarkan ukuran keberhasilan yang telah dirumuskan.
     \item Menarik kesimpulan berdasarkan hasil analisis untuk menentukan ketercapaian tujuan penelitian serta merumuskan peluang pengembangan selanjutnya.
 \end{enumerate}
@@ -244,8 +244,8 @@ Pelaksanaan penelitian ini menempuh beberapa tahapan umum sebagai berikut:
 Laporan ini terdiri atas lima bab. Bab I menjelaskan latar belakang, rumusan
 masalah, tujuan, batasan, dan metodologi penelitian. Bab II memaparkan kajian
 pustaka tentang arsitektur, unit dokumen, pengindeksan, \emph{knowledge graph},
-pengelolaan konteks, dan evaluasi. Bab III menjelaskan analisis masalah dan
+pengelolaan konteks, dan eksperimen. Bab III menjelaskan analisis masalah dan
 rancangan solusi OMNI-RAG, sedangkan Bab IV menyajikan eksperimen, hasil, dan
-evaluasi komponen \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph}.
+eksperimen komponen \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph}.
 Bab V merangkum kesimpulan dan saran. Spesifikasi kebutuhan, rancangan sistem,
 dan pengujian tambahan disajikan pada lampiran.

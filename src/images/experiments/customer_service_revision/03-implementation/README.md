@@ -12,7 +12,7 @@ hasil. Multiblock hanya menampilkan ringkasan di `analysis/`; detail audit berad
 
 ## Konfigurasi bersama
 
-- [`configuration-matrix.md`](configuration-matrix.md) — kondisi matched OFAT.
+- [`configuration-matrix.md`](configuration-matrix.md) — konfigurasi matched OFAT.
 - [`existing-profile-map.json`](existing-profile-map.json) — lima profile existing yang dipakai ulang.
 - [`metrics-and-scoring.md`](metrics-and-scoring.md) — definisi unit, provenance, dan denominator.
 - [`implementation-plan.md`](implementation-plan.md) — urutan eksekusi dan gate.

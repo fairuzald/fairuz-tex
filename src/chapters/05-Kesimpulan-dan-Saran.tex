@@ -1,69 +1,72 @@
 \chapter[KESIMPULAN DAN SARAN]{Kesimpulan dan Saran}
 \label{chap:kesimpulan-saran}
 
-Bab ini merangkum hasil perancangan dan evaluasi OMNI-RAG pada dua konteks, yaitu
-\emph{User Manual} dan dokumen hukum. Kesimpulan disusun untuk menjawab tiga
-rumusan masalah penelitian.
+Bab ini merangkum hasil perancangan dan eksperimen OMNI-RAG pada \emph{User Manual} dan
+dokumen hukum. Kesimpulan berikut menjawab tiga rumusan masalah berdasarkan \emph{Recall}@30.
+Setiap konfigurasi dihitung secara terpisah tanpa penggabungan hasil antarkonfigurasi.
 
 \section{Kesimpulan}
 \label{sec:kesimpulan}
 
 \begin{enumerate}
-  \item \textbf{Arsitektur modular dan keterlacakan.} Omni-RAG menggunakan kontrak
-  masukan dan keluaran yang sama untuk setiap komponen. Karena itu, strategi
-  \emph{chunking}, \emph{indexing}, dan \emph{knowledge graph} dapat diganti melalui
-  \emph{plugin} tanpa mengubah orkestrator inti. \emph{Canonical chunk} menyimpan
-  identitas sumber, struktur, dan \emph{context reference}, sehingga hasil pencarian
-  dapat ditelusuri kembali ke dokumen asal.
+  \item Arsitektur \emph{plugin} mendukung empat implementasi
+  \emph{chunker}, yaitu \emph{generic structure-aware}, \emph{generic recursive},
+  \emph{generic sliding-window}, dan \emph{legal structure-aware}, tanpa mengubah kode inti.
+  \emph{Sliding-window} digunakan sebagai \emph{baseline}. Pada \emph{User Manual}, konfigurasi
+  \emph{Structure-aware hybrid} memperoleh \emph{Recall}@30 sebesar 0,740, sedangkan \emph{baseline}
+  \emph{Sliding-window} memperoleh 0,685, dengan selisih +0,055. Pada dokumen hukum,
+  \emph{Legal-structure dense} memperoleh \emph{Recall}@30 sebesar 0,6854, sedangkan \emph{baseline}
+  \emph{Sliding} memperoleh 0,6345, dengan selisih +0,0509. Dengan demikian, pemeliharaan struktur dokumen meningkatkan cakupan
+  \emph{context reference} pada kedua \emph{use case}.
 
-  \item \textbf{Hasil \emph{retrieval} pada dua kasus penggunaan.} Pada \emph{User
-  Manual}, \emph{generic structure-aware chunker} menjadi strategi \emph{chunking}
-  terbaik dengan \emph{recall} gabungan 0,740 pada \(K=25\). \emph{Dense indexer}
-  berbasis BAAI/BGE-M3 menjadi strategi indeks terbaik dengan \emph{recall} 0,830
-  pada \(K=40\), dan tetap tertinggi pada perbandingan sistem di \(K=45\) dengan nilai
-  0,835. Pada \(K=45\), \emph{dense} memperoleh \emph{recall} 0,850 untuk pertanyaan
-  bahasa Inggris dan 0,820 untuk bahasa Indonesia. Selisih yang kecil ini menunjukkan
-  bahwa BAAI/BGE-M3 tetap dapat mencari konteks pada pertanyaan lintas bahasa.
-  Pada dokumen hukum, \emph{legal structure-aware chunker} memperoleh \emph{recall}
-  0,64, sedangkan \emph{hybrid indexer} berbasis BAAI/BGE-M3 memperoleh nilai tertinggi,
-  yaitu 0,67 pada \(K=25\). Dengan demikian, struktur dokumen menjadi faktor penting
-  pada hukum, sementara penggabungan kecocokan istilah dan makna memberi cakupan
-  pencarian terbaik.
+  \item Arsitektur \emph{plugin} mendukung tiga strategi
+  \emph{indexer}, yaitu \emph{sparse}, \emph{dense}, dan \emph{hybrid}, tanpa mengubah orkestrator.
+  \emph{Structure-aware sparse} digunakan sebagai \emph{baseline}. Pada \emph{User Manual},
+  \emph{Structure-aware dense} berbasis BAAI/\emph{BGE-M3} memperoleh \emph{Recall}@30 sebesar
+  0,785, sedangkan \emph{baseline sparse} memperoleh 0,420. Pada dokumen hukum, \emph{Legal-structure
+  dense} memperoleh 0,6854, sedangkan \emph{baseline sparse} memperoleh 0,6381. Dengan demikian,
+  pencarian \emph{dense} menjadi strategi terbaik untuk tujuan utama penelitian, yaitu menemukan
+  sebanyak mungkin \emph{context reference}. \(K = 30\) digunakan sebagai cutoff bersama karena
+  kurva \emph{recall} mulai memasuki bagian yang lebih datar pada titik tersebut.
 
-  \item \textbf{Knowledge graph dan metrik evaluasi.} Pada evaluasi hubungan hukum,
-  \(K=25\) digunakan karena merupakan titik \emph{sweet spot retrieval}, sedangkan
-  batas relasi \(W=50\) dipilih karena kurva sudah memasuki \emph{plateau}. Pada titik
-  ini, \emph{hybrid} memperoleh \emph{recall} relasi standar tertinggi, yaitu 0,846.
-  \emph{Sparse} memiliki \emph{precision} dan F1 tertinggi, sehingga kedua metrik
-  tersebut tetap berguna sebagai diagnostik, tetapi pemilihan konfigurasi didasarkan
-  pada \emph{recall}. Baris tanpa relasi dipertahankan dan prediksi relasi yang tidak
-  didukung dihitung sebagai \emph{reject} agar skor tidak meningkat secara semu.
+  \item Arsitektur \emph{plugin} mendukung dua strategi
+  \emph{knowledge graph}, yaitu \emph{legal graph} dan \emph{LLM graph}, dengan artefak kanonik
+  yang sama dan tanpa perubahan pada orkestrator. Eksperimen aktif menggunakan \emph{legal graph}
+  pada dokumen hukum dan menelusuri \emph{neighborhood} global sampai kedalaman dua. Pada
+  \(K = 30\), \emph{knowledge-graph recall} mencapai 1,0000 untuk \emph{Sliding}, 0,9975 untuk
+  \emph{Recursive} dan \emph{hybrid}, 0,9672 untuk \emph{sparse}, serta 0,9556 untuk
+  \emph{Legal-structure dense}. Nilai ini menjawab jangkauan dokumen terhubung dan dibaca
+  terpisah dari \emph{context-reference recall}. Dengan demikian, seluruh rumusan masalah
+  terjawab melalui kontrak \emph{plugin}, hasil \emph{recall} per komponen, dan traversal graf
+  yang dapat ditelusuri.
 \end{enumerate}
 
 \section{Saran}
 \label{sec:saran}
 
-Pengembangan selanjutnya disarankan untuk memperkuat evaluasi konfigurasi dan
-memperluas cakupan pengujian sebagai berikut.
+\noindent Pengembangan berikutnya dapat dilakukan melalui beberapa arah berikut.
 
 \begin{enumerate}
-  \item \textbf{Mengevaluasi konfigurasi komponen RAG secara terpadu.}
-  Gunakan rancangan \emph{full factorial} untuk menguji seluruh kombinasi strategi
-  \emph{chunker}, \emph{indexer}, model \emph{embedding}, ukuran \emph{chunk},
-  \emph{overlap}, dan \emph{cutoff} \(K\). Setiap strategi perlu disertai konfigurasi
-  parameternya secara jelas, seperti jenis \emph{plugin}, ukuran \emph{chunk}, metode
-  pemisah, serta pengaturan indeks. Laporkan pengaruh utama setiap komponen dan
-  interaksi antarkomponen, bukan hanya hasil pengujian satu faktor pada satu waktu.
-  \emph{Ablation study} dapat digunakan sebagai analisis tambahan untuk mengukur
-  kontribusi tiap komponen ketika komponen lainnya dibuat tetap.
+  \item \textbf{Memperluas \emph{dataset} dan korpus.} Uji strategi pada lebih banyak manual,
+  peraturan, bahasa, dan pertanyaan terverifikasi. Pertahankan pemetaan \emph{context reference} serta
+  pembagian strata agar perbandingan antarkorpus tetap adil.
 
-  \item \textbf{Memperkuat validasi korpus dan \emph{dataset}.} Uji sistem pada korpus
-  hukum yang lebih beragam dan \emph{User Manual} dari produk lain.
-  Pertahankan pembagian strata, \emph{context reference}, dan evaluasi per bahasa agar
-  hasil dapat dibandingkan secara adil.
+  \item \textbf{Memisahkan tahap \emph{retrieval}, \emph{reranking}, dan \emph{generation}.}
+  Pertahankan \(K = 30\) sebagai cutoff kandidat saat menguji \emph{reranker}. Untuk
+  \emph{generation}, laporkan \(K = 10\), bahasa, model penilai, dan jumlah pertanyaan agar
+  hasil dapat direproduksi.
 
-  \item \textbf{Meningkatkan kesiapan operasional \emph{plugin}.} Sediakan paket
-  instalasi yang memuat \emph{manifest}, implementasi, dependensi, versi kontrak, dan pengujian.
-  Sistem perlu memvalidasi kompatibilitas serta keamanan paket sebelum strategi baru
-  diaktifkan.
+  \item \textbf{Memperkuat eksperimen komponen.} Uji ukuran segmen, \emph{overlap}, model
+  \emph{embedding}, strategi \emph{indexer}, dan pengaturan konteks induk secara terpisah sebelum
+  menyimpulkan pengaruh gabungannya.
+
+  \item \textbf{Memperdalam pengukuran \emph{knowledge graph}.} Pertahankan pemisahan antara
+  \emph{context-reference recall} dan \emph{neighborhood recall}. Simpan jenis relasi, arah relasi,
+  kedalaman traversal, dan dokumen yang membuka setiap tetangga agar kontribusi graf dapat
+  dianalisis per pertanyaan.
+
+  \item \textbf{Meningkatkan kesiapan operasional \emph{plugin}.} Sediakan paket instalasi yang
+  memuat \emph{manifest}, versi kontrak, dependensi, pemeriksaan kompatibilitas, dan pengujian
+  untuk setiap \emph{plugin}. Validasi ini mencegah artefak, indeks, dan graf yang tidak kompatibel
+  ketika sumber atau strategi pemrosesan diganti.
 \end{enumerate}

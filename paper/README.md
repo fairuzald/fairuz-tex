@@ -22,4 +22,7 @@ Versi panjang tetap berada di `src/IF4092_Laporan_SidangTA_13522057.pdf` dan dib
 
 Detail antarmuka, daftar API, ERD lengkap, daftar istilah, dan lampiran pertanyaan tetap tersedia pada TA. Paper merangkum arsitektur, kontribusi utama, komponen pendukung, metode, hasil, dan keterbatasan. Tidak ada eksperimen baru yang dijalankan untuk penyusunan artikel ini.
 
-Angka User Manual pada K=40 (0,830) dibedakan dari K=45 (0,835). Hasil chunker pada K=25 menggunakan indexer tetap yang berbeda antarkorpus. KG recall hanya dilaporkan untuk 30 pertanyaan relasi hukum. Hasil tidak menyatakan kualitas jawaban akhir, signifikansi statistik, atau efektivitas keamanan.
+Angka pada artikel mengikuti konfigurasi akhir dengan retrieval pada K=30 dan generation pada K=10.
+Benchmark hukum berisi 25 pertanyaan yang disusun untuk eksperimen dan diverifikasi oleh ahli.
+KG recall dilaporkan sebagai eksperimen terpisah pada graf hukum global. Hasil tidak menyatakan
+kualitas jawaban akhir di luar pengukuran generation, signifikansi statistik, atau efektivitas keamanan.

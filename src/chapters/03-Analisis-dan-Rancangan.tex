@@ -36,7 +36,7 @@ mengolah dokumen mentah menjadi representasi informasi dalam bentuk teks. Tahap
 \emph{upstream} tersebut ditampilkan sebagai konteks dan bukan merupakan fokus
 utama pembahasan.
 
-Keterbatasan \emph{context window} pada model bahasa menjadi alasan penggunaan
+Keterbatasan \emph{context window} pada \emph{model} bahasa menjadi alasan penggunaan
 \emph{chunker}. Jumlah informasi yang dapat diproses dalam satu permintaan
 terbatas, sehingga dokumen yang panjang perlu dibagi menjadi potongan-potongan
 yang lebih kecil. Namun, pembagian ini menimbulkan tantangan baru karena konteks dan hubungan
@@ -47,7 +47,7 @@ Potongan dokumen tersebut kemudian perlu ditemukan kembali berdasarkan makna
 pertanyaan pengguna. \emph{Indexer} mengubah potongan menjadi representasi yang
 dapat dicari secara semantik dan menyimpannya dalam \emph{vector database},
 sehingga konteks yang sesuai dapat diambil dengan cepat untuk mendukung jawaban.
-RAG biasa masih memiliki keterbatasan dalam merepresentasikan hubungan antarentitas
+\emph{RAG} biasa masih memiliki keterbatasan dalam merepresentasikan hubungan antarentitas
 dan antardokumen. Oleh karena itu, \emph{knowledge graph} digunakan untuk menangkap
 hubungan tersebut dan melengkapi konteks yang diperoleh dari proses \emph{retrieval}.
 
@@ -55,7 +55,7 @@ Masalah lain muncul karena OMNI-RAG digunakan pada berbagai \emph{domain}. Setia
 \emph{domain} dapat memiliki struktur dokumen, \emph{metadata}, dan representasi
 informasi yang berbeda, sehingga strategi \emph{chunking}, \emph{indexing}, dan
 representasi entitas yang dibutuhkan juga berbeda. Jika penambahan \emph{domain}
-mengharuskan perubahan kode secara menyeluruh atau pembangunan \emph{pipeline} RAG
+mengharuskan perubahan kode secara menyeluruh atau pembangunan \emph{pipeline} \emph{RAG}
 dari awal, pengembangan sistem akan menjadi lambat. Oleh karena itu, diperlukan
 abstraksi dan kontrak yang dapat menampung perbedaan antar-\emph{domain}, sehingga
 \emph{domain} baru dapat ditambahkan dengan perubahan kode seminimal mungkin.
@@ -67,7 +67,7 @@ keluaran yang harus dipenuhi agar komponen dapat digunakan oleh tahap lain.
 
 Mode \emph{online} merupakan jalur yang berinteraksi langsung dengan pengguna
 melalui pertanyaan dan percakapan. Pertanyaan pengguna diproses bersama
-histori percakapan sebelum digunakan untuk pencarian, penyusunan konteks, dan
+riwayat percakapan sebelum digunakan untuk pencarian, penyusunan konteks, dan
 pembuatan jawaban.
 
 \begin{figure}[H]
@@ -83,8 +83,8 @@ penelitian ditandai dengan kotak berwarna oranye, yaitu \emph{Context PII},
 percakapan ditampilkan sebagai konteks untuk menunjukkan hubungan sebelum dan
 sesudah ketiga komponen tersebut.
 
-Pada jalur \emph{online}, pertanyaan pengguna diproses bersama histori
-percakapan sebagai satu konteks. Pertanyaan maupun histori tersebut dapat
+Pada jalur \emph{online}, pertanyaan pengguna diproses bersama riwayat
+percakapan sebagai satu konteks. Pertanyaan maupun riwayat tersebut dapat
 memuat informasi pribadi seperti identitas, kontak, lokasi, atau informasi
 sensitif lainnya. Apabila informasi tersebut tidak dikenali dengan tepat, data
 pribadi dapat ikut diteruskan ke \emph{service} yang tidak seharusnya menerimanya.
@@ -97,10 +97,10 @@ dapat mengandung informasi atau pernyataan yang melanggar kebijakan
 keselamatan dan privasi. Masalah ini menjadi lebih kompleks karena pemeriksaan
 harus dilakukan pada konteks yang dapat berubah sepanjang percakapan.
 
-Pertumbuhan histori percakapan kemudian memengaruhi kapasitas \emph{context
-window}. Jika seluruh histori dikirimkan pada setiap pertanyaan, ukuran konteks,
+Pertumbuhan riwayat percakapan kemudian memengaruhi kapasitas \emph{context
+window}. Jika seluruh riwayat dikirimkan pada setiap pertanyaan, ukuran konteks,
 penggunaan \emph{token}, dan waktu respons akan terus meningkat hingga mendekati atau
-melampaui batas \emph{context window}. Namun, apabila histori dipangkas terlalu
+melampaui batas \emph{context window}. Namun, apabila riwayat dipangkas terlalu
 banyak, informasi penting untuk memahami pertanyaan lanjutan dapat hilang.
 Masalah utama pada jalur \emph{online} adalah menjaga privasi
 dan keamanan sambil mempertahankan konteks percakapan yang cukup dalam batas
@@ -131,7 +131,7 @@ pencabutan antarperaturan \parencite{uuPembentukanPeraturan2011}.
     \label{fig:kerangka-peraturan-perundangan}
 \end{figure}
 
-Kerangka utama dokumen tersebut ditampilkan pada Gambar~\ref{fig:kerangka-peraturan-perundangan}.
+\noindent Kerangka utama dokumen tersebut ditampilkan pada Gambar~\ref{fig:kerangka-peraturan-perundangan}.
 
 Pada bagian Batang Tubuh, informasi disusun melalui hierarki Bab, Bagian,
 Pasal, Ayat, Huruf, dan Angka. Satu Pasal dapat terdiri atas
@@ -145,7 +145,7 @@ beberapa Ayat, sedangkan Ayat dapat dirinci menggunakan Huruf dan Angka
     \label{fig:hierarki-rincian-pasal}
 \end{figure}
 
-Rincian hierarki di bawah Pasal dapat dilihat pada Gambar~\ref{fig:hierarki-rincian-pasal}.
+\noindent Rincian hierarki di bawah Pasal dapat dilihat pada Gambar~\ref{fig:hierarki-rincian-pasal}.
 
 Pasal merupakan unit struktural utama dalam merepresentasi dokumen hukum.
 Pemahaman pada tingkat pasal memerlukan pemahaman pada unit struktural di
@@ -159,7 +159,7 @@ pasal (Republik Indonesia, 2011, Lampiran II, angka 77).
     \label{fig:definisi-pasal}
 \end{figure}
 
-Kedudukan Pasal sebagai unit utama diperlihatkan pada Gambar~\ref{fig:definisi-pasal}.
+\noindent Kedudukan Pasal sebagai unit utama diperlihatkan pada Gambar~\ref{fig:definisi-pasal}.
 
 Masalah muncul ketika struktur tersebut hilang atau diproses sebagai paragraf
 biasa. Pemisahan pada batas Pasal atau Ayat dapat memisahkan norma dari syarat,
@@ -182,14 +182,14 @@ subbagian, langkah bernomor, tabel, catatan, peringatan, dan gambar, sedangkan
 dokumen lain hanya menggunakan judul dan paragraf.
 
 NETGEAR dipilih sebagai sumber karena manual produknya tersedia secara publik dalam
-bentuk PDF digital dengan teks yang dapat diproses langsung tanpa OCR. Manual tersebut
+bentuk \emph{PDF} \emph{digital} dengan teks yang dapat diproses langsung tanpa \emph{OCR}. Manual tersebut
 juga menyediakan \emph{document outline} atau \emph{bookmark} yang membantu menunjukkan
 susunan bagian dokumen. Isi manual mencakup pemasangan perangkat, konfigurasi jaringan,
-penggunaan fitur, spesifikasi, dan penanganan gangguan. Beberapa model router, modem,
+penggunaan fitur, spesifikasi, dan penanganan gangguan. Beberapa \emph{model} \emph{router}, \emph{modem},
 dan sistem \emph{Wi-Fi mesh} dapat digunakan bersama sehingga korpus tetap terkontrol,
 tetapi memiliki variasi struktur dan kebutuhan informasi pengguna.
 
-Perbedaan tersebut menjadi tantangan bagi proses parsing. Daftar isi atau
+Perbedaan tersebut menjadi tantangan bagi proses \emph{parsing}. Daftar isi atau
 \emph{bookmark} dapat membantu menunjukkan hierarki topik, tetapi tidak selalu
 tersedia atau menunjuk tepat pada awal isi yang sesuai. Selain itu, prosedur
 pemecahan masalah dapat bergantung pada prasyarat, urutan langkah, konfigurasi
@@ -226,7 +226,7 @@ dan tanggung jawabnya dapat dibedakan dengan jelas.
     KF-01 & Sistem memilih strategi pemotongan sesuai dengan pengaturan pada saat pembuatan \emph{profile}.\\
     KF-02 & Sistem menghasilkan potongan yang memuat identitas, jenis, teks, \emph{metadata}, sumber \emph{block}, dan hubungan antarpotongan.\\
     KF-03 & Sistem memeriksa hasil pemotongan dan menolak hasil yang memiliki identitas, sumber, atau hubungan yang tidak valid.\\
-    KF-04 & Sistem menyimpan hasil pemotongan beserta identitas dokumen, profil, dan \emph{run}, serta mencatat status dan kesalahan proses.\\
+    KF-04 & Sistem menyimpan hasil pemotongan beserta identitas dokumen, profil, dan \emph{run}, serta mencatat \emph{status} dan kesalahan proses.\\
 \end{longtable}
 
 \noindent Kebutuhan nonfungsional sistem \emph{chunker} disajikan pada Tabel~\ref{tab:knf-chunker}.
@@ -344,10 +344,10 @@ dan tanggung jawabnya dapat dibedakan dengan jelas.
     \endhead
     \bottomrule
     \endfoot
-    KF-13 & Sistem mengenali PII pada kueri dan histori percakapan, menggantinya dengan penanda, serta menyimpan pemetaannya dalam ruang lingkup permintaan.\\
-    KF-14 & Sistem membersihkan histori percakapan dan teks tambahan sebelum meneruskannya ke \emph{service} eksternal.\\
-    KF-15 & Sistem mengembalikan PII hanya pada keluaran yang berwenang.\\
-    KF-16 & Sistem menghentikan permintaan dan memberikan \emph{status} kegagalan ketika perlindungan PII tidak tersedia.\\
+    KF-13 & Sistem mengenali \emph{PII} pada kueri dan riwayat percakapan, menggantinya dengan penanda, serta menyimpan pemetaannya dalam ruang lingkup permintaan.\\
+    KF-14 & Sistem membersihkan riwayat percakapan dan teks tambahan sebelum meneruskannya ke \emph{service} eksternal.\\
+    KF-15 & Sistem mengembalikan \emph{PII} hanya pada keluaran yang berwenang.\\
+    KF-16 & Sistem menghentikan permintaan dan memberikan \emph{status} kegagalan ketika perlindungan \emph{PII} tidak tersedia.\\
 \end{longtable}
 
 \noindent Kebutuhan nonfungsional sistem \emph{Context PII} disajikan pada Tabel~\ref{tab:knf-context-pii}.
@@ -365,8 +365,8 @@ dan tanggung jawabnya dapat dibedakan dengan jelas.
     \endhead
     \bottomrule
     \endfoot
-    KNF-08 & Kerahasiaan dan isolasi pemetaan PII, yaitu PII mentah tidak diteruskan ke \emph{service} eksternal dan pemetaannya hanya berlaku pada cakupan permintaan atau percakapan terkait.\\
-    KNF-09 & Keandalan perlindungan PII, yaitu sistem menerapkan kebijakan gagal-tertutup ketika perlindungan PII tidak tersedia, kecuali mode degradasi diizinkan.\\
+    KNF-08 & Kerahasiaan dan isolasi pemetaan \emph{PII}, yaitu \emph{PII} mentah tidak diteruskan ke \emph{service} eksternal dan pemetaannya hanya berlaku pada cakupan permintaan atau percakapan terkait.\\
+    KNF-09 & Keandalan perlindungan \emph{PII}, yaitu sistem menerapkan kebijakan gagal-tertutup ketika perlindungan \emph{PII} tidak tersedia, kecuali mode degradasi diizinkan.\\
 \end{longtable}
 
 \noindent Kebutuhan fungsional sistem \emph{guardrail} disajikan pada Tabel~\ref{tab:kf-guardrail}.
@@ -384,7 +384,7 @@ dan tanggung jawabnya dapat dibedakan dengan jelas.
     \endhead
     \bottomrule
     \endfoot
-    KF-17 & Sistem memeriksa kueri setelah PII diganti dan kembali memeriksanya setelah prapemrosesan serta penyusunan konteks selesai.\\
+    KF-17 & Sistem memeriksa kueri setelah \emph{PII} diganti dan kembali memeriksanya setelah prapemrosesan serta penyusunan konteks selesai.\\
     KF-18 & Sistem menghasilkan keputusan pemeriksaan, kategori pelanggaran, alasan, dan kueri aman apabila tersedia.\\
     KF-19 & Sistem menghentikan pencarian atau pembuatan jawaban ketika pemeriksaan menolak kueri, serta menerapkan kebijakan yang ditetapkan ketika \emph{service} pemeriksaan tidak tersedia.\\
 \end{longtable}
@@ -445,7 +445,7 @@ dan tanggung jawabnya dapat dibedakan dengan jelas.
     \bottomrule
     \endfoot
     KNF-12 & Batas konteks percakapan, yaitu hasil pemadatan tetap berada dalam batas \emph{context window} dan waktu pemrosesan yang dikonfigurasi.\\
-    KNF-13 & Keutuhan histori percakapan, yaitu urutan pesan, rentang cakupan, dan identitas percakapan tetap dipertahankan setelah pemadatan.\\
+    KNF-13 & Keutuhan riwayat percakapan, yaitu urutan pesan, rentang cakupan, dan identitas percakapan tetap dipertahankan setelah pemadatan.\\
     KNF-14 & Idempotensi pemadatan, yaitu pemrosesan ulang tidak menggandakan ringkasan atau butir memori yang telah dibuat.\\
 \end{longtable}
 
@@ -513,7 +513,7 @@ Setiap \emph{profile} memiliki konfigurasi, \emph{pipeline run}, \emph{artifact}
 \subsubsection{Kontrak \emph{Input} dan \emph{Output Chunker}}
 \label{subsubsec:kontrak-chunker}
 
-Pada sistem RAG \emph{multi-domain} berbasis \emph{plugin}, \emph{chunker} menerima masukan berdasarkan kontrak \emph{input} yang seragam. Kontrak tersebut berasal dari \emph{parser} yang menormalisasi dokumen menjadi \code{CanonicalDocument}. \emph{Plugin} \emph{chunker} kemudian memproses \code{CanonicalDocument} dan menghasilkan \code{CanonicalChunks} yang memuat teks, asal, relasi, serta \emph{metadata} yang diperlukan. \code{CanonicalChunks} selanjutnya menjadi masukan bagi \emph{indexer} dan \emph{knowledge graph} secara paralel. Dengan kontrak ini, berbagai strategi pemotongan dapat digunakan pada \emph{plugin} \emph{chunker} tanpa mengubah orkestrator selama mengikuti kontrak \emph{input} dan \emph{output} yang telah didefinisikan.
+Pada sistem \emph{RAG} \emph{multi-domain} berbasis \emph{plugin}, \emph{chunker} menerima masukan berdasarkan kontrak \emph{input} yang seragam. Kontrak tersebut berasal dari \emph{parser} yang menormalisasi dokumen menjadi \code{CanonicalDocument}. \emph{Plugin} \emph{chunker} kemudian memproses \code{CanonicalDocument} dan menghasilkan \code{CanonicalChunks} yang memuat teks, asal, relasi, serta \emph{metadata} yang diperlukan. \code{CanonicalChunks} selanjutnya menjadi masukan bagi \emph{indexer} dan \emph{knowledge graph} secara paralel. Dengan kontrak ini, berbagai strategi pemotongan dapat digunakan pada \emph{plugin} \emph{chunker} tanpa mengubah orkestrator selama mengikuti kontrak \emph{input} dan \emph{output} yang telah didefinisikan.
 
 \begin{figure}[H]
     \centering
@@ -522,7 +522,7 @@ Pada sistem RAG \emph{multi-domain} berbasis \emph{plugin}, \emph{chunker} mener
     \label{fig:analisis-chunker-strategies}
 \end{figure}
 
-Perbandingan strategi pemotongan diringkas pada Gambar~\ref{fig:analisis-chunker-strategies}.
+\noindent Perbandingan strategi pemotongan diringkas pada Gambar~\ref{fig:analisis-chunker-strategies}.
 
 \subsubsection{Unitisasi dan Batas Ukuran}
 \label{subsubsec:unitisasi-chunker}
@@ -560,7 +560,7 @@ Pengguna dapat menentukan level \emph{heading} yang menjadi \emph{target} pemoto
 
 \emph{Legal structure-aware chunking} merupakan spesialisasi \emph{structure-aware chunking} untuk \emph{domain} hukum. Prinsipnya sama, tetapi \emph{outline} yang digunakan mengikuti hierarki dokumen hukum, yaitu Bab, Bagian, Pasal, Ayat, Huruf, dan Angka. Karena Pasal merupakan unit hukum utama, proses pemotongan berpusat pada Pasal dan konteks induknya, seperti Bab dan Bagian, tetap dibawa bersama.
 
-Strategi ini membagi hasil pemotongan menjadi dua jenis \emph{chunk}. \emph{Parent chunk} berisi satu Pasal secara utuh untuk digunakan sebagai konteks, sedangkan \emph{child chunk} berisi bagian-bagian Pasal yang dipotong agar memenuhi batas ukuran. Jika isi Pasal melebihi batas ukuran atau memerlukan \emph{overlap}, pemotongan dilakukan bertahap berdasarkan Ayat, kemudian Huruf atau Angka pada tingkat yang lebih kecil. \emph{Child chunk} digunakan sebagai kandidat pencarian, sedangkan \emph{parent chunk} diberikan kepada model sebagai konteks lengkap agar isi Pasal tetap dipahami tanpa kehilangan hubungan hierarkinya.
+Strategi ini membagi hasil pemotongan menjadi dua jenis \emph{chunk}. \emph{Parent chunk} berisi satu Pasal secara utuh untuk digunakan sebagai konteks, sedangkan \emph{child chunk} berisi bagian-bagian Pasal yang dipotong agar memenuhi batas ukuran. Jika isi Pasal melebihi batas ukuran atau memerlukan \emph{overlap}, pemotongan dilakukan bertahap berdasarkan Ayat, kemudian Huruf atau Angka pada tingkat yang lebih kecil. \emph{Child chunk} digunakan sebagai kandidat pencarian, sedangkan \emph{parent chunk} diberikan kepada \emph{model} sebagai konteks lengkap agar isi Pasal tetap dipahami tanpa kehilangan hubungan hierarkinya.
 
 \subsection{Rancangan \emph{Indexer Plugin}}
 \label{subsec:solusi-indexer}
@@ -581,21 +581,52 @@ Hanya \emph{chunk} bertipe \emph{retrieval} atau \emph{both} yang diproses sebag
     \label{fig:analisis-indexer-contract}
 \end{figure}
 
-Alur kontrak \emph{indexer} ditampilkan pada Gambar~\ref{fig:analisis-indexer-contract}.
+\noindent Alur kontrak \emph{indexer} ditampilkan pada Gambar~\ref{fig:analisis-indexer-contract}.
 
 \subsubsection{Indeks \emph{Leksikal}}
 \label{subsubsec:index-leksikal}
 
 Indeks \emph{leksikal} bertujuan menangkap istilah-istilah spesifik yang muncul dalam kueri. Pada \emph{domain} hukum, kueri dapat memuat nama peraturan, nama lembaga, atau istilah hukum yang bersifat normatif. Oleh karena itu, indeks \emph{leksikal} diperlukan untuk menangkap kecocokan istilah tersebut secara langsung.
 
-BM25 menghitung skor dari frekuensi istilah dalam sebuah \emph{chunk}, seberapa jarang istilah tersebut muncul di seluruh koleksi, dan panjang teks. Istilah yang lebih sering muncul dalam \emph{chunk} cenderung meningkatkan skor, sedangkan istilah yang muncul di lebih sedikit \emph{chunk} diberi bobot lebih besar. Normalisasi panjang mencegah \emph{chunk} yang panjang memperoleh skor tinggi hanya karena memuat lebih banyak kata. Hasilnya, \emph{chunk} yang paling sesuai dengan istilah kueri ditempatkan pada urutan teratas.
+\emph{BM25} menghitung skor dari frekuensi istilah dalam sebuah \emph{chunk}, seberapa jarang istilah tersebut muncul di seluruh koleksi, dan panjang teks. Istilah yang lebih sering muncul dalam \emph{chunk} cenderung meningkatkan skor, sedangkan istilah yang muncul di lebih sedikit \emph{chunk} diberi bobot lebih besar. Normalisasi panjang mencegah \emph{chunk} yang panjang memperoleh skor tinggi hanya karena memuat lebih banyak kata. Hasilnya, \emph{chunk} yang paling sesuai dengan istilah kueri ditempatkan pada urutan teratas.
 
 \subsubsection{Indeks \emph{Dense}}
 \label{subsubsec:index-dense}
 
-Indeks \emph{dense} menggunakan model \emph{embedding} untuk mengubah kueri pengguna dan isi \emph{chunk} menjadi vektor. Teks yang memiliki makna serupa akan direpresentasikan oleh vektor yang berdekatan, meskipun menggunakan istilah yang berbeda atau berupa parafrasa. Saat proses \emph{retrieval}, sistem menghitung \emph{cosine similarity} antara vektor kueri dan vektor \emph{chunk}. \emph{Chunk} dengan nilai kemiripan tertinggi diprioritaskan.
+Indeks \emph{dense} menggunakan \emph{model} \emph{embedding} untuk mengubah kueri pengguna dan isi \emph{chunk} menjadi vektor. Kedekatan vektor digunakan sebagai pendekatan operasional terhadap kemiripan makna, sehingga parafrasa atau istilah yang berbeda dapat memperoleh skor yang berdekatan. Saat proses \emph{retrieval}, sistem menghitung \emph{cosine similarity} antara vektor kueri dan vektor \emph{chunk}. \emph{Chunk} dengan nilai kemiripan tertinggi diprioritaskan.
 
-Penelitian ini membandingkan model IndoLegalBERT dan BAAI/BGE-M3. Pemilihan \emph{model} menentukan cara teks dipetakan menjadi vektor, sedangkan \emph{plugin indexer} bertanggung jawab membentuk dan menyimpan vektor tersebut untuk digunakan pada proses \emph{retrieval}.
+Penelitian ini menggunakan BAAI/\emph{BGE-M3} sebagai \emph{model} \emph{embedding}. Pemilihan \emph{model}
+menentukan cara teks dipetakan menjadi vektor, sedangkan \emph{plugin indexer} bertanggung jawab
+membentuk dan menyimpan vektor tersebut untuk digunakan pada proses \emph{retrieval}.
+
+\paragraph{Batasan representasi semantik pada domain hukum.}
+Istilah ``semantik'' dalam penelitian ini digunakan sebagai definisi operasional, yaitu kedekatan
+representasi vektor antara kueri dan konteks, bukan sebagai penetapan bahwa dua teks memiliki
+makna hukum yang identik. Makna hukum bergantung pada definisi dalam peraturan, ruang lingkup
+ketentuan, peran suatu entitas, hubungan dengan pasal lain, serta waktu dan yurisdiksi yang
+berlaku. Karena itu, skor \emph{cosine similarity} tidak dapat diperlakukan sebagai putusan atas
+kesetaraan atau keberlakuan norma.
+
+Kesulitan tersebut tampak pada istilah ``orang''. Dalam dokumen hukum, istilah ini dapat merujuk
+pada orang perseorangan, badan hukum, korporasi, instansi, organisasi, atau kelompok, bergantung
+pada definisi dan hubungan yang dinyatakan oleh peraturan. Dua teks yang memakai kata yang sama
+belum tentu menunjuk entitas yang sama, sedangkan dua istilah berbeda dapat merujuk pada entitas
+atau tindakan hukum yang sama. Representasi \emph{dense} umum tidak memiliki informasi yang cukup
+untuk menyelesaikan perbedaan tersebut secara andal.
+
+Penelitian ini menggunakan BAAI/\emph{BGE-M3} sebagai representasi semantik umum multibahasa.
+\emph{Model} tersebut dipilih karena mendukung banyak bahasa dan masukan panjang
+\parencite{chenM3Embedding2024}. Pilihan ini membantu menemukan parafrasa dan istilah yang berbeda,
+tetapi tidak diperlakukan sebagai penentu bahwa dua kalimat mempunyai makna hukum yang identik.
+Identitas dokumen, struktur peraturan, \emph{metadata}, dan \emph{provenance} tetap menjadi sumber
+keputusan yang dapat diperiksa.
+
+Implikasinya, jalur \emph{dense} digunakan untuk membantu menemukan konteks yang memiliki
+kemiripan bahasa atau parafrasa, tetapi identitas dan makna normatif tidak diserahkan kepada
+skor semantik saja. Informasi struktur, \emph{metadata}, \emph{provenance}, dan relasi eksplisit
+tetap diperlukan. Pengembangan berikutnya dapat melatih \emph{sentence-transformer} hukum
+Indonesia menggunakan pasangan atau triplet teks yang dianotasi ahli, termasuk variasi rujukan
+orang perseorangan, badan hukum, instansi, dan kelompok.
 
 \subsubsection{Indeks \emph{Hybrid}}
 \label{subsubsec:index-hybrid}
@@ -607,32 +638,25 @@ Pada tahap \emph{retrieval}, sistem mengambil daftar kandidat dari kedua \emph{i
 \subsubsection{Materialisasi dan Penghapusan Proyeksi}
 \label{subsubsec:materialisasi-index}
 
-\mbox{\code{CanonicalIndex}} disimpan terlebih dahulu di \emph{object storage} sebelum dikirim ke OpenSearch. Salinan ini dapat digunakan kembali ketika proses materialisasi gagal atau perlu diulang. Dengan demikian, sistem cukup mencoba kembali pengiriman ke OpenSearch menggunakan hasil indeks yang sudah ada, tanpa membentuk ulang indeks dari \mbox{\code{CanonicalChunks}}.
+\mbox{\code{CanonicalIndex}} disimpan terlebih dahulu di \emph{object storage} sebelum dikirim ke \emph{OpenSearch}. Salinan ini dapat digunakan kembali ketika proses materialisasi gagal atau perlu diulang. Dengan demikian, sistem cukup mencoba kembali pengiriman ke \emph{OpenSearch} menggunakan hasil indeks yang sudah ada, tanpa membentuk ulang indeks dari \mbox{\code{CanonicalChunks}}.
 
-Ketika \emph{profile} atau dokumen dalam \emph{profile} dihapus, proyeksi OpenSearch yang terkait juga dihapus. Langkah ini menjaga agar proses \emph{retrieval} tidak mengembalikan dokumen yang sudah tidak termasuk dalam \emph{profile}, sehingga data lama tidak tertinggal dan tidak terjadi ketidaksesuaian antara indeks dan isi \emph{profile}.
+Ketika \emph{profile} atau dokumen dalam \emph{profile} dihapus, proyeksi \emph{OpenSearch} yang terkait juga dihapus. Langkah ini menjaga agar proses \emph{retrieval} tidak mengembalikan dokumen yang sudah tidak termasuk dalam \emph{profile}, sehingga data lama tidak tertinggal dan tidak terjadi ketidaksesuaian antara indeks dan isi \emph{profile}.
 
 \subsection{Rancangan \emph{Knowledge Graph Plugin}}
 \label{subsec:solusi-knowledge-graph}
 
-RAG biasa lebih berfokus pada kemiripan teks, sehingga hubungan antardokumen atau hubungan antarentitas yang tersebar tidak selalu tertangkap. \emph{Knowledge graph} digunakan untuk merepresentasikan entitas, atribut, dan hubungan tersebut secara eksplisit. Dengan representasi ini, sistem dapat menelusuri hubungan antardokumen dan melengkapi konteks hasil \emph{retrieval}.
+\emph{RAG} biasa lebih berfokus pada kemiripan teks, sehingga hubungan antardokumen atau hubungan antarentitas yang tersebar tidak selalu tertangkap. \emph{Knowledge graph} digunakan untuk merepresentasikan entitas, atribut, dan hubungan tersebut secara eksplisit. Dengan representasi ini, sistem dapat menelusuri hubungan antardokumen dan melengkapi konteks hasil \emph{retrieval}.
 
-\emph{Knowledge graph plugin} menerima \code{CanonicalChunks} sebagai \emph{input} dan menghasilkan \emph{artifact graph} berupa \code{CanonicalGraph}. Setiap \emph{plugin} mengikuti kontrak \emph{input} dan \emph{output} yang sama, sehingga strategi pembentukan \emph{graph} dapat diganti tanpa mengubah \emph{chunker} atau orkestrator. Komponen ini bersifat opsional dan diaktifkan sesuai \emph{profile}.
+\emph{Knowledge graph plugin} menerima \code{CanonicalChunks} sebagai \emph{input} dan menghasilkan \emph{artifact graph} berupa \code{CanonicalGraph}. Kontrak \emph{input} dan \emph{output} yang seragam memungkinkan strategi pembentukan \emph{graph} diganti tanpa mengubah \emph{chunker} atau orkestrator. Komponen ini bersifat opsional dan dipilih melalui \emph{profile}.
 
 \subsubsection{Kontrak \emph{Input} dan \emph{Output Knowledge Graph}}
 \label{subsubsec:kontrak-canonical-graph}
 
-Kontrak \emph{graph} menetapkan bahwa \emph{plugin} menerima \code{CanonicalChunks} yang
-memuat teks, struktur, \emph{metadata}, dan \emph{provenance}. \emph{Plugin} mengolah masukan
-tersebut menjadi \code{CanonicalGraph} yang terdiri atas simpul dan sisi. Simpul mewakili
-entitas atau bagian dokumen, sedangkan sisi mewakili hubungan berarah antara dua simpul.
-Arah hubungan dipertahankan agar asal setiap entitas dan relasinya dapat ditelusuri selama
-proses \emph{ingestion}. Setiap triplet entitas diberi identitas unik untuk mencegah
-duplikasi ketika informasi yang sama ditemukan kembali.
-
-Kontrak \emph{input} dan \emph{output} yang sama memastikan \emph{plugin} tetap menghasilkan struktur
-\code{CanonicalGraph} tanpa mengubah \emph{chunker} atau orkestrator. \emph{Knowledge graph}
-bersifat opsional dan dipilih melalui \emph{profile}, sedangkan lapisan penyimpanan
-memproyeksikan hasilnya setelah \emph{graph} terbentuk.
+Kontrak tersebut menetapkan bahwa masukan memuat teks, struktur, \emph{metadata}, dan
+\emph{provenance}, sedangkan keluaran \code{CanonicalGraph} terdiri atas simpul dan sisi berarah.
+Simpul mewakili entitas atau bagian dokumen, sementara sisi menyimpan hubungan antarsimpul.
+Arah dan identitas setiap triplet dipertahankan agar relasi dapat ditelusuri selama proses
+\emph{ingestion} dan tidak tercatat ganda ketika informasi yang sama ditemukan kembali.
 
 \begin{figure}[H]
     \centering
@@ -641,51 +665,105 @@ memproyeksikan hasilnya setelah \emph{graph} terbentuk.
     \label{fig:analisis-kg-contract}
 \end{figure}
 
-Alur kontrak \emph{knowledge graph} ditampilkan pada Gambar~\ref{fig:analisis-kg-contract}.
+\noindent Alur kontrak \emph{knowledge graph} ditampilkan pada Gambar~\ref{fig:analisis-kg-contract}.
 
 \subsubsection{Pembentukan \emph{Graph} Deterministik}
 \label{subsubsec:graph-deterministik}
 
-\emph{Graph} deterministik adalah \emph{graph} yang membentuk entitas dan relasinya
-secara \emph{manual} berdasarkan \emph{metadata} yang tersedia secara eksplisit. Strategi ini
-tidak memerlukan inferensi bebas dalam membentuk \emph{triplet}, sehingga hasilnya lebih
-mudah ditelusuri, dicari, dan diaudit.
+\emph{Graph} deterministik membentuk entitas dan relasi secara eksplisit dari \emph{metadata}
+yang tersedia. Strategi ini tidak memerlukan inferensi bebas ketika membentuk \emph{triplet},
+sehingga hasilnya mudah ditelusuri dan diaudit.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.80\textwidth]{images/manual/3.10.png}
-    \caption{Relasi deterministik antara peraturan dan pasal}
+    \caption{Relasi deterministik antara peraturan, bagian perubahan, dan pasal}
     \label{fig:analisis-graph-deterministik-domain}
 \end{figure}
 
-Contoh relasi deterministik diperlihatkan pada Gambar~\ref{fig:analisis-graph-deterministik-domain}.
+\noindent Contoh relasi deterministik diperlihatkan pada Gambar~\ref{fig:analisis-graph-deterministik-domain}.
 
-Pada \emph{domain} hukum, strategi ini digunakan karena entitas dan relasi antarperaturan
-telah ditentukan dalam undang-undang. \emph{Graph} memiliki dua jenis simpul, yaitu simpul
-peraturan dan simpul pasal, dengan hubungan \emph{memiliki} dari peraturan ke pasal.
-Antarsimpul peraturan, hubungan yang digunakan adalah \emph{mengubah}, \emph{menetapkan},
-dan \emph{mencabut}. Aturan tersebut menjaga \emph{graph} tetap konsisten dengan struktur hukum
-sumber.
+Contoh pada dokumen sumber memperjelas perbedaan antara peraturan perubahan dan peraturan yang
+menjadi \emph{target} perubahan. Gambar~\ref{fig:analisis-legal-revise-pasal-i} memperlihatkan bagian
+Pasal I pada Undang-Undang Nomor 7 Tahun 2020. Bagian tersebut menyatakan bahwa beberapa
+ketentuan dalam Undang-Undang Nomor 24 Tahun 2003 telah diubah. Dalam \emph{model} graf, dokumen
+Undang-Undang Nomor 7 Tahun 2020 menjadi simpul peraturan sumber, sedangkan Pasal I menjadi
+\code{RevisePasal} yang mengelompokkan instruksi perubahan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\textwidth,height=0.34\textheight,keepaspectratio]{images/manual/3.10.1 uu-7-2020-revise-pasal-1.png}
+    \caption{Contoh Pasal I pada Undang-Undang Nomor 7 Tahun 2020 sebagai bagian perubahan}
+    \label{fig:analisis-legal-revise-pasal-i}
+\end{figure}
+
+Instruksi pada contoh tersebut menyebut Pasal 4. Gambar~\ref{fig:analisis-legal-base-pasal-4}
+menunjukkan Pasal 4 pada peraturan \emph{target} sebelum perubahan, sedangkan
+Gambar~\ref{fig:analisis-legal-amended-pasal-4} menunjukkan isi Pasal 4 yang ditulis kembali
+dalam peraturan perubahan. Kedua gambar tidak diperlakukan sebagai satu teks tanpa identitas.
+Peraturan \emph{target}, nomor pasal, dan isi hasil perubahan tetap disimpan sebagai bagian yang dapat
+ditelusuri. Dengan demikian, Pasal 4 menjadi konteks karena identitas peraturan \emph{target} dan nomor
+pasalnya cocok dengan instruksi pada Pasal I.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\textwidth,height=0.34\textheight,keepaspectratio]{images/manual/3.10.1 uu-24-2003-pasal-4.png.png}
+    \caption{Pasal 4 pada Undang-Undang Nomor 24 Tahun 2003 sebagai peraturan \emph{target}}
+    \label{fig:analisis-legal-base-pasal-4}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\textwidth,height=0.34\textheight,keepaspectratio]{images/manual/3.10.1 uu-7-2020-pasal-4.png.png}
+    \caption{Pasal 4 setelah dirumuskan dalam Undang-Undang Nomor 7 Tahun 2020}
+    \label{fig:analisis-legal-amended-pasal-4}
+\end{figure}
+
+Pada \emph{domain} hukum, entitas dan relasi antarperaturan telah ditentukan dalam undang-undang.
+Implementasi menggunakan tiga tipe simpul: \code{Regulation} untuk peraturan dasar dan perubahan,
+\code{RevisePasal} untuk bagian seperti Pasal I atau Pasal II pada peraturan perubahan, serta
+\code{Pasal} untuk isi pasal yang dapat menjadi konteks. Hubungan \code{HAS} mempertahankan struktur
+internal dokumen, sedangkan hubungan antarsimpul peraturan adalah \code{AMENDS}, \code{ESTABLISHES},
+dan \code{REVOKES}.
+
+Judul, bab, kalimat, dan instruksi \code{REVISE_ANGKA} tidak dibuat sebagai simpul tersendiri.
+Penanda perubahan disimpan melalui \code{revision_refs} dan \emph{metadata} pada \emph{chunk}.
+Relasi tambahan hanya dibuat jika dinyatakan oleh \code{status_peraturan}, sehingga identitas unit
+hukum tetap merujuk pada \emph{chunk} sumber tanpa menambah simpul yang tidak diperlukan.
+
+Pada saat sebuah \code{Pasal} hasil perubahan akan digunakan sebagai konteks, \emph{resolver} tidak
+hanya memakai nomor pasal. \emph{Resolver} memeriksa pasangan identitas peraturan \emph{target} dan nomor
+pasal pada artefak \emph{chunk}. Untuk operasi \code{MENGUBAH}, kecocokan seperti Pasal 1 pada
+peraturan perubahan dengan Pasal 1 pada peraturan \emph{target} dinyatakan valid jika \emph{target} peraturan
+tidak ambigu. Untuk operasi penyisipan, pasal baru dicocokkan bersama nomor pasal tetangga yang
+menjadi acuan. Isi pasal hasil perubahan atau konteks tetangganya kemudian dimuat dari artefak
+\emph{parser}, bukan ditebak dari \emph{label} graf. Karena itu, graf menyimpan hubungan dan identitas,
+sedangkan artefak \emph{parser} menyediakan teks konteks yang dipakai pada tahap berikutnya.
+
+\subsubsection{Mekanisme \emph{Retrieval} Berbasis \emph{Knowledge Graph}}
+\label{subsubsec:mekanisme-retrieval-knowledge-graph}
+
+Graf tidak menggantikan indeks teks. \emph{Retriever} mengambil \emph{top-}$(K)$ \emph{chunk}
+dari \emph{OpenSearch}, lalu \code{LegalGraphBuilder} mengelompokkan kandidat berdasarkan
+regulasi dan menelusuri relasi \code{REVOKES}, \code{AMENDS}, dan \code{ESTABLISHES} hingga dua
+lompatan. Hasilnya dipetakan kembali ke ID \emph{chunk}, dideduplikasi, dan digabungkan dengan
+konteks teks. Peraturan lain hanya ikut muncul jika terhubung dengan \emph{seed} dan lolos
+\emph{filter} tipe, arah, serta batas relasi. Dengan demikian, bukti utama tetap berasal dari
+\emph{top-}$(K)$ \emph{retrieval}. Graf hanya memperluas kandidat yang sudah ditemukan.
 
 \subsubsection{\emph{Canonicalization} dan Validasi \emph{Graph}}
 \label{subsubsec:canonicalization-graph}
 
-Sebelum disimpan, simpul dan sisi dinormalisasi agar identitas, tipe, properti, dan label
-relasi memiliki bentuk yang sama pada setiap \emph{profile}. Langkah ini mencegah fakta yang
-sama tercatat berulang. Informasi \emph{provenance} tetap disimpan agar setiap bagian
-\emph{graph} dapat ditelusuri kembali ke \emph{chunk} dan dokumen sumbernya.
-
-Selanjutnya, validasi memeriksa tipe simpul, titik asal dan tujuan setiap sisi, arah relasi,
-bukti, \emph{provenance}, serta kesesuaian cakupan dokumen dan \emph{profile}. Relasi yang
-tidak memiliki titik asal atau tujuan, atau tidak didukung bukti dari dokumen sumber, ditolak.
-Dengan demikian, \emph{artifact graph} hanya memuat hubungan yang dapat ditelusuri dan benar-benar
-didukung oleh dokumen sumber.
+Sebelum disimpan, simpul dan sisi dinormalisasi agar identitas, tipe, properti, dan \emph{label}
+relasi konsisten pada setiap \emph{profile}. Validasi memeriksa titik asal dan tujuan, arah relasi,
+bukti, \emph{provenance}, serta cakupan dokumen. Relasi tanpa kedua titik atau tanpa dukungan
+dokumen ditolak, sehingga \emph{artifact graph} tetap dapat ditelusuri ke sumbernya.
 
 \subsubsection{Materialisasi dan Penghapusan \emph{Graph}}
 \label{subsubsec:materialisasi-graph}
 
 \emph{Artifact graph} disimpan terlebih dahulu di \emph{object storage} sebelum
-dimaterialisasi ke basis data graf, seperti Neo4j. Jika proses materialisasi gagal,
+dimaterialisasi ke basis data graf, seperti \emph{Neo4j}. Jika proses materialisasi gagal,
 sistem dapat melakukan \emph{retry} menggunakan \emph{artifact graph} yang sudah tersimpan
 tanpa membangun \emph{graph} dari awal.
 
@@ -698,18 +776,18 @@ menggunakan \emph{datasource} yang sama tetap dipertahankan.
 \label{subsec:solusi-context-pii}
 
 \emph{Context PII} adalah lapisan \emph{preprocessing online} yang melindungi informasi
-pribadi sebelum pertanyaan dan konteks percakapan diteruskan ke LLM atau \emph{service} eksternal.
+pribadi sebelum pertanyaan dan konteks percakapan diteruskan ke \emph{LLM} atau \emph{service} eksternal.
 Dengan lapisan ini, komponen eksternal tidak menerima data pribadi pengguna secara langsung.
 Data dianonimkan sementara, lalu dipulihkan setelah keluaran diperiksa dan diizinkan sehingga
-pengguna tetap dapat melihat konteks aslinya. Histori dan data sumber tidak diubah secara
+pengguna tetap dapat melihat konteks aslinya. Riwayat dan data sumber tidak diubah secara
 permanen.
 
-\subsubsection{Deteksi dan Pseudonimisasi PII}
+\subsubsection{Deteksi dan Pseudonimisasi \emph{PII}}
 \label{subsubsec:deteksi-pseudonimisasi}
 
-Deteksi \emph{Personally Identifiable Information} (PII) dilakukan menggunakan
+Deteksi \emph{Personally Identifiable Information} (\emph{PII}) dilakukan menggunakan
 \emph{Named Entity Recognition} (NER). NER mengenali entitas pribadi pada \emph{query},
-histori, dan \emph{memory} yang menjadi \emph{context}, lalu menggantinya dengan
+riwayat, dan \emph{memory} yang menjadi \emph{context}, lalu menggantinya dengan
 \emph{placeholder} yang tidak mengungkapkan nilai asli. Setiap \emph{placeholder}
 dibuat sebagai penanda unik agar pemetaan dapat dipulihkan dan tidak tertukar.
 
@@ -719,17 +797,17 @@ Pemetaan \emph{placeholder} dan nilai asli disimpan terpisah, sedangkan komponen
 hanya menerima \emph{payload} anonim. Bagian lokal menyimpan informasi pemulihan setelah
 keluaran diperiksa.
 
-\subsubsection{Penyimpanan \emph{Mapping} dan Pemulihan PII}
+\subsubsection{Penyimpanan \emph{Mapping} dan Pemulihan \emph{PII}}
 \label{subsubsec:mapping-dan-pemulihan-pii}
 
-Pada tahap sebelumnya, NER mengganti PII dengan \emph{placeholder} agar data pribadi
-tidak ikut dikirim ke LLM atau \emph{service} eksternal. \emph{Context PII} kemudian menjadi
+Pada tahap sebelumnya, NER mengganti \emph{PII} dengan \emph{placeholder} agar data pribadi
+tidak ikut dikirim ke \emph{LLM} atau \emph{service} eksternal. \emph{Context PII} kemudian menjadi
 lapisan yang menangani pemulihan data tersebut. Untuk itu, sistem menyimpan pemetaan
 antara setiap \emph{placeholder} dan nilai aslinya di basis data secara terpisah dari
 \emph{payload} anonim. Pemetaan tersebut diberi cakupan berdasarkan permintaan
 atau percakapan, sehingga hanya dapat digunakan pada konteks yang sama.
 
-Setelah LLM menghasilkan jawaban dan jawaban itu lolos pemeriksaan keamanan, sistem
+Setelah \emph{LLM} menghasilkan jawaban dan jawaban itu lolos pemeriksaan keamanan, sistem
 menggunakan pemetaan serta cakupan yang sesuai untuk mengembalikan \emph{placeholder}
 menjadi data asli. Jika pemetaan tidak ditemukan atau cakupan tidak cocok,
 \emph{placeholder} tidak dipulihkan. Dengan cara ini, komponen eksternal tetap hanya
@@ -740,7 +818,7 @@ setelah pemeriksaan selesai.
 \label{subsec:solusi-guardrail}
 
 \emph{Guardrail} adalah lapisan pemeriksaan keselamatan yang bekerja sebelum dan sesudah
-proses utama RAG. Sebelum \emph{input} diteruskan ke \emph{retrieval} atau LLM,
+proses utama \emph{RAG}. Sebelum \emph{input} diteruskan ke \emph{retrieval} atau \emph{LLM},
 \emph{guardrail} memeriksa permintaan berbahaya, pelanggaran kebijakan, dan upaya
 \emph{prompt injection} atau \emph{cross injection} yang mencoba mengubah aturan sistem.
 Setelah jawaban dibuat, \emph{guardrail} memeriksa kembali keluarannya sebelum diberikan
@@ -755,7 +833,7 @@ jawaban melewati pemeriksaan yang sama sebelum diteruskan ke tahap berikutnya.
 \label{subsubsec:guardrail-input}
 
 \emph{Guardrail} masukan memeriksa \emph{query} dan \emph{context} sebelum diteruskan
-ke \emph{retrieval} atau LLM. Pemeriksaan mencakup upaya \emph{prompt injection} dan
+ke \emph{retrieval} atau \emph{LLM}. Pemeriksaan mencakup upaya \emph{prompt injection} dan
 \emph{cross injection}, permintaan untuk melakukan tindakan berbahaya, serta kata atau pola
 yang masuk daftar blokir. Pemeriksaan dilakukan pada bentuk akhir \emph{input} setelah
 seluruh \emph{preprocessing} selesai, sehingga keputusan berlaku pada data yang benar-benar
@@ -776,10 +854,10 @@ dihentikan atau diganti dengan respons yang aman.
 \label{subsec:solusi-history-compactor}
 
 Untuk mengatasi keterbatasan ukuran \emph{context window}, digunakan \emph{history
-compactor} untuk mengatur histori yang dibawa ke percakapan berikutnya. Komponen ini
-mempertahankan pesan terbaru yang masih relevan dan meringkas pesan lama ketika histori
+compactor} untuk mengatur riwayat yang dibawa ke percakapan berikutnya. Komponen ini
+mempertahankan pesan terbaru yang masih relevan dan meringkas pesan lama ketika riwayat
 mulai mendekati batas. Dengan cara ini, \emph{query} lanjutan tetap memperoleh konteks
-yang cukup dari percakapan sebelumnya, sehingga LLM tidak kehilangan alur percakapan
+yang cukup dari percakapan sebelumnya, sehingga \emph{LLM} tidak kehilangan alur percakapan
 dan ukuran \emph{context} tetap terkendali.
 
 \subsubsection{Pemilihan Pesan Terbaru}
@@ -787,7 +865,7 @@ dan ukuran \emph{context} tetap terkendali.
 
 Pesan terbaru tetap dipilih karena \emph{query} lanjutan sering bergantung pada detail
 percakapan terakhir. Pemilih mengambil beberapa pesan paling baru sesuai urutan dan
-batas \emph{context}, bukan seluruh histori, sehingga LLM menerima konteks lokal yang
+batas \emph{context}, bukan seluruh riwayat, sehingga \emph{LLM} menerima konteks lokal yang
 cukup tanpa membuat ukuran \emph{input} terlalu besar.
 
 Pesan yang sudah dirangkum dalam \emph{summary} tidak dipilih ulang, kecuali detailnya
@@ -797,11 +875,11 @@ baru, sementara alur percakapan tetap terjaga.
 \subsubsection{\emph{Rolling Summary}}
 \label{subsubsec:rolling-summary}
 
-\emph{Rolling summary} digunakan untuk memadatkan percakapan terbaru ketika histori
+\emph{Rolling summary} digunakan untuk memadatkan percakapan terbaru ketika riwayat
 mulai mendekati atau melewati batas \emph{context window}. Sistem menggabungkan
-\emph{summary} sebelumnya dengan pesan yang belum tercakup, lalu meminta LLM membuat
+\emph{summary} sebelumnya dengan pesan yang belum tercakup, lalu meminta \emph{LLM} membuat
 satu ringkasan singkat. Ringkasan tersebut menggantikan sebagian pesan lama dalam
-konteks yang dikirim pada \emph{request} berikutnya. Ketika histori kembali memenuhi
+konteks yang dikirim pada \emph{request} berikutnya. Ketika riwayat kembali memenuhi
 batas, proses yang sama diulang sehingga ringkasan terus diperbarui.
 
 Ringkasan mempertahankan informasi penting seperti tujuan, keputusan, batasan,
@@ -820,7 +898,7 @@ bahasa formal'', pernyataan tersebut dapat disimpan sebagai \emph{memory item} a
 respons berikutnya mengikuti preferensi itu.
 
 \emph{Memory items} juga dibatasi oleh \emph{context window}. Sistem hanya membawa
-item yang masih relevan dan membatasi jumlah serta panjangnya. Ketika histori dan
+item yang masih relevan dan membatasi jumlah serta panjangnya. Ketika riwayat dan
 \emph{memory items} mulai memenuhi batas, informasi yang lebih lama dipadatkan melalui
 \emph{rolling summary}. Dengan cara ini, konteks penting tetap tersedia tanpa membuat
 ukuran \emph{context} terlalu besar.
@@ -828,14 +906,14 @@ ukuran \emph{context} terlalu besar.
 \subsubsection{Pemicu \emph{Compaction}}
 \label{subsubsec:trigger-compaction}
 
-\emph{Compaction} dipicu ketika gabungan histori percakapan melewati batas \emph{context
+\emph{Compaction} dipicu ketika gabungan riwayat percakapan melewati batas \emph{context
 window}. Sistem terlebih dahulu memeriksa \emph{rolling summary}. Jika ringkasan dan
 pesan yang masih perlu dibawa sudah terlalu besar, ringkasan lama digabungkan dengan
-pesan yang belum tercakup lalu diringkas kembali menggunakan LLM. Sistem kemudian
+pesan yang belum tercakup lalu diringkas kembali menggunakan \emph{LLM}. Sistem kemudian
 memeriksa \emph{memory items}. Jika jumlah atau panjangnya sudah memenuhi batas,
 informasi lama yang masih relevan ikut dipadatkan ke dalam \emph{rolling summary}.
 
-Dengan demikian, \emph{context} yang diberikan kepada LLM terdiri atas \emph{memory
+Dengan demikian, \emph{context} yang diberikan kepada \emph{LLM} terdiri atas \emph{memory
 items} yang masih relevan, beberapa percakapan mentah terbaru, dan \emph{rolling summary}.
 Pesan terbaru dipertahankan agar percakapan tetap nyambung. Setiap kali gabungan tersebut
 kembali mendekati batas \emph{context window}, proses pemadatan diulangi.

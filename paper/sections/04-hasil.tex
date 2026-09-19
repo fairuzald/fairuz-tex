@@ -1,41 +1,41 @@
 \section{Hasil dan Pembahasan}
 \subsection{Pemeliharaan Struktur Dokumen}
-Tabel~\ref{tab:chunking} menunjukkan bahwa \tech{structure-aware chunker} menghasilkan \tech{recall} tertinggi dalam kedua perbandingan pada $K=25$. Pada \tech{User Manual}, selisihnya terhadap \tech{recursive} adalah 0,130 dan terhadap \tech{sliding-window} adalah 0,065. Pada peraturan, selisihnya masing-masing 0,04 dan 0,03.
+Tabel~\ref{tab:chunking} menunjukkan bahwa \tech{structure-aware chunker} menghasilkan \tech{recall} tertinggi pada $K = 30$. Pada \tech{User Manual}, selisihnya terhadap \tech{recursive} adalah 0,115 dan terhadap \tech{baseline sliding-window} adalah 0,055. Pada peraturan, selisihnya terhadap \tech{recursive} adalah 0,0124 dan terhadap \tech{baseline sliding-window} adalah 0,0509.
 
 \begin{table}[tb]
 \centering\small
-\caption{\tech{Recall} perbandingan \tech{chunker}, $K=25$.}
+\caption{\tech{Recall} perbandingan \tech{chunker}, $K = 30$.}
 \label{tab:chunking}
 \begin{tabularx}{\columnwidth}{@{}>{\RaggedRight\arraybackslash}Xrr@{}}
 \toprule
 Strategi & \tech{User Manual} & Peraturan\\\midrule
-\tech{Structure-aware} & \textbf{0,740} & \textbf{0,64}\\
-\tech{Recursive} & 0,610 & 0,60\\
-\tech{Sliding-window} & 0,675 & 0,61\\\bottomrule
+\tech{Structure-aware} & \textbf{0,740} & \textbf{0,6854}\\
+\tech{Recursive} & 0,625 & 0,6730\\
+\tech{Baseline sliding-window} & 0,685 & 0,6345\\\bottomrule
 \end{tabularx}
 \smallskip
 \parbox{\columnwidth}{\footnotesize Strategi peraturan menggunakan varian \tech{legal structure-aware}. \tech{Indexer} dibuat tetap dalam setiap korpus, yaitu \tech{hybrid} untuk \tech{User Manual} dan \tech{dense} untuk peraturan.}
 \end{table}
 
-Hasil tersebut konsisten dengan manfaat mempertahankan hubungan \tech{block} dan konteks induknya pada manual, serta batas pasal dan ayat pada peraturan. Namun, perbandingan ini menguji konfigurasi lengkap setiap \tech{chunker}. Tanpa eksperimen tambahan yang menghilangkan konteks induk secara terpisah, seluruh selisih tidak dapat diatribusikan hanya pada satu mekanisme struktural.
+Hasil tersebut konsisten dengan manfaat mempertahankan struktur konteks pada manual dan batas pasal serta ayat pada peraturan. Perbandingan ini menguji konfigurasi lengkap setiap \tech{chunker}, sehingga selisih dibaca sebagai dampak strategi segmentasi secara keseluruhan.
 
 \subsection{Pencarian pada \tech{User Manual}}
-Pada $K=40$, \tech{dense indexer} mencapai \tech{recall} gabungan 0,830. Nilainya adalah 0,850 untuk pertanyaan bahasa Inggris dan 0,810 untuk bahasa Indonesia. Selisih empat poin persentase menunjukkan bahwa pencarian berbasis representasi semantik tetap menemukan sebagian besar referensi ketika bahasa pertanyaan berbeda dari bahasa dokumen.
+Pada $K = 30$, \tech{dense indexer} mencapai \tech{recall} gabungan 0,785. Nilai ini lebih tinggi daripada \tech{hybrid} 0,740 dan \tech{baseline sparse} 0,420. Pertanyaan Inggris cenderung lebih mudah karena bahasa manual sumber sama, sedangkan pertanyaan Indonesia menguji pencarian lintas bahasa.
 
-Untuk membandingkan kondisi pada jumlah kandidat yang sama, Tabel~\ref{tab:manual} menggunakan $K=45$. \tech{Dense} mencapai 0,835, lebih tinggi daripada \tech{hybrid baseline} sebesar 0,745 dan \tech{sparse} sebesar 0,465. \tech{Recursive} dan \tech{sliding-window} pada tabel ini tetap menggunakan \tech{hybrid indexer}.
+Tabel~\ref{tab:manual} merangkum hasil pada cutoff bersama $K = 30$. \tech{Recall} menjadi dasar pemilihan, sedangkan metrik lain membantu membaca kepadatan dan urutan kandidat.
 
 \begin{table}[tb]
 \centering\small
-\caption{Hasil \tech{User Manual} pada $K=45$.}
+\caption{Hasil \tech{User Manual} pada $K = 30$.}
 \label{tab:manual}
 \begin{tabularx}{\columnwidth}{@{}>{\RaggedRight\arraybackslash}Xrrr@{}}
 \toprule
-Kondisi & \tech{Recall} & \tech{Precision} & \tech{nDCG}\\\midrule
-\tech{Hybrid baseline} & 0,745 & 0,033 & 0,339\\
-\tech{Recursive} & 0,630 & 0,022 & 0,294\\
-\tech{Sliding-window} & 0,685 & 0,028 & 0,325\\
-\tech{Sparse} & 0,465 & 0,023 & 0,177\\
-\tech{Dense} & \textbf{0,835} & \textbf{0,045} & \textbf{0,380}\\\bottomrule
+Kondisi & \tech{Recall} & \tech{Precision} & \tech{NDCG}\\\midrule
+\tech{Baseline sliding-window} & 0,685 & 0,041 & 0,322\\
+\tech{Recursive} & 0,625 & 0,032 & 0,291\\
+\tech{Structure-aware hybrid} & 0,740 & 0,048 & 0,333\\
+\tech{Baseline structure-aware sparse} & 0,420 & 0,028 & 0,157\\
+\tech{Structure-aware dense} & \textbf{0,785} & \textbf{0,057} & \textbf{0,350}\\\bottomrule
 \end{tabularx}
 \end{table}
 
@@ -49,30 +49,27 @@ Pertanyaan mengenai gejala dan prosedur dapat memakai parafrasa yang tidak muncu
 \end{figure*}
 
 \subsection{Pencarian pada Peraturan}
-Pada pemilihan model dengan $K=45$, BAAI/BGE-M3 mencapai \tech{recall} 0,65, sedangkan Indo-LegalBERT mencapai 0,45. Hasil ini mendasari penggunaan BAAI/BGE-M3 sebagai model acuan pada perbandingan komponen berikutnya. Temuan tersebut terbatas pada konfigurasi dan pertanyaan yang digunakan.
-
-Pada $K=25$, \tech{hybrid indexer} memperoleh \tech{recall} tertinggi sebesar 0,67, sedangkan \tech{dense} dan \tech{sparse} sama-sama mencapai 0,64 (Tabel~\ref{tab:legal}). Pertanyaan hukum dapat menggabungkan istilah atau identitas peraturan yang eksplisit dengan uraian kebutuhan informasi. Kombinasi pencocokan istilah dan makna memberikan cakupan lebih tinggi pada korpus ini.
+Pada $K = 30$, \tech{legal-structure dense} memperoleh \tech{recall} 0,6854, diikuti \tech{hybrid} 0,6412 dan \tech{baseline sparse} 0,6381 (Tabel~\ref{tab:legal}). \tech{Dense} lebih mampu menjembatani perbedaan redaksi pertanyaan dan peraturan, sedangkan \tech{sparse} lebih bergantung pada kecocokan istilah.
 
 \begin{table}[tb]
 \centering\small
-\caption{Hasil peraturan pada $K=25$.}
+\caption{Hasil peraturan pada $K = 30$.}
 \label{tab:legal}
 \begin{tabularx}{\columnwidth}{@{}>{\RaggedRight\arraybackslash}Xrrr@{}}
 \toprule
-Kondisi & \tech{Recall} & \tech{Precision} & \tech{nDCG}\\\midrule
-\tech{Dense baseline} & 0,64 & 0,047 & \textbf{0,445}\\
-Indo-LegalBERT & 0,43 & 0,025 & 0,203\\
-\tech{Recursive} & 0,60 & 0,038 & 0,381\\
-\tech{Sliding-window} & 0,61 & 0,040 & 0,407\\
-\tech{Sparse} & 0,64 & \textbf{0,071} & 0,358\\
-\tech{Hybrid} & \textbf{0,67} & 0,068 & 0,437\\\bottomrule
+Kondisi & \tech{Recall} & \tech{Precision} & \tech{NDCG}\\\midrule
+\tech{Legal-structure dense} & \textbf{0,6854} & \textbf{0,1520} & 0,5040\\
+\tech{Recursive} & 0,6730 & 0,1453 & 0,4909\\
+\tech{Baseline sliding-window} & 0,6345 & 0,1507 & \textbf{0,5042}\\
+\tech{Baseline structure-aware sparse} & 0,6381 & 0,1253 & 0,4262\\
+\tech{Structure-aware hybrid} & 0,6412 & 0,1307 & 0,4797\\\bottomrule
 \end{tabularx}
 \end{table}
 
-Keunggulan \tech{recall} tidak berarti seluruh ukuran ikut tertinggi. \tech{Sparse} menghasilkan \tech{precision} 0,071, sedangkan \tech{dense} menghasilkan \tech{nDCG} 0,445. Pemilihan \tech{hybrid} mengikuti tujuan menemukan referensi sebanyak mungkin sebelum tahap \tech{downstream}. Nilai \tech{precision} yang rendah juga memperlihatkan bahwa kandidat masih mengandung banyak bagian yang tidak relevan. Peningkatan kualitas jawaban setelah \tech{reranking} belum diuji.
+Keunggulan \tech{recall} tidak berarti semua metrik ikut tertinggi. \tech{Sliding} unggul tipis pada \tech{NDCG}, sedangkan \tech{hybrid} memiliki \tech{MRR} tertinggi pada tabel lengkap. Perbedaan ini menunjukkan bahwa cakupan total dan posisi hasil pertama adalah tujuan yang berbeda. \tech{Recall} tetap menjadi dasar pemilihan konfigurasi.
 
 \subsection{Penelusuran Hubungan dalam Graf}
-Pada 30 pertanyaan relasi dan $K=25$, \tech{sparse} menghasilkan \tech{KG recall} 0,517, diikuti \tech{hybrid} 0,417, \tech{sliding-window} 0,350, serta \tech{dense baseline} dan \tech{recursive} masing-masing 0,300. Penggantian model ke Indo-LegalBERT menghasilkan 0,150. Gambar~\ref{fig:kg} menampilkan perubahan ukuran ini terhadap $K$.
+Pada $K = 30$, \tech{sliding-window} menghasilkan \tech{KG recall} 1,0000, diikuti \tech{recursive} dan \tech{hybrid} 0,9975, \tech{sparse} 0,9672, serta \tech{dense} 0,9556. Gambar~\ref{fig:kg} menampilkan perubahan jangkauan dokumen ini terhadap $K$.
 
 \begin{figure*}[t]
 \centering
@@ -81,11 +78,11 @@ Pada 30 pertanyaan relasi dan $K=25$, \tech{sparse} menghasilkan \tech{KG recall
 \label{fig:kg}
 \end{figure*}
 
-Keunggulan \tech{sparse} pada kelompok ini konsisten dengan pertanyaan yang menyebut entitas atau penanda peraturan secara eksplisit. Hasilnya tidak bertentangan dengan keunggulan \tech{hybrid} pada keseluruhan pertanyaan karena cakupan evaluasinya berbeda. Evaluasi ini merupakan diagnostik penelusuran relasi pada korpus peraturan. Tidak tersedia hasil kuantitatif pembanding graf pada \tech{User Manual} dalam eksperimen yang dirangkum.
+Nilai ini merupakan ukuran jangkauan dokumen tetangga, bukan pengganti \tech{context-reference recall}. Satu dokumen yang ditemukan dapat membuka beberapa dokumen terkait, sehingga urutannya dapat berbeda dari \tech{recall} langsung. Tidak ada eksperimen graf yang sama pada \tech{User Manual}.
 
 \subsection{Implikasi dan Keterbatasan}
-Arsitektur \tech{plugin} menyediakan tempat untuk menerapkan strategi yang berbeda tanpa mengubah kontrak informasi. Pada dua korpus ini, pemeliharaan struktur memberi hasil \tech{chunking} terbaik, tetapi strategi pencarian terpilih berbeda. Oleh karena itu, perluasan \tech{domain} perlu disertai evaluasi konfigurasi, bukan sekadar penggunaan ulang konfigurasi lama.
+Arsitektur \tech{plugin} menyediakan tempat untuk menerapkan strategi yang berbeda tanpa mengubah kontrak informasi. Pada dua korpus ini, pemeliharaan struktur memberi hasil \tech{chunking} terbaik, tetapi strategi pencarian terpilih berbeda. Oleh karena itu, perluasan \tech{domain} perlu disertai eksperimen konfigurasi, bukan sekadar penggunaan ulang konfigurasi lama.
 
 Angka antarkorpus tidak dapat dibaca sebagai perbandingan langsung tingkat kesulitan. Korpus, jumlah referensi acuan, bahasa, dan nilai $K$ berbeda. Pasangan pertanyaan dualbahasa juga berbagi konteks, sementara pertanyaan hukum dari PSU yang sama berbagi sumber. Jumlah pertanyaan karena itu tidak sama dengan jumlah observasi yang sepenuhnya independen.
 
-Pemilihan peraturan hanya mencakup dokumen yang siap diproses secara vektor. Manual terbatas pada sembilan produk Netgear. Pertanyaan disusun dengan bantuan model dari konteks acuan, sehingga belum tentu mencerminkan distribusi pertanyaan pengguna nyata. OFAT belum menguji interaksi antarkomponen, dan tidak ada klaim signifikansi statistik atas selisih hasil. Pengukuran kualitas jawaban, biaya operasional, keamanan, dan efektivitas komponen percakapan memerlukan evaluasi tersendiri.
+Pemilihan peraturan hanya mencakup dokumen yang siap diproses secara vektor. Manual terbatas pada sembilan produk Netgear. Pertanyaan disusun dari konteks acuan, sehingga belum tentu mencerminkan distribusi pertanyaan pengguna nyata. OFAT belum menguji interaksi antarkomponen dan tidak ada klaim signifikansi statistik atas selisih hasil.

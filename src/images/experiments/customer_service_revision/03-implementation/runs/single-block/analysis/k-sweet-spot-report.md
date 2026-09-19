@@ -10,9 +10,9 @@ Analisis ini mencari cutoff retrieval ketika tambahan lima kandidat tidak lagi m
 - **Sweet spot:** nilai maksimum antara terminal recall plateau dan plateau praktis NDCG (`|Δ NDCG| ≤ 0.01`). Precision dilaporkan sebagai biaya coverage, bukan syarat plateau karena secara definisi cenderung turun ketika K membesar.
 - Unit analisis adalah pertanyaan yang sama pada dua cutoff berurutan; English dan Indonesian dihitung terpisah dari 100 pertanyaan masing-masing.
 
-## Hasil per kondisi dan bahasa
+## Hasil per konfigurasi dan bahasa
 
-| Condition | Bahasa | Recall plateau | NDCG plateau | Sweet spot K | Recall @ sweet | Recall @60 | Tambahan recall setelah sweet | Precision @ sweet | Precision @60 |
+| Configuration | Bahasa | Recall plateau | NDCG plateau | Sweet spot K | Recall @ sweet | Recall @60 | Tambahan recall setelah sweet | Precision @ sweet | Precision @60 |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | Hybrid baseline | COMBINED | 25 | 25 | 25 | 0.740 | 0.745 | +0.005 | 0.055 | 0.025 |
 | Hybrid baseline | EN | 25 | 30 | 30 | 0.800 | 0.810 | +0.010 | 0.052 | 0.027 |
@@ -33,7 +33,7 @@ Analisis ini mencari cutoff retrieval ketika tambahan lima kandidat tidak lagi m
 ## Kesimpulan operasional
 
 - Sweet spot terminal pada agregat gabungan adalah: Hybrid baseline K=25; Recursive chunker K=25; Sliding-window chunker K=25; Sparse indexer K=45; Dense indexer K=40.
-- Jika satu cutoff harus dipakai lintas profile, **K=45** adalah pilihan konservatif berbasis plateau terminal pada seluruh kondisi; ia menghindari menghentikan dense/sparse terlalu cepat.
+- Jika satu cutoff harus dipakai lintas profile, **K=45** adalah pilihan konservatif berbasis plateau terminal pada seluruh konfigurasi; ia menghindari menghentikan dense/sparse terlalu cepat.
 - Untuk profile dense sebagai kandidat final, K=40 adalah sweet spot terminal pada ketiga kelompok (gabungan, English, Indonesian). Dari K=40 ke K=60 masih ada kenaikan kumulatif sekitar 3 pp, tetapi tiap langkahnya berada di bawah ambang 2 pp dan tidak signifikan secara paired-bootstrap; K=60 hanya dipilih bila coverage maksimum lebih penting daripada precision.
 - English dan Indonesian tidak boleh digabung saat mengambil keputusan: gunakan nilai bahasa terendah sebagai guardrail bila ingin satu cutoff yang aman untuk kedua bahasa.
 

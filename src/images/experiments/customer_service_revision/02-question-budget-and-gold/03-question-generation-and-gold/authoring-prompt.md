@@ -2,11 +2,11 @@
 
 Gunakan satu row `question-slots.csv` dan packet dengan `packet_status=ready` untuk
 menulis satu draft JSON object per `question_pair_id`. Model menerima seluruh field
-`context_text`, bukan hanya anchor block. Dua bahasa harus menguji intent yang sama.
+`context_text`, bukan hanya anchor block. Dua bahasa harus menguji slot dan context reference yang sama.
 
 ## Aturan
 
-- Ikuti `question_family` dan `language` pada slot.
+- Ikuti `question_family` dan `language` pada slot; `question_family` bukan label intent.
 - Tulis pertanyaan customer-service yang natural, umum, dan mudah dibayangkan oleh pelanggan awam.
 - Hindari memulai pertanyaan dengan menu path, nama protokol, atau istilah internal; detail teknis
   tetap boleh berada di reference answer bila diperlukan oleh manual.

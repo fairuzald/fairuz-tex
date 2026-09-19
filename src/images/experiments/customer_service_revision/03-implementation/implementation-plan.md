@@ -62,7 +62,7 @@ menghasilkan:
 - `question_pair_id` metrics untuk konsistensi bilingual;
 - first-hit rank, MRR, no-hit rate, candidate-pool size, median/P90 latency;
 - metrik setiap `question_id` tanpa menyimpan ulang candidate payload pada CSV analisis;
-- diagram condition pada K=10/K=60, heatmap product, CDF first-hit, dan precision–recall trade-off.
+- diagram konfigurasi pada K=10/K=60, heatmap product, CDF first-hit, dan precision–recall trade-off.
 
 Artefak final berada di [`runs/single-block/analysis/analysis-report.md`](runs/single-block/analysis/analysis-report.md).
 
@@ -79,7 +79,7 @@ chunker/indexer. Lane ini memakai gold evidence variable-size dan denominator pr
 
 1. Input question/gold harus frozen dan berjumlah 200 row dengan 100 row per bahasa.
 2. Semua gold row harus memiliki tepat satu evidence block untuk lane single-block.
-3. Setiap kondisi wajib memiliki 200 trace valid dan datasource 9/9 succeeded.
+3. Setiap konfigurasi wajib memiliki 200 trace valid dan datasource 9/9 succeeded.
 4. Tidak boleh ada indexing ulang ketika memakai profile map existing.
 5. Report wajib memuat `language-by-cutoff.csv` dan tabel EN/ID terpisah; run tanpa salah satu
    bahasa dianggap tidak lengkap.

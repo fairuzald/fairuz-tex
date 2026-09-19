@@ -3,10 +3,10 @@
 ## Tujuan
 
 Run ini mendesain ulang bank pertanyaan Customer Service dengan candidate context lengkap dari
-parent section. Sebagian intent akan membutuhkan beberapa block, sementara intent lain dapat
+parent section. Sebagian slot akan membutuhkan beberapa block, sementara slot lain dapat
 terjawab oleh satu block; LLM yang menentukan evidence set. Aturan lama tetap berlaku:
 datasource `netgear-customer-service`, seluruh sembilan manual masuk census, sampling hanya
-dilakukan pada leaf outline dengan seed tetap, dan hasil akhir 100 intent bilingual (100 English
+dilakukan pada leaf outline dengan seed tetap, dan hasil akhir 100 slot bilingual (100 English
 + 100 Indonesia = 200 row).
 
 Run ini tidak menimpa `selection-v1`. Artefak baru harus disimpan sebagai
@@ -29,14 +29,14 @@ candidate context yang kaya, bukan kewajiban bahwa setiap gold harus memiliki du
 
 ## Kontrol yang dipertahankan
 
-- 100 intent dan dua row bahasa untuk setiap intent (`question_pair_id` sama).
+- 100 slot dan dua row bahasa untuk setiap slot (`question_pair_id` sama).
 - Quota family tetap 50 row per family: fakta, setup, troubleshooting, dan fitur/keamanan/
   pemeliharaan/limitasi.
 - Sampling hanya dari `question_outline_frame.csv`; `question_source_frame.csv` adalah lookup
   teks dan provenance, bukan pool sampling kedua.
 - Random pick memakai seed `20260831` dan strata struktural `document × page_bin`.
 - Wording harus customer-facing, awam, dan tidak membocorkan ID internal.
-- Tidak ada reranker, intent classifier, knowledge graph, atau retrieval dalam authoring.
+- Tidak ada reranker, intent classifier, knowledge graph, atau retrieval dalam authoring; slot tidak dipakai sebagai label intent.
 - Database/object-storage audit tetap wajib sebelum authoring model menerima context.
 
 ## Input frozen
@@ -52,7 +52,7 @@ candidate context yang kaya, bukan kewajiban bahwa setiap gold harus memiliki du
 └── question-slots.csv
 ```
 
-`question-slots.csv` tetap menjadi daftar 100 intent dan 200 language slot. Jika anchor baru
+`question-slots.csv` tetap menjadi daftar 100 slot dan 200 language row. Jika anchor baru
 dipilih, buat run budget baru dengan seed dan allocation report yang dicatat; jangan mengubah
 file frozen `selection-v1`.
 
@@ -97,11 +97,11 @@ keberadaan ID di packet, dan provenance; Python tidak memaksa jumlah block atau 
   "reference_answer_en": "...",
   "reference_answer_id": "...",
   "evidence_block_ids": ["BLOCK-A"],
-  "evidence_rationale": "This block fully answers the intent."
+  "evidence_rationale": "This block fully answers the slot question."
 }
 ```
 
-Pertanyaan English dan Indonesia untuk satu `question_pair_id` harus mempertahankan intent,
+Pertanyaan English dan Indonesia untuk satu `question_pair_id` harus mempertahankan slot,
 reference answer, dan set evidence yang sama. Pertanyaan wajib memakai bahasa umum; nama menu,
 protokol, atau istilah teknis hanya dipakai jika memang diperlukan untuk membedakan tindakan.
 
@@ -180,7 +180,7 @@ jumlah block candidate per packet, jumlah gold block per question, dan alasan re
 OAT/OFAT hanya boleh memakai run ini jika:
 
 1. datasource dan sembilan dokumen cocok dengan audit database/object storage;
-2. 100 intent dan 200 row bilingual sudah frozen;
+2. 100 slot dan 200 row bilingual sudah frozen;
 3. seluruh packet berstatus `ready` dan berada di bawah hard token limit;
 4. setiap evidence set berisi block yang benar-benar diperlukan; jumlahnya boleh berbeda antar pertanyaan;
 5. quote, offset, page, hash, dan claim mapping lulus validator;
@@ -191,7 +191,7 @@ OAT/OFAT hanya boleh memakai run ini jika:
 
 Multi-block dipakai untuk meningkatkan validitas evidence, bukan untuk menaikkan angka recall.
 Jika audit menemukan hanya satu block yang diperlukan, pertanyaan tersebut harus tetap
-single-block atau diganti dengan intent lain yang secara alami membutuhkan beberapa block.
+single-block atau diganti dengan slot lain yang secara alami membutuhkan beberapa block.
 
 Pada review Codex saat ini, seluruh 100 packet dibaca dari `context_text` lengkap. Setelah
 evaluasi ulang, 16 pasangan memakai satu block, 68 memakai dua block, 13 memakai tiga block,

@@ -159,42 +159,6 @@
       \endverb
       \keyw{Computer Science - Computation and Language}
     \endentry
-    \entry{archiaiIndoLegalBertModelCard}{online}{}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=1ba5bb4800019bb1d36d3d09db784bbb}{%
-           family={{Archi AI}},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{organization}{1}{%
-        {Hugging Face}%
-      }
-      \strng{namehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{fullhash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{fullhashraw}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{bibnamehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authorbibnamehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authornamehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authorfullhash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authorfullhashraw}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \field{sortinit}{A}
-      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
-      \field{labeldatesource}{nodate}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{Model card for the archi-ai/Indo-LegalBERT checkpoint}
-      \field{title}{Indo-LegalBERT}
-      \field{urlday}{24}
-      \field{urlmonth}{8}
-      \field{urlyear}{2026}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://huggingface.co/archi-ai/Indo-LegalBERT
-      \endverb
-      \verb{url}
-      \verb https://huggingface.co/archi-ai/Indo-LegalBERT
-      \endverb
-    \endentry
     \entry{uuPembentukanPeraturan2011}{online}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a97484ffae7576a31eec9f496413dc23}{%
@@ -434,6 +398,61 @@
       \endverb
       \verb{url}
       \verb https://aclanthology.org/2024.emnlp-main.845/
+      \endverb
+    \endentry
+    \entry{cormackReciprocalRankFusion2009}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=8d007d505d39a8bbd47859edd9f4e9b6}{%
+           family={Cormack},
+           familyi={C\bibinitperiod},
+           given={Gordon\bibnamedelima V.},
+           giveni={G\bibinitperiod\bibinitdelim V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=627d44a3dfae51306bbd69387cb26ecf}{%
+           family={Clarke},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelimb L.\bibnamedelimi A.},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ba15bcbe35105437c49f4856ca902e75}{%
+           family={Buettcher},
+           familyi={B\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{6bb6f63c17e0aba9e6b11b99e39a4c5e}
+      \strng{fullhash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{fullhashraw}{45bd8b96ac405cb538d398359473efe1}
+      \strng{bibnamehash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{authorbibnamehash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{authornamehash}{6bb6f63c17e0aba9e6b11b99e39a4c5e}
+      \strng{authorfullhash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{authorfullhashraw}{45bd8b96ac405cb538d398359473efe1}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the 32nd Annual International ACM SIGIR Conference on Research and Development in Information Retrieval}
+      \field{title}{Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods}
+      \field{year}{2009}
+      \field{dateera}{ce}
+      \field{pages}{758\bibrangedash 759}
+      \range{pages}{2}
+      \verb{doi}
+      \verb 10.1145/1571941.1572114
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/1571941.1572114
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/1571941.1572114
       \endverb
     \endentry
     \entry{edgeFromLocalGlobalGraph2024}{article}{}{}
@@ -1925,6 +1944,66 @@
       \endverb
       \verb{url}
       \verb https://microsoft.github.io/presidio/
+      \endverb
+    \endentry
+    \entry{muninggarLexIDMetadataSemantic2023}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b9735a303417fbc715c25cad5792e21f}{%
+           family={Muninggar},
+           familyi={M\bibinitperiod},
+           given={Nur\bibnamedelima Siti},
+           giveni={N\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bdfff7fae4b047cbb0cd8f2d43a96fa1}{%
+           family={Krisnadhi},
+           familyi={K\bibinitperiod},
+           given={Adila\bibnamedelima Alfa},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{fullhash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{fullhashraw}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{bibnamehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authorbibnamehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authornamehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authorfullhash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authorfullhashraw}{d67d03a39625b0c0c3c884098c5b484f}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{The Legal Fiction principle stipulates that the government needs to ensure the public availability of all of their legal documents. Unfortunately, the text-based search services they provide cannot return satisfactory answers in retrieval scenarios requiring proper representation of relationships between various legal documents. A key problem here is the lack of explicit representation of such relationships behind the employed retrieval engines. We aim to address this problem by proposing LexID knowledge graph (KG) that provides an explicit knowledge representation for Indonesian legal domain usable for such retrieval purposes. The KG contains both legal metadata information and semantic content of the legal clauses of the legal document's articles, modeled using formal vocabulary from the LexID ontology also presented in this paper. The KG is constructed from thousands of Indonesian legal documents. Since the procedure of writing a legal document regulated by the government is clear and detailed, we use a rule-based approach to construct our KG. At the end, we describe several use cases of the KG to address different retrieval needs. In Addition, we evaluated the quality of our KG by measuring its ability to answer questions and got that LexID can answer questions with the macro average F1 score is about 0.91.}
+      \field{day}{1}
+      \field{issn}{2502-9274, 2088-7051}
+      \field{journaltitle}{Jurnal Ilmu Komputer dan Informasi}
+      \field{month}{3}
+      \field{number}{1}
+      \field{shorttitle}{{{LexID}}}
+      \field{title}{{{LexID}}: {{The Metadata}} and {{Semantic Knowledge Graph Construction}} of {{Indonesian Legal Document}}}
+      \field{urlday}{5}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{volume}{16}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{15\bibrangedash 46}
+      \range{pages}{32}
+      \verb{doi}
+      \verb 10.21609/jiki.v16i1.1096
+      \endverb
+      \verb{file}
+      \verb /home/fairuz/Zotero/storage/PLHB9SQZ/Muninggar and Krisnadhi - 2023 - LexID The Metadata and Semantic Knowledge Graph Construction of Indonesian Legal Document.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://jiki.cs.ui.ac.id/index.php/jiki/article/view/1096
+      \endverb
+      \verb{url}
+      \verb https://jiki.cs.ui.ac.id/index.php/jiki/article/view/1096
       \endverb
     \endentry
     \entry{narimissaExploringInformationRetrieval2024}{online}{}{}
@@ -3022,42 +3101,6 @@
       \endverb
       \keyw{Computer Science - Computation and Language}
     \endentry
-    \entry{archiaiIndoLegalBertModelCard}{online}{}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=1ba5bb4800019bb1d36d3d09db784bbb}{%
-           family={{Archi AI}},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{organization}{1}{%
-        {Hugging Face}%
-      }
-      \strng{namehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{fullhash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{fullhashraw}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{bibnamehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authorbibnamehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authornamehash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authorfullhash}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \strng{authorfullhashraw}{1ba5bb4800019bb1d36d3d09db784bbb}
-      \field{sortinit}{A}
-      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
-      \field{labeldatesource}{nodate}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{Model card for the archi-ai/Indo-LegalBERT checkpoint}
-      \field{title}{Indo-LegalBERT}
-      \field{urlday}{24}
-      \field{urlmonth}{8}
-      \field{urlyear}{2026}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://huggingface.co/archi-ai/Indo-LegalBERT
-      \endverb
-      \verb{url}
-      \verb https://huggingface.co/archi-ai/Indo-LegalBERT
-      \endverb
-    \endentry
     \entry{uuPembentukanPeraturan2011}{online}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=a97484ffae7576a31eec9f496413dc23}{%
@@ -3297,6 +3340,61 @@
       \endverb
       \verb{url}
       \verb https://aclanthology.org/2024.emnlp-main.845/
+      \endverb
+    \endentry
+    \entry{cormackReciprocalRankFusion2009}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=8d007d505d39a8bbd47859edd9f4e9b6}{%
+           family={Cormack},
+           familyi={C\bibinitperiod},
+           given={Gordon\bibnamedelima V.},
+           giveni={G\bibinitperiod\bibinitdelim V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=627d44a3dfae51306bbd69387cb26ecf}{%
+           family={Clarke},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelimb L.\bibnamedelimi A.},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ba15bcbe35105437c49f4856ca902e75}{%
+           family={Buettcher},
+           familyi={B\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{6bb6f63c17e0aba9e6b11b99e39a4c5e}
+      \strng{fullhash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{fullhashraw}{45bd8b96ac405cb538d398359473efe1}
+      \strng{bibnamehash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{authorbibnamehash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{authornamehash}{6bb6f63c17e0aba9e6b11b99e39a4c5e}
+      \strng{authorfullhash}{45bd8b96ac405cb538d398359473efe1}
+      \strng{authorfullhashraw}{45bd8b96ac405cb538d398359473efe1}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the 32nd Annual International ACM SIGIR Conference on Research and Development in Information Retrieval}
+      \field{title}{Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods}
+      \field{year}{2009}
+      \field{dateera}{ce}
+      \field{pages}{758\bibrangedash 759}
+      \range{pages}{2}
+      \verb{doi}
+      \verb 10.1145/1571941.1572114
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/1571941.1572114
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/1571941.1572114
       \endverb
     \endentry
     \entry{edgeFromLocalGlobalGraph2024}{article}{}{}
@@ -4788,6 +4886,66 @@
       \endverb
       \verb{url}
       \verb https://microsoft.github.io/presidio/
+      \endverb
+    \endentry
+    \entry{muninggarLexIDMetadataSemantic2023}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b9735a303417fbc715c25cad5792e21f}{%
+           family={Muninggar},
+           familyi={M\bibinitperiod},
+           given={Nur\bibnamedelima Siti},
+           giveni={N\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bdfff7fae4b047cbb0cd8f2d43a96fa1}{%
+           family={Krisnadhi},
+           familyi={K\bibinitperiod},
+           given={Adila\bibnamedelima Alfa},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{fullhash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{fullhashraw}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{bibnamehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authorbibnamehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authornamehash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authorfullhash}{d67d03a39625b0c0c3c884098c5b484f}
+      \strng{authorfullhashraw}{d67d03a39625b0c0c3c884098c5b484f}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{The Legal Fiction principle stipulates that the government needs to ensure the public availability of all of their legal documents. Unfortunately, the text-based search services they provide cannot return satisfactory answers in retrieval scenarios requiring proper representation of relationships between various legal documents. A key problem here is the lack of explicit representation of such relationships behind the employed retrieval engines. We aim to address this problem by proposing LexID knowledge graph (KG) that provides an explicit knowledge representation for Indonesian legal domain usable for such retrieval purposes. The KG contains both legal metadata information and semantic content of the legal clauses of the legal document's articles, modeled using formal vocabulary from the LexID ontology also presented in this paper. The KG is constructed from thousands of Indonesian legal documents. Since the procedure of writing a legal document regulated by the government is clear and detailed, we use a rule-based approach to construct our KG. At the end, we describe several use cases of the KG to address different retrieval needs. In Addition, we evaluated the quality of our KG by measuring its ability to answer questions and got that LexID can answer questions with the macro average F1 score is about 0.91.}
+      \field{day}{1}
+      \field{issn}{2502-9274, 2088-7051}
+      \field{journaltitle}{Jurnal Ilmu Komputer dan Informasi}
+      \field{month}{3}
+      \field{number}{1}
+      \field{shorttitle}{{{LexID}}}
+      \field{title}{{{LexID}}: {{The Metadata}} and {{Semantic Knowledge Graph Construction}} of {{Indonesian Legal Document}}}
+      \field{urlday}{5}
+      \field{urlmonth}{1}
+      \field{urlyear}{2026}
+      \field{volume}{16}
+      \field{year}{2023}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{15\bibrangedash 46}
+      \range{pages}{32}
+      \verb{doi}
+      \verb 10.21609/jiki.v16i1.1096
+      \endverb
+      \verb{file}
+      \verb /home/fairuz/Zotero/storage/PLHB9SQZ/Muninggar and Krisnadhi - 2023 - LexID The Metadata and Semantic Knowledge Graph Construction of Indonesian Legal Document.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://jiki.cs.ui.ac.id/index.php/jiki/article/view/1096
+      \endverb
+      \verb{url}
+      \verb https://jiki.cs.ui.ac.id/index.php/jiki/article/view/1096
       \endverb
     \endentry
     \entry{narimissaExploringInformationRetrieval2024}{online}{}{}

@@ -31,7 +31,7 @@
 % remain single-spaced as required by the report-writing guidelines.
 \AtBeginEnvironment{longtable}{\singlespacing}
 % Do not carry the document-wide paragraph-fill stretch into split table
-% cells; it can produce infinite-glue diagnostics when a longtable is broken
+% cells, it can produce infinite-glue diagnostics when a longtable is broken
 % across pages.
 \AtBeginEnvironment{longtable}{\setlength{\parfillskip}{0pt}}
 % Keep ordinary-sized tables in the main chapters together when they can fit
@@ -55,9 +55,11 @@
     figurename=Gambar,
     tablename=Tabel
 }
-% Pedoman mensyaratkan jarak minimal tiga baris antara float dan teks.
-\setlength{\intextsep}{3\baselineskip}
-\setlength{\textfloatsep}{3\baselineskip}
+% Keep figures and tables visually separated from body text without creating
+% an oversized blank band.  Most report figures use the [H] placement, for
+% which \intextsep controls the space immediately before and after the float.
+\setlength{\intextsep}{1\baselineskip}
+\setlength{\textfloatsep}{1\baselineskip}
 
 % Unicode font support
 \usepackage{fontspec}

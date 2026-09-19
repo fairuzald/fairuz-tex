@@ -12,41 +12,41 @@ konfigurasi dapat dibaca tanpa harus membuka bagian lain.
 
 \begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
 \caption{Struktur tabel \texttt{pipeline\_profile\_nodes}: urutan \emph{Node} dan \emph{Plugin}}\label{tab:rancangan-schema-pipeline-profile-nodes}\\
-\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\toprule \emph{Field} & Tabel/Tipe & Kunci/\emph{NULL} & Fungsi\\ \midrule
 \endfirsthead
-\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/\emph{NULL} & Fungsi\\ \midrule \endhead
 \bottomrule \endfoot
-\code{id} & \code{uuid} & PK, NOT NULL & Identitas baris \emph{node}.\\
-\code{profile_id} & \code{uuid} & FK, NOT NULL & \emph{Profile} pemilik, \emph{node} dihapus bersama \emph{profile}.\\
-\code{node_id} & \code{text} & UNIQUE/\emph{profile} & Identitas \emph{node} di dalam \emph{profile}.\\
-\code{component_type} & enum \code{component_type} & NOT NULL & \code{parser}, \code{chunker}, \code{indexer}, \code{kg}, \code{retrieval_orchestrator}, \code{xai_intent}, \code{xai_retrieval}, \code{xai_reranking}, \code{scraper}.\\
-\code{plugin_id} & \code{uuid} & FK, NOT NULL & \emph{Plugin} yang dipilih.\\
-\code{sort_order} & \code{integer} & UNIQUE/\emph{profile} & Posisi \emph{node}, satu posisi tidak boleh ganda.\\
-\code{config_json} & \code{json} & NOT NULL & Konfigurasi efektif yang lolos JSON \emph{Schema}.\\
+\code{id} & \code{uuid} & PK, NOT \emph{NULL} & Identitas baris \emph{node}.\\
+\code{profile_id} & \code{uuid} & FK, NOT \emph{NULL} & \emph{Profile} pemilik, \emph{node} dihapus bersama \emph{profile}.\\
+\code{node_id} & \code{text} & \emph{UNIQUE}/\emph{profile} & Identitas \emph{node} di dalam \emph{profile}.\\
+\code{component_type} & enum \code{component_type} & NOT \emph{NULL} & \code{parser}, \code{chunker}, \code{indexer}, \code{kg}, \code{retrieval_orchestrator}, \code{xai_intent}, \code{xai_retrieval}, \code{xai_reranking}, \code{scraper}.\\
+\code{plugin_id} & \code{uuid} & FK, NOT \emph{NULL} & \emph{Plugin} yang dipilih.\\
+\code{sort_order} & \code{integer} & \emph{UNIQUE}/\emph{profile} & Posisi \emph{node}, satu posisi tidak boleh ganda.\\
+\code{config_json} & \code{json} & NOT \emph{NULL} & Konfigurasi efektif yang lolos JSON \emph{Schema}.\\
 \end{longtable}
 
 \begin{longtable}{@{}p{3.8cm}p{2.8cm}p{2.5cm}p{\dimexpr\textwidth-3.8cm-2.8cm-2.5cm-6\tabcolsep\relax}@{}}
-\caption{Struktur tabel \texttt{rag\_node\_runs}: status dan percobaan \emph{Node}}\label{tab:rancangan-schema-rag-node-runs}\\
-\toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule
+\caption{Struktur tabel \texttt{rag\_node\_runs}: \emph{status} dan percobaan \emph{Node}}\label{tab:rancangan-schema-rag-node-runs}\\
+\toprule \emph{Field} & Tabel/Tipe & Kunci/\emph{NULL} & Fungsi\\ \midrule
 \endfirsthead
-\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/NULL & Fungsi\\ \midrule \endhead
+\multicolumn{4}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Tabel/Tipe & Kunci/\emph{NULL} & Fungsi\\ \midrule \endhead
 \bottomrule \endfoot
-\code{id} & \code{uuid} & PK, NOT NULL & Identitas satu eksekusi \emph{node}.\\
+\code{id} & \code{uuid} & PK, NOT \emph{NULL} & Identitas satu eksekusi \emph{node}.\\
 \code{run_id} & \code{uuid} & FK CASCADE & \emph{Pipeline run} pemilik.\\
-\code{component_type} & enum \code{rag_component_type} & NOT NULL & \code{chunker}, \code{indexer}, \code{kg}, \code{parser}, \code{scraper}.\\
-\code{plugin_name} & \code{text} & NULL & Nama \emph{plugin} yang dijalankan.\\
-\code{plugin_version} & \code{text} & NULL & Versi \emph{plugin} yang dijalankan.\\
-\code{status} & enum \code{rag_run_status} & NOT NULL & \code{queued}, \code{running}, \code{succeeded}, \code{failed}, \code{cancelled}.\\
-\code{attempt} & \code{integer} & NOT NULL & Nomor percobaan \emph{node}.\\
-\code{pipeline_attempt} & \code{integer} & NOT NULL & Nomor percobaan \emph{pipeline}.\\
-\code{artifact_object_key} & \code{text} & NULL & \emph{Artifact} keluaran \emph{node}.\\
-\code{cache_hit} & \code{boolean} & NULL & Penanda keluaran dipulihkan dari \emph{artifact cache}.\\
-\code{cache_key} & \code{text} & NULL & Kunci deterministik untuk pencarian \emph{artifact cache}.\\
-\code{error_json} & \code{jsonb} & NULL & Kegagalan lokal \emph{node}.\\
-\code{created_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu \emph{node} \emph{run} dibuat.\\
-\code{started_at} & \code{timestamptz} & NULL & Waktu \emph{node} mulai diproses.\\
-\code{finished_at} & \code{timestamptz} & NULL & Waktu \emph{node} selesai.\\
-\code{updated_at} & \code{timestamptz} & NOT NULL, \code{now()} & Waktu status \emph{node} terakhir diubah.\\
+\code{component_type} & enum \code{rag_component_type} & NOT \emph{NULL} & \code{chunker}, \code{indexer}, \code{kg}, \code{parser}, \code{scraper}.\\
+\code{plugin_name} & \code{text} & \emph{NULL} & Nama \emph{plugin} yang dijalankan.\\
+\code{plugin_version} & \code{text} & \emph{NULL} & Versi \emph{plugin} yang dijalankan.\\
+\code{status} & enum \code{rag_run_status} & NOT \emph{NULL} & \code{queued}, \code{running}, \code{succeeded}, \code{failed}, \code{cancelled}.\\
+\code{attempt} & \code{integer} & NOT \emph{NULL} & Nomor percobaan \emph{node}.\\
+\code{pipeline_attempt} & \code{integer} & NOT \emph{NULL} & Nomor percobaan \emph{pipeline}.\\
+\code{artifact_object_key} & \code{text} & \emph{NULL} & \emph{Artifact} keluaran \emph{node}.\\
+\code{cache_hit} & \code{boolean} & \emph{NULL} & Penanda keluaran dipulihkan dari \emph{artifact cache}.\\
+\code{cache_key} & \code{text} & \emph{NULL} & Kunci deterministik untuk pencarian \emph{artifact cache}.\\
+\code{error_json} & \code{jsonb} & \emph{NULL} & Kegagalan lokal \emph{node}.\\
+\code{created_at} & \code{timestamptz} & NOT \emph{NULL}, \code{now()} & Waktu \emph{node} \emph{run} dibuat.\\
+\code{started_at} & \code{timestamptz} & \emph{NULL} & Waktu \emph{node} mulai diproses.\\
+\code{finished_at} & \code{timestamptz} & \emph{NULL} & Waktu \emph{node} selesai.\\
+\code{updated_at} & \code{timestamptz} & NOT \emph{NULL}, \code{now()} & Waktu \emph{status} \emph{node} terakhir diubah.\\
 \end{longtable}
 
 \begin{longtable}{@{}p{3.5cm}p{3.0cm}p{\dimexpr\textwidth-3.5cm-3.0cm-4\tabcolsep\relax}@{}}
@@ -72,9 +72,9 @@ konfigurasi dapat dibaca tanpa harus membuka bagian lain.
 \bottomrule \endfoot
 \code{idempotency_key} & \emph{string} & Kunci deduplikasi untuk satu permintaan \emph{chunker}.\\
 \code{event} & \code{NodeEventEnvelope} & Identitas \emph{run}, \emph{node} \emph{chunker}, \emph{attempt}, dan korelasi.\\
-\code{profile_id} & \emph{string}, NULL & \emph{Profile} \emph{target} ketika pesan memerlukan identitas eksplisit.\\
-\code{document_artifact} & \code{ArtifactReference}, NULL & Referensi \code{canonical-document}.\\
-\code{document_object_key} & \emph{string}, NULL & Referensi kompatibilitas, minimal satu sumber dokumen harus tersedia.\\
+\code{profile_id} & \emph{string}, \emph{NULL} & \emph{Profile} \emph{target} ketika pesan memerlukan identitas eksplisit.\\
+\code{document_artifact} & \code{ArtifactReference}, \emph{NULL} & Referensi \code{canonical-document}.\\
+\code{document_object_key} & \emph{string}, \emph{NULL} & Referensi kompatibilitas, minimal satu sumber dokumen harus tersedia.\\
 \end{longtable}
 
 \begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{4.0cm}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{2.4cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.4cm-6\tabcolsep\relax}@{}}
@@ -88,13 +88,13 @@ konfigurasi dapat dibaca tanpa harus membuka bagian lain.
 \code{CanonicalChunks} & \code{chunks} & \emph{array of} \code{Canonical}\allowbreak\code{Chunk} & Daftar elemen \code{CanonicalChunk} hasil pemotongan.\\
 \code{CanonicalChunks} & \code{metadata} & \emph{object} & \emph{Metadata} kumpulan \emph{chunk}.\\
 \code{CanonicalChunk} & \code{chunk_id} & \emph{string} & Identitas \emph{chunk}.\\
-\code{CanonicalChunk} & \code{kind} & \emph{enum} & Kanal penggunaan \emph{chunk}, yaitu \emph{retrieval}, \emph{context}, atau \emph{both}.\\
+\code{CanonicalChunk} & \code{kind} & \emph{enum} & Jenis penggunaan \emph{chunk}, yaitu \emph{retrieval}, \emph{context}, atau \emph{both}.\\
 \code{CanonicalChunk} & \code{text} & \emph{string} & Teks \emph{chunk}.\\
 \code{CanonicalChunk} & \code{metadata} & \emph{object} & \emph{Metadata} \emph{chunk}.\\
 \code{CanonicalChunk} & \code{source_blocks} & \emph{array of} \code{string} & Referensi ID \emph{block} sumber \emph{chunk}.\\
-\code{relationships} & \code{parent_id} & \emph{string}, NULL & Referensi \emph{parent} \emph{chunk} jika tersedia.\\
-\code{relationships} & \code{previous_id} & \emph{string}, NULL & Referensi \emph{chunk} sebelumnya jika tersedia.\\
-\code{relationships} & \code{next_id} & \emph{string}, NULL & Referensi \emph{chunk} berikutnya jika tersedia.\\
+\code{relationships} & \code{parent_id} & \emph{string}, \emph{NULL} & Referensi \emph{parent} \emph{chunk} jika tersedia.\\
+\code{relationships} & \code{previous_id} & \emph{string}, \emph{NULL} & Referensi \emph{chunk} sebelumnya jika tersedia.\\
+\code{relationships} & \code{next_id} & \emph{string}, \emph{NULL} & Referensi \emph{chunk} berikutnya jika tersedia.\\
 \end{longtable}
 
 \begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{4.0cm}>{\RaggedRight\arraybackslash}p{3.0cm}>{\RaggedRight\arraybackslash}p{2.4cm}>{\RaggedRight\arraybackslash}p{\dimexpr\textwidth-4.0cm-3.0cm-2.4cm-6\tabcolsep\relax}@{}}
@@ -125,14 +125,14 @@ konfigurasi dapat dibaca tanpa harus membuka bagian lain.
 \endfirsthead
 \multicolumn{3}{l}{\footnotesize\emph{(lanjutan)}}\\ \toprule \emph{Field} & Nilai \emph{default}/batas & Makna dan keluaran\\ \midrule \endhead
 \bottomrule \endfoot
-\code{indexed_metadata} & array, \emph{default} kosong, maksimum 32 item & \emph{Metadata} yang diproyeksikan ke dokumen indeks. Setiap item memiliki nama, path \emph{metadata}, dan tipe.\\
+\code{indexed_metadata} & \emph{array}, \emph{default} kosong, maksimum 32 item & \emph{Metadata} yang diproyeksikan ke dokumen indeks. Setiap item memiliki nama, path \emph{metadata}, dan tipe.\\
 \code{embedding.provider} & enum local/openrouter/openai, \emph{default} \code{local} & \emph{Adapter} penyedia \emph{embedding}.\\
-\code{embedding.model} & \emph{default} \code{BAAI/bge-m3} & Identitas model \emph{embedding}.\\
+\code{embedding.model} & \emph{default} \code{BAAI/bge-m3} & Identitas \emph{model} \emph{embedding}.\\
 \code{embedding.api_key_ref} & opsional untuk \emph{provider} eksternal & Referensi kunci akses dari environment.\\
 \code{embedding.api_key} & opsional untuk \emph{provider} eksternal & Nilai kunci akses inline.\\
 \code{embedding.base_url} & \emph{default} URL \emph{provider} & Alamat \emph{service} \emph{embedding} eksternal.\\
 \code{embedding.timeout_seconds} & number, \emph{default} 30 & Batas waktu permintaan \emph{embedding}.\\
-\code{embedding.revision} & opsional & Revisi model \emph{embedding}.\\
+\code{embedding.revision} & opsional & Revisi \emph{model} \emph{embedding}.\\
 \code{embedding.local_backend} & opsional & \emph{Backend} inferensi lokal.\\
 \code{embedding.batch_size} & \emph{default} 32 & Jumlah teks dalam satu batch inferensi.\\
 \code{embedding.device} & \emph{default} \code{auto} & Perangkat inferensi yang digunakan.\\

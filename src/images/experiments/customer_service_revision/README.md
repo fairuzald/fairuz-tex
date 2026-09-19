@@ -7,7 +7,7 @@ Benchmark retrieval untuk datasource `netgear-customer-service`.
 | Tahap | Keputusan | Output |
 |---|---|---|
 | 01 — Corpus dan EDA | Gunakan seluruh 9 PDF; analisis outline dan provenance | `question_outline_frame.csv`, `question_source_frame.csv`, manifest |
-| 02.01 — Budget | Random pick 100 leaf outline/intents dengan seed, coverage dokumen/page; setiap intent dibuat dua language slot | `question-slots.csv`, allocation report |
+| 02.01 — Budget | Random pick 100 leaf outline/slot anchors dengan seed dan coverage dokumen/page; setiap slot dibuat dua varian bahasa | `question-slots.csv`, allocation report |
 | 02.02 — Context | Expand 100 outline terpilih secara deterministik menjadi 100 shared bounded context packets yang dipakai dua bahasa | `context-packets.jsonl`, context manifest |
 | 02.03 — Question/gold | Tulis 100 pasangan pertanyaan customer-facing English–Indonesia dan gold dari packet saja | `question-set.csv`, `gold-evidence.jsonl` |
 | 03 — Retrieval | Dua lane terpisah: single-block final dan multiblock benchmark; generic structure-aware, tanpa KG | Empat metrik single-block per cutoff, bahasa, family, product, pasangan, dan question |
@@ -17,7 +17,7 @@ Benchmark retrieval untuk datasource `netgear-customer-service`.
 - Corpus adalah census 9/9; tidak ada sampling dokumen.
 - Random pick dilakukan pada `question_outline_frame.csv`, bukan pada label heuristic.
 - `question_source_frame.csv` hanya lookup text block untuk context dan gold.
-- Setiap intent memiliki dua varian pertanyaan: 100 English (`Q-001..Q-100`) dan 100 Indonesian (`Q-101..Q-200`); `question_pair_id` menghubungkan keduanya.
+- Setiap slot memiliki dua varian pertanyaan: 100 English (`Q-001..Q-100`) dan 100 Indonesian (`Q-101..Q-200`); `question_pair_id` menghubungkan keduanya. Slot bukan label intent dan tidak dipakai untuk klasifikasi.
 - Family pertanyaan seimbang pada seluruh 200 row: 50 fakta, 50 setup, 50 troubleshooting, 50 fitur/limitasi.
 - Wording memakai gaya customer awam; istilah teknis hanya dipertahankan jika memang diperlukan agar manual dapat menjawabnya.
 - Implementasi memakai `generic-structure-aware` sebagai chunker acuan. Tidak ada knowledge graph, LLM graph, atau metrik KG.

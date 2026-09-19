@@ -1,7 +1,7 @@
 # 02.03 — Question generation dan gold
 
 Tahap ini mengirim `context_text` lengkap dari setiap packet ke authoring LLM. Model menulis
-satu intent customer-facing dalam English dan Indonesia, reference answer, lalu memilih sendiri
+satu pasangan pertanyaan customer-facing dalam English dan Indonesia, reference answer, lalu memilih sendiri
 block evidence yang benar-benar diperlukan. Jumlah evidence boleh satu atau beberapa block;
 tidak ada aturan “tepat dua”.
 
@@ -15,7 +15,7 @@ tidak ada aturan “tepat dua”.
 
 Satu packet dipakai bersama oleh dua bahasa pada `question_pair_id` yang sama. `context_text`
 adalah string lengkap berlabel yang berisi semua candidate block hasil materialisasi. “Lengkap”
-berarti seluruh context packet untuk intent itu, bukan seluruh sembilan manual sekaligus. LLM
+berarti seluruh context packet untuk slot itu, bukan seluruh sembilan manual sekaligus. LLM
 tidak boleh mengambil teks di luar string tersebut.
 
 ## Authoring command
