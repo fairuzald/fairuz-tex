@@ -1,0 +1,103 @@
+\section{Hasil dan Pembahasan}
+
+\subsection{Hasil pada User Manual}
+
+\begin{table}[t]
+\centering
+\caption{Hasil kelompok chunker pada User Manual, $K=30$}
+\label{tab:hasil-manual-chunker}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}p{0.37\columnwidth}rrrr@{}}
+\toprule
+\textbf{Strategi} & \textbf{R} & \textbf{P} & \textbf{N} & \textbf{M}\\
+\midrule
+Structure-aware hybrid & \textbf{0,740} & \textbf{0,048} & \textbf{0,333} & 0,231\\
+Recursive & 0,625 & 0,032 & 0,291 & 0,216\\
+Sliding-window & 0,685 & 0,041 & 0,322 & \textbf{0,232}\\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize R: Recall, P: Precision, N: NDCG, M: MRR.}
+\end{tabularx}
+\end{table}
+
+Pada kelompok chunker, structure-aware hybrid menghasilkan Recall@30 sebesar 0,740, lebih tinggi 0,055 daripada sliding-window dan 0,115 daripada recursive (Tabel~\ref{tab:hasil-manual-chunker}). Keunggulan tersebut juga muncul pada precision dan NDCG. Sliding-window memiliki MRR sedikit lebih tinggi, 0,232 berbanding 0,231, sehingga pemeliharaan struktur meningkatkan jumlah reference yang ditemukan tanpa selalu menempatkan reference pertama pada posisi paling awal. Ketika cutoff dinaikkan ke 60, recall hanya berubah menjadi 0,745, 0,685, dan 0,630; sebagian besar coverage tambahan sudah diperoleh sebelum ekor ranking.
+
+\begin{table}[t]
+\centering
+\caption{Hasil kelompok indexer pada User Manual, $K=30$}
+\label{tab:hasil-manual-indexer}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}p{0.37\columnwidth}rrrr@{}}
+\toprule
+\textbf{Strategi} & \textbf{R} & \textbf{P} & \textbf{N} & \textbf{M}\\
+\midrule
+Structure-aware dense & \textbf{0,785} & \textbf{0,057} & \textbf{0,350} & \textbf{0,314}\\
+Hybrid & 0,740 & 0,048 & 0,333 & 0,231\\
+Structure-aware sparse & 0,420 & 0,028 & 0,157 & 0,120\\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize R: Recall, P: Precision, N: NDCG, M: MRR.}
+\end{tabularx}
+\end{table}
+
+Dense indexer memberikan hasil terbaik pada semua metrik retrieval manual (Tabel~\ref{tab:hasil-manual-indexer}). Selisih recall dense terhadap sparse adalah 0,365, sedangkan terhadap hybrid adalah 0,045. Pada $K=30$, recall dense untuk pertanyaan Inggris dan Indonesia masing-masing 0,810 dan 0,760; gap lintas bahasa 0,050 lebih kecil daripada hybrid (0,120) dan sparse (0,240). Hal ini konsisten dengan tujuan BGE-M3 untuk menemukan parafrasa multibahasa, tetapi tidak mengubah batasan bahwa kecocokan vektor bukan kesetaraan makna hukum.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{metrics-at-sweet-spot-indexer.png}
+\caption{Metrik indexer User Manual pada $K=30$.}
+\label{fig:hasil-manual-indexer}
+\end{figure}
+
+Pada generation dengan $K=10$, dense menghasilkan correctness/faithfulness 0,788/0,958, hybrid 0,711/0,946, dan sparse 0,508/0,881. Payload dense justru paling kecil, sekitar 3.399 token, dibandingkan hybrid 3.514 dan sparse 3.708. Jadi peningkatan correctness tidak dijelaskan oleh jumlah token semata, melainkan oleh reference yang lebih lengkap dan lebih awal pada sepuluh evidence teratas.
+
+\subsection{Hasil pada Peraturan Pendidikan}
+
+\begin{table*}[t]
+\centering
+\caption{Hasil retrieval pada corpus hukum, $K=30$}
+\label{tab:hasil-legal}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{0.31\textwidth}rrrr@{}}
+\toprule
+\textbf{Konfigurasi} & \textbf{Recall} & \textbf{Precision} & \textbf{NDCG} & \textbf{MRR}\\
+\midrule
+Legal-structure dense (kelompok chunker) & \textbf{0,6854} & \textbf{0,1520} & 0,5040 & \textbf{0,5240}\\
+Recursive (kelompok chunker) & 0,6730 & 0,1453 & 0,4909 & 0,4937\\
+Sliding (kelompok chunker) & 0,6345 & 0,1507 & \textbf{0,5042} & 0,4626\\
+Structure-aware dense (kelompok indexer) & \textbf{0,6854} & \textbf{0,1520} & \textbf{0,5040} & 0,5240\\
+Structure-aware sparse & 0,6381 & 0,1253 & 0,4262 & 0,4613\\
+Structure-aware hybrid & 0,6412 & 0,1307 & 0,4797 & \textbf{0,5439}\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+Legal-structure dense mengalahkan sliding baseline pada recall sebesar 0,0509 (Tabel~\ref{tab:hasil-legal}). Keunggulan tersebut berasal dari child chunk yang tetap membawa identitas Pasal dan konteks induk, bukan dari penambahan jumlah kandidat. Recursive berada dekat dengan dense karena kalimat yang bersebelahan sering tetap bersama; sliding hampir menyamai dense pada NDCG (0,5042 berbanding 0,5040), tetapi tidak menemukan sebanyak reference secara total.
+
+Pada kelompok indexer, dense memperoleh recall 0,6854, sparse 0,6381, dan hybrid 0,6412. Hybrid memiliki MRR tertinggi, 0,5439, yang berarti satu reference pertama lebih sering muncul di posisi awal. Namun, tujuan utama pipeline adalah menyediakan sebanyak mungkin context reference untuk tahap berikutnya, sehingga dense tetap dipilih sebagai konfigurasi coverage. Perbedaan ini memperlihatkan bahwa recall dan posisi hit pertama mengukur sifat ranking yang berbeda.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{metrics-at-sweet-spot.png}
+\caption{Metrik seluruh konfigurasi hukum pada $K=30$.}
+\label{fig:hasil-legal}
+\end{figure}
+
+Generation hukum memperkuat pola tersebut. Legal-structure dense menghasilkan correctness 0,690 dan faithfulness 0,972. Sparse menghasilkan 0,578/0,982, sedangkan hybrid menghasilkan 0,664/0,982. Faithfulness yang tinggi tidak berarti jawaban lengkap: evidence dapat mendukung klaim yang ditulis, tetapi tidak memuat seluruh rincian reference. Payload rata-rata ketiga indexer hampir sama, sehingga selisih correctness lebih tepat dibaca sebagai dampak coverage dan urutan evidence.
+
+\subsection{Perluasan dengan Legal Knowledge Graph}
+
+Eksperimen graf memetakan reference ke dokumen sumber, mengambil seed dari top-30 retrieval, lalu menelusuri neighborhood global sampai kedalaman dua. Pada benchmark hukum, graf memiliki 17 relasi berarah dan 24 relasi tak berarah. Neighborhood recall pada $K=30$ adalah 0,9556 untuk dense, 0,9975 untuk recursive, 1,0000 untuk sliding, 0,9672 untuk sparse, dan 0,9975 untuk hybrid.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{kg-expanded-full-recall-k30.png}
+\caption{Neighborhood recall legal graph pada $K=30$.}
+\label{fig:hasil-kg}
+\end{figure}
+
+Nilai 1,0000 pada sliding tidak bertentangan dengan recall context reference yang lebih rendah. Satu dokumen seed dapat membuka beberapa dokumen tetangga melalui relasi perubahan, sehingga graf mengukur jangkauan lingkungan dan bukan ketepatan langsung setiap unit bukti. Temuan ini mendukung penggunaan graf sebagai proyeksi pelengkap: text retrieval memilih seed, sementara traversal menyediakan konteks lintas-dokumen yang eksplisit dan dapat ditelusuri.
+
+\subsection{Pembahasan dan Keterbatasan}
+
+Hasil dua korpus menunjukkan pola yang konsisten tetapi tidak identik. Structure-aware membantu ketika struktur sumber membawa informasi semantik, terutama pada legal-structure yang mempertahankan identitas Pasal dan parent context. Dense retrieval paling baik untuk coverage pada kedua domain, tetapi hybrid lebih baik untuk MRR hukum. Dengan demikian, tidak ada konfigurasi yang unggul pada seluruh metrik; tujuan tahap harus ditetapkan sebelum memilih komponen.
+
+Kesimpulan ini bersifat kondisional pada corpus, pertanyaan, parser native-text, model BGE-M3, dan cutoff yang digunakan. Manual hanya mencakup sembilan produk Netgear dan 200 pertanyaan bilingual, sedangkan corpus hukum mencakup satu bidang dan 25 pertanyaan terverifikasi. OFAT tidak mengukur interaksi semua kombinasi parameter. Neighborhood recall juga tidak dapat dipakai sebagai pengganti context-reference recall. Perluasan corpus, anotasi relasi per pertanyaan, full factorial, dan pengujian model embedding hukum menjadi pekerjaan lanjutan yang wajar.

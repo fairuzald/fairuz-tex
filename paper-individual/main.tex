@@ -1,0 +1,55 @@
+\documentclass[conference,a4paper,10pt]{IEEEtran}
+
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{amsmath,amssymb,booktabs,graphicx,microtype,tabularx,array,url,xurl,xspace}
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=4,giveninits=true,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{../src/bib/manual.bib}
+\addbibresource{../src/bib/agent.bib}
+\addbibresource{../src/bib/ingestion.bib}
+
+\graphicspath{{../src/images/}{../src/images/manual/}{../src/images/experiments/customer_service_revision/final_eda/}{../src/images/experiments/legal_revision/final_eda/}}
+
+\newcommand{\chunker}{\textit{chunker}\xspace}
+\newcommand{\indexer}{\textit{indexer}\xspace}
+\newcommand{\kg}{\textit{knowledge graph}\xspace}
+\newcommand{\plugin}{\textit{plugin}\xspace}
+\newcommand{\artifact}{\textit{artifact}\xspace}
+\newcommand{\profile}{\textit{profile}\xspace}
+\newcommand{\retrieval}{\textit{retrieval}\xspace}
+\newcommand{\omnirag}{OMNI-RAG\xspace}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.08}
+
+\title{Konstruksi Basis Pengetahuan Modular pada OMNI-RAG Multi-Domain:\\
+Evaluasi Chunker, Indexer, dan Legal Knowledge Graph}
+
+\author{\IEEEauthorblockN{Moh Fairuz Alauddin Yahya}
+\IEEEauthorblockA{Program Studi Informatika, Institut Teknologi Bandung\\
+Bandung, Indonesia\\
+13522057}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Pipeline \textit{Retrieval-Augmented Generation} (RAG) harus mengubah dokumen yang beragam menjadi unit informasi yang dapat dicari sebelum model bahasa menyusun jawaban. Paper ini menyajikan rancangan dan evaluasi kontribusi individual untuk konstruksi basis pengetahuan pada \omnirag, yaitu arsitektur multi-domain berbasis \plugin. Fokus penelitian adalah tiga proyeksi dari dokumen kanonik yang sama: \chunker, \indexer, dan \kg. Kontrak \textit{CanonicalDocument}, \textit{CanonicalChunks}, \textit{CanonicalIndex}, dan \textit{CanonicalGraph} memisahkan orkestrator dari strategi pemrosesan, sedangkan \textit{profile}, manifest, dan provenance menjaga pemilihan komponen serta keterlacakan hasil. Eksperimen \textit{one factor at a time} menggunakan sembilan manual Netgear (1.400 halaman, 200 pertanyaan bilingual) dan korpus hukum (256 dokumen, 25 pertanyaan terverifikasi). Pada $K=30$, \textit{structure-aware} menghasilkan \textit{recall} 0,740 pada manual, sedangkan \textit{legal-structure dense} menghasilkan 0,6854 pada korpus hukum. Dense indexer BAAI/BGE-M3 memperoleh \textit{recall} 0,785 pada manual dan 0,6854 pada hukum; hybrid memiliki MRR hukum tertinggi, 0,5439. Traversal graf hingga kedalaman dua mencapai \textit{neighborhood recall} 1,0000 pada konfigurasi \textit{sliding}. Hasil menunjukkan bahwa pemeliharaan struktur dan pencocokan semantik meningkatkan cakupan konteks, tetapi konfigurasi terbaik bergantung pada domain serta metrik yang diprioritaskan.
+\end{abstract}
+
+\begin{IEEEkeywords}
+OMNI-RAG, basis pengetahuan, chunking, indexing, knowledge graph, plugin, retrieval augmented generation.
+\end{IEEEkeywords}
+
+\input{sections/01-pendahuluan}
+\input{sections/02-rancangan}
+\input{sections/03-metode}
+\input{sections/04-hasil}
+\input{sections/05-kesimpulan}
+
+\balance
+\printbibliography[title={Daftar Pustaka}]
+\end{document}

@@ -1,0 +1,11 @@
+\section{Kesimpulan}
+
+Paper ini menyajikan konstruksi basis pengetahuan modular untuk \omnirag multi-domain, dengan Capstone hanya sebagai konteks integrasi. Kontrak artefak kanonik membuat keluaran parser, \chunker, \indexer, dan \kg dapat dipertukarkan; \plugin Registry dan \profile memungkinkan strategi baru dipilih tanpa mengubah orkestrator. Dari empat strategi chunker, pemeliharaan struktur memberikan coverage lebih tinggi daripada fixed-window pada manual maupun peraturan. Dari tiga strategi indexer, dense BAAI/BGE-M3 memberikan Recall@30 tertinggi pada kedua corpus, sementara hybrid memiliki MRR hukum tertinggi. Legal graph deterministik memperluas seed retrieval ke neighborhood dokumen yang hampir atau sepenuhnya tercakup, tetapi metrik tersebut tetap dibaca terpisah dari recall context reference.
+
+Secara empiris, konfigurasi utama adalah structure-aware dense untuk coverage manual (recall 0,785) dan legal-structure dense untuk coverage hukum (recall 0,6854). Hasil ini tidak menyatakan bahwa satu konfigurasi universal untuk semua domain; konfigurasi terbaik ditentukan oleh struktur dokumen dan tujuan metrik. Kontribusi utama penelitian adalah menunjukkan bagaimana keputusan tersebut dapat diuji secara terisolasi melalui kontrak, provenance, dan eksperimen OFAT.
+
+Pengembangan berikutnya perlu memperluas corpus dan pertanyaan terverifikasi, menguji full factorial untuk interaksi chunker-indexer, melatih atau mengevaluasi embedding yang lebih spesifik untuk bahasa hukum Indonesia, serta mengukur kualitas relasi graf per jenis dan per pertanyaan. Artefak run dan provenance yang sudah disimpan menyediakan dasar untuk eksperimen tersebut.
+
+\section*{Ucapan Terima Kasih}
+
+Penulis berterima kasih kepada pembimbing dan anggota tim proyek yang menyediakan konteks integrasi sistem. Paper ini hanya menyajikan kontribusi penulis pada konstruksi basis pengetahuan dan tidak mengklaim kinerja komponen sistem di luar ruang lingkup tersebut.

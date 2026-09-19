@@ -1,0 +1,70 @@
+\section{Metode Eksperimen}
+
+\subsection{Lingkungan dan Korpus}
+
+Pipeline dijalankan dengan Python 3.13 pada worker asinkron. PostgreSQL menyimpan status dan metadata eksekusi, object storage menyimpan artefak, RabbitMQ membawa handoff antartahap, OpenSearch 3.3.0 menyediakan lexical dan vector search, dan Neo4j 5.26 menyimpan graf. Embedding menggunakan BAAI/BGE-M3 pada CPU. Infrastruktur, parser, model, dan jumlah kandidat dibuat sama untuk setiap perbandingan komponen.
+
+\begin{table}[t]
+\centering
+\caption{Korpus dan unit evaluasi}
+\label{tab:korpus}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}p{0.25\columnwidth}X@{}}
+\toprule
+\textbf{Korpus} & \textbf{Cakupan dan acuan}\\
+\midrule
+\textit{User Manual} & 9 manual Netgear, 1.400 halaman, 100 slot bilingual, 200 pertanyaan, satu context reference per slot.\\
+Peraturan pendidikan & 256 dokumen (49 memuat reference dan 207 noise), 25 pertanyaan terverifikasi, 148 baris reference, 144 context unik, 45 dokumen seed.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Pada corpus manual, sembilan dokumen meliputi CM2000, LM1200, R6350, R7000, RAX120, RAX50, RAXE500, RBK852, dan XR500. Pertanyaan dibentuk dari slot yang disampling terstratifikasi menurut dokumen dan posisi halaman, kemudian setiap slot diberi varian Inggris dan Indonesia. Pada corpus hukum, 49 dokumen yang memuat reference dipertahankan sebagai inti; 207 noise dipilih secara stratified berdasarkan kelompok bentuk, status, rentang tahun, dan panjang sehingga semua konfigurasi melihat datasource 256 dokumen yang sama.
+
+\subsection{Protokol Perbandingan}
+
+Eksperimen memakai \textit{one factor at a time} (OFAT). Pada kelompok chunker, datasource, parser, embedding, dan indexer dikunci; hanya strategi segmentasi yang berubah. Pada kelompok indexer, chunker dan seluruh input dikunci; hanya representasi lexical, dense, atau hybrid yang berubah. Jalur direct retrieval mematikan reranker dan \kg agar metrik retrieval tidak tercampur dengan tahap hilir. Sweep cutoff menggunakan $K=5,10,\ldots,60$; $K=30$ dipilih sebagai cutoff kandidat bersama untuk membaca trade-off coverage dan beban downstream. Generation menggunakan sepuluh evidence teratas ($K=10$).
+
+Pertanyaan manual dihitung gabungan serta terpisah menurut bahasa. Pertanyaan hukum mencakup pendirian dan status institusi, kewenangan, akses mahasiswa, kualifikasi staf, penjaminan mutu, serta kepatuhan. Semua hasil dicatat per konfigurasi; hasil kandidat dari konfigurasi berbeda tidak digabungkan.
+
+\subsection{Metrik}
+
+Misalkan $G_q$ adalah himpunan context reference acuan untuk pertanyaan $q$, sedangkan $R_q(K)$ adalah himpunan chunk unik yang dikembalikan sampai cutoff $K$. Recall dan precision dihitung sebagai
+\begin{equation}
+\begin{aligned}
+\operatorname{Recall}@K&=\frac{1}{|Q|}\sum_{q\in Q}\frac{|G_q\cap R_q(K)|}{|G_q|},\\
+\operatorname{Precision}@K&=\frac{1}{|Q|}\sum_{q\in Q}\frac{|G_q\cap R_q(K)|}{K}.
+\end{aligned}
+\label{eq:recall-precision}
+\end{equation}
+
+MRR menilai posisi reference pertama. Jika $r_q$ adalah posisi tersebut, kontribusinya $1/r_q$ dan bernilai nol ketika reference tidak ditemukan. NDCG menggunakan label relevansi bertingkat 0, 1, dan 2 untuk membedakan konteks yang tidak mendukung, mendukung sebagian, dan mendukung langsung. Pada generation, \textit{correctness} mengukur kelengkapan jawaban terhadap acuan, sedangkan \textit{faithfulness} memeriksa dukungan klaim oleh evidence.
+
+Untuk graf, reference dipetakan ke dokumen sumber. $N_q$ adalah himpunan dokumen tetangga acuan dan $H_q(K)$ adalah hasil setelah seed retrieval dan traversal global hingga kedalaman dua. Neighborhood recall didefinisikan sebagai
+\begin{equation}
+\operatorname{KGRecall}@K=\frac{1}{|Q|}\sum_{q\in Q}\frac{|N_q\cap H_q(K)|}{|N_q|}.
+\label{eq:kg-recall}
+\end{equation}
+
+Metrik ini mengukur jangkauan lingkungan, bukan keberhasilan menemukan setiap context reference secara langsung. Oleh sebab itu, nilai graf dilaporkan terpisah dari Recall@K retrieval.
+
+\subsection{Konfigurasi yang Dibandingkan}
+
+\begin{table*}[t]
+\centering
+\caption{Konfigurasi OFAT pada dua korpus}
+\label{tab:konfigurasi}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{0.18\textwidth}p{0.31\textwidth}X@{}}
+\toprule
+\textbf{Korpus dan kelompok} & \textbf{Level yang dibandingkan} & \textbf{Parameter tetap}\\
+\midrule
+Manual--chunker & structure-aware hybrid; recursive; sliding-window & 512 karakter, overlap 51 untuk recursive/sliding, hybrid indexer, parser dan embedding yang sama.\\
+Manual--indexer & structure-aware dense; hybrid; structure-aware sparse & structure-aware chunker, BAAI/BGE-M3 untuk dense, lexical field dan corpus yang sama.\\
+Hukum--chunker & legal-structure dense; recursive; sliding & parent hydration, 512 karakter untuk struktur legal, overlap 51 untuk recursive/sliding, dense indexer.\\
+Hukum--indexer & legal-structure dense; structure-aware hybrid; structure-aware sparse & legal structure-aware chunker, corpus dan context reference yang sama; hybrid memakai RRF.\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+Konfigurasi manual menggunakan satu context reference per slot sehingga perubahan Recall@K dapat dibaca langsung sebagai perubahan cakupan unit acuan. Konfigurasi hukum menggunakan 144 context reference unik; hubungan legal graph dibangun dari 17 relasi berarah dan 24 relasi tak berarah yang tersedia pada benchmark. Pemilihan $K=30$ tidak menyatakan bahwa seluruh kurva telah datar, melainkan menyediakan titik kerja yang sama untuk membandingkan komponen dan meneruskan kandidat ke tahap berikutnya.

@@ -1,0 +1,71 @@
+\section{Rancangan Pipeline Konstruksi Basis Pengetahuan}
+
+\subsection{Batas Sistem dan Artefak Kanonik}
+
+Jalur yang dibangun menerima keluaran parser berupa dokumen kanonik, lalu menjalankan \chunker dan memproyeksikan hasilnya secara paralel ke \indexer serta \kg. Pemisahan ini mengikuti prinsip modular RAG: worker membaca referensi artefak dari object storage, sedangkan pesan hanya membawa identitas run, node, dan kunci idempotensi. Dengan demikian, kegagalan atau pengulangan satu tahap tidak mengharuskan seluruh dokumen diproses ulang.
+
+Empat kontrak menjadi batas integrasi.
+
+\begin{table}[t]
+\centering
+\caption{Kontrak artefak pada pipeline konstruksi basis pengetahuan}
+\label{tab:kontrak-artefak}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}p{0.30\columnwidth}X@{}}
+\toprule
+\textbf{Artefak} & \textbf{Isi dan konsumen}\\
+\midrule
+\code{CanonicalDocument} & Identitas dokumen, blok hierarkis, teks, lokasi sumber, metadata, dan provenance; dibaca \chunker.\\
+\code{CanonicalChunks} & Identitas chunk, tipe retrieval/context, teks, parent, posisi, fingerprint, relasi, dan provenance; dibaca \indexer dan \kg.\\
+\code{CanonicalIndex} & Identitas chunk, teks, metadata, keluaran lexical atau embedding, model, dan versi; dimaterialisasi pada OpenSearch.\\
+\code{CanonicalGraph} & Simpul, sisi bertipe, bukti, cakupan dokumen, dan provenance; dimaterialisasi pada Neo4j.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\profile mengikat datasource, urutan node, implementasi \plugin, konfigurasi, dan versi kontrak. Plugin Registry menyimpan identitas, tipe komponen, versi, skema konfigurasi, dan entry point. Resolver memuat implementasi berdasarkan manifest lalu memvalidasi kompatibilitas sebelum worker menjalankan proses. Penggantian strategi cukup mengubah node \profile atau menambahkan \plugin baru yang memenuhi kontrak; orkestrator tetap membaca dan menulis jenis artefak yang sama.
+
+Setiap eksekusi menyimpan pipeline run dan node attempt, termasuk producer, konfigurasi, jumlah masukan, jumlah keluaran, status, durasi, kesalahan, dan referensi artefak. Metadata ini bukan hasil retrieval, tetapi bagian dari mekanisme reproduksi: dua konfigurasi dapat dibandingkan tanpa kehilangan identitas sumber, model, atau versi \plugin.
+
+\subsection{Strategi Chunker}
+
+\textit{Sliding-window} menggunakan jendela 512 karakter dan overlap 51 karakter. \textit{Recursive} memecah paragraf, kalimat, kata, lalu karakter ketika batas ukuran terlampaui. \textit{Generic structure-aware} memanfaatkan outline parser, memilih target \code{text\_block}, dan membawa heading induk sebagai konteks. \textit{Legal structure-aware} mengikuti hierarki Bab, Bagian, Pasal, Ayat, Huruf, dan Angka. Satu Pasal dapat menjadi parent chunk yang utuh, sedangkan child chunk dipakai sebagai kandidat pencarian ketika isi Pasal terlalu panjang.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{3.7.png}
+\caption{Kontrak \chunker: satu \code{CanonicalDocument} dapat diproses oleh beberapa strategi dan menghasilkan \code{CanonicalChunks}.}
+\label{fig:kontrak-chunker}
+\end{figure}
+
+Parent hydration pada strategi legal memisahkan ketepatan pencarian dari kelengkapan konteks. Child membawa bagian yang cocok dengan kueri; ketika child ditemukan, resolver dapat memuat parent Pasal beserta metadata Bab atau Bagian. Identitas parent, child, dan source block tetap disimpan sehingga konteks tidak dibentuk ulang dari teks yang berbeda.
+
+\subsection{Strategi Indexer}
+
+Indexer hanya memasukkan chunk bertipe \textit{retrieval} atau \textit{both} sebagai kandidat. Chunk bertipe \textit{context} dipertahankan untuk hydration dan sitasi, tetapi tidak dicari mandiri. Sparse indexer menggunakan BM25-compatible lexical fields. Dense indexer membentuk embedding BAAI/BGE-M3 dan menyimpan vector field. Hybrid indexer mengambil dua daftar kandidat dan menggabungkannya dengan Reciprocal Rank Fusion tanpa mengubah artefak chunk.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{3.8.png}
+\caption{Kontrak \indexer dari \code{CanonicalChunks} ke \code{CanonicalIndex}.}
+\label{fig:kontrak-indexer}
+\end{figure}
+
+OpenSearch menjadi penyimpanan proyeksi retrieval, sementara salinan \code{CanonicalIndex} tetap disimpan sebagai artefak. Upsert membawa chunk ID, document ID, profile ID, metadata, model, dan provenance. Jika materialisasi gagal, artefak dapat dikirim ulang tanpa menghitung embedding dari awal. Penghapusan profile atau dokumen juga menghapus proyeksi yang sesuai agar indeks tidak menyisakan konteks lama.
+
+\subsection{Legal Knowledge Graph}
+
+\kg opsional menerima \code{CanonicalChunks} yang sama dengan indexer, bukan hasil pemotongan atau sumber terpisah. Implementasi eksperimen adalah graf legal deterministik. Tipe simpulnya adalah \code{Regulation}, \code{RevisePasal}, dan \code{Pasal}; relasi internal \code{HAS} menjaga struktur dokumen, sedangkan relasi antarperaturan mencakup \code{AMENDS}, \code{ESTABLISHES}, dan \code{REVOKES}. Relasi hanya dibuat jika identitas dan status sumber eksplisit pada metadata.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{3.9.png}
+\caption{Kontrak \kg opsional dari \code{CanonicalChunks} ke \code{CanonicalGraph}.}
+\label{fig:kontrak-kg}
+\end{figure}
+
+Resolver legal tidak mencocokkan nomor Pasal saja. Untuk operasi perubahan, resolver memeriksa pasangan identitas peraturan target dan nomor Pasal; untuk penyisipan, resolver juga melihat nomor tetangga. Isi Pasal hasil resolusi dimuat dari artefak parser. Saat online, hasil top-$K$ indexer menjadi seed, lalu traversal global dibatasi dua lompatan, arah relasi, tipe relasi, dan cakupan profile. Hasil traversal dipetakan kembali ke chunk ID dan dideduplikasi. Dengan mekanisme ini, graf memperluas lingkungan dokumen tanpa menggantikan bukti teks.
+
+\subsection{Klaim yang Diuji}
+
+Rancangan menghasilkan tiga hipotesis operasional. Pertama, pemeliharaan struktur meningkatkan cakupan context reference dibandingkan fixed-window. Kedua, dense retrieval meningkatkan recall ketika kueri memparafrasekan istilah sumber, sedangkan hybrid dapat menguntungkan posisi hit pertama. Ketiga, traversal legal graph memperluas jangkauan dokumen tetangga, tetapi neighborhood recall harus dibaca terpisah dari context-reference recall. Ketiganya diuji dengan konfigurasi, corpus, dan cutoff yang ditetapkan sebelum perbandingan.

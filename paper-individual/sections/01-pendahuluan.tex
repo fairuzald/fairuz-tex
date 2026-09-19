@@ -1,0 +1,37 @@
+\section{Pendahuluan}
+
+Sistem tanya jawab berbasis \textit{large language model} (LLM) membutuhkan sumber eksternal agar jawaban tidak hanya bergantung pada pengetahuan parametrik model. \textit{Retrieval-Augmented Generation} (RAG) menyediakan sumber tersebut dengan mengambil potongan dokumen sebelum proses generasi \cite{lewisRetrievalAugmentedGenerationKnowledgeIntensive2021,huangSurveyRetrievalAugmentedText2024}. Tantangannya bukan sekadar menyimpan dokumen. Dokumen hukum memiliki hierarki Bab, Bagian, Pasal, Ayat, Huruf, dan Angka, sedangkan \textit{User Manual} berisi struktur yang lebih bebas seperti heading, langkah prosedural, tabel, dan peringatan. Jika batas potongan, representasi indeks, atau hubungan antardokumen dibentuk tanpa memperhatikan struktur, konteks yang dibutuhkan dapat terpisah atau sulit ditemukan.
+
+Paper ini mengambil satu kontribusi teknis dari platform \omnirag yang dikembangkan dalam proyek Capstone empat orang. Konteks tersebut hanya diperlukan untuk menempatkan jalur konstruksi basis pengetahuan di antara komponen sistem lain; pembahasan dan evaluasi di sini dibatasi pada pekerjaan individu penulis. Jalur yang dipelajari adalah pemrosesan \textit{offline} dari dokumen kanonik menjadi potongan, indeks, dan graf yang dapat dipakai oleh tahap \retrieval.
+
+Tiga masalah penelitian dirumuskan sebagai berikut.
+
+\begin{enumerate}
+    \item Bagaimana strategi \chunker dapat membentuk unit informasi yang mempertahankan konteks struktural pada dokumen dengan karakteristik berbeda?
+    \item Bagaimana strategi \indexer sparse, dense, dan hybrid memengaruhi kelengkapan serta urutan konteks yang ditemukan?
+    \item Bagaimana \kg dibangun dari unit yang sama dan digunakan untuk memperluas jangkauan dokumen tanpa mengaburkan provenance sumber?
+\end{enumerate}
+
+Kontribusi paper ini adalah (1) rancangan kontrak artefak kanonik yang menghubungkan parser, \chunker, \indexer, dan \kg; (2) implementasi arsitektur \plugin dan \profile yang memungkinkan strategi diganti tanpa mengubah orkestrator; (3) legal \kg deterministik yang merepresentasikan hubungan perubahan peraturan; dan (4) evaluasi terkontrol pada korpus manual produk dan peraturan pendidikan Indonesia. Evaluasi tidak menggabungkan hasil lintas konfigurasi: setiap konfigurasi memakai korpus, pertanyaan, parser, dan model embedding yang sama ketika satu faktor sedang dibandingkan.
+
+Ruang lingkup paper adalah konstruksi basis pengetahuan dan dampaknya pada \retrieval serta generation. Tahap akuisisi dan parsing diperlakukan sebagai pemasok dokumen kanonik, sedangkan komponen percakapan berada di luar klaim penelitian ini. Dengan batas tersebut, bagian berikutnya membahas landasan teknis, rancangan pipeline, metode eksperimen, hasil, dan implikasinya.
+
+\section{Landasan dan Posisi Penelitian}
+
+\subsection{Unit Dokumen dan Chunking}
+
+\textit{Chunking} menentukan unit yang akan disimpan, dicari, dan diberikan kepada generator. Potongan terlalu besar membawa noise dan melampaui anggaran konteks, sedangkan potongan terlalu kecil dapat memisahkan definisi, syarat, pengecualian, atau hubungan antarbagian. Studi NitiBench menunjukkan bahwa pemotongan berbasis struktur dapat memberikan hasil berbeda dari strategi generik pada pertanyaan hukum \cite{akarajaradwongNitiBenchComprehensiveStudy2025}. Karena itu, batas potongan diperlakukan sebagai keputusan desain yang perlu diuji pada domain target, bukan sebagai parameter universal.
+
+Penelitian ini membandingkan \textit{sliding-window}, \textit{recursive}, \textit{generic structure-aware}, dan \textit{legal structure-aware}. Strategi generik memanfaatkan outline parser dan dapat membawa konteks heading induk. Strategi legal memusatkan unit pada Pasal, mempertahankan konteks Bab atau Bagian, lalu dapat membentuk \textit{child chunk} sebagai kandidat dan \textit{parent chunk} sebagai konteks lengkap.
+
+\subsection{Indexer dan Representasi Pencarian}
+
+Indexer leksikal seperti BM25 memberi bobot pada istilah yang jarang dan menormalisasi panjang dokumen \cite{robertsonProbabilisticRelevanceFramework2009}. Dense retrieval memetakan kueri dan unit teks menjadi vektor sehingga parafrasa dapat ditemukan meskipun tidak memiliki kata yang sama \cite{karpukhinDensePassageRetrieval2020}. BAAI/BGE-M3 dipakai sebagai model embedding multibahasa untuk eksperimen ini \cite{chenM3Embedding2024}. Hybrid retrieval menggabungkan daftar leksikal dan dense melalui Reciprocal Rank Fusion \cite{cormackReciprocalRankFusion2009}.
+
+Perbedaan ketiga representasi penting pada dokumen hukum. Nomor peraturan dan nomor Pasal membutuhkan kecocokan literal, sementara pertanyaan pengguna dapat memparafrasekan norma. Skor dense dipahami sebagai kedekatan representasi, bukan putusan bahwa dua teks memiliki makna hukum yang identik. Identitas dokumen, struktur, metadata, dan provenance tetap menjadi dasar yang dapat diperiksa.
+
+\subsection{Knowledge Graph sebagai Proyeksi Pelengkap}
+
+\kg merepresentasikan entitas dan hubungan sebagai graf $G=(V,E)$ dengan sisi bertipe. Graf dapat menampung hubungan eksplisit yang tidak selalu muncul sebagai kemiripan teks, misalnya peraturan yang mengubah, menetapkan, atau mencabut peraturan lain. Paper ini membedakan dukungan graf opsional dari \textit{GraphRAG}: indeks teks tetap menghasilkan seed, lalu graf memperluas lingkungan dokumen seed; graf bukan pengganti pencarian teks atau mekanisme ringkasan komunitas utama \cite{edgeFromLocalGlobalGraph2024,hanRetrievalAugmentedGenerationGraphs2025}.
+
+Desain modular diperlukan karena strategi yang baik pada satu domain belum tentu baik pada domain lain. Modular RAG memisahkan komponen yang dapat diganti, sedangkan kontrak antarmuka menjaga agar perubahan strategi tidak menyebar ke orkestrator \cite{gaoModularRAG2024,garlanIntroductionSoftware1994}. Penelitian ini menerapkan prinsip tersebut pada artefak pengetahuan dan mengujinya melalui hasil retrieval yang terukur.

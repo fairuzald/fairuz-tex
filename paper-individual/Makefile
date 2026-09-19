@@ -1,6 +1,6 @@
 LATEX ?= xelatex
 BIBER ?= biber
-OUTPUT := Omni-RAG_Knowledge_Base_IEEE
+OUTPUT := OMNI-RAG_Individual_Knowledge_Base_IEEE
 BUILD := build
 
 .PHONY: all pdf clean
@@ -17,4 +17,3 @@ pdf:
 
 clean:
 	rm -rf $(BUILD) $(OUTPUT).pdf
-
