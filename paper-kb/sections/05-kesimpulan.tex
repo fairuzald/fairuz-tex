@@ -1,0 +1,11 @@
+\section{Kesimpulan}
+
+Paper ini memisahkan kontribusi pembangunan basis pengetahuan dari keseluruhan cerita Capstone OMNI-RAG. Pada proyek empat orang tersebut, jalur offline menerima dokumen yang telah diparsing dan membentuk unit, indeks, serta graf yang dipakai bersama oleh aplikasi chatbot. Kontrak \canon{CanonicalDocument}, \canon{CanonicalChunks}, \canon{CanonicalIndex}, dan \canon{CanonicalGraph} membuat artefak dapat dipertukarkan, sedangkan \plugin{}, \profile{}, pipeline run, attempt, dan provenance menjaga ekstensibilitas serta keterulangan eksperimen.
+
+Hasil menunjukkan bahwa \textit{structure-aware chunking} meningkatkan coverage pada dua domain, tetapi strategi terbaik bergantung pada struktur sumber. Pada cutoff 30, konfigurasi structure-aware mencapai recall 0,740 pada \textit{User Manual} dan legal structure-aware mencapai 0,6854 pada peraturan. Dense indexer memperoleh recall tertinggi pada kedua korpus, yaitu 0,785 dan 0,6854. Hybrid menghasilkan MRR hukum tertinggi, 0,5439, sehingga coverage dan posisi hit pertama perlu diperlakukan sebagai tujuan yang berbeda. Traversal \kg{} hingga kedalaman dua mencapai recall lingkungan 1,0000 pada konfigurasi sliding-window, tetapi metrik tersebut tidak menggantikan recall context reference.
+
+Kontribusi teknis ini mendukung rancangan platform multidomain: komponen baru dapat ditambahkan melalui registry dan kontrak artefak tanpa mengubah orkestrator inti, sementara monitoring berbasis run dan provenance membuat hasil dapat diaudit. Pengembangan lanjutan perlu menguji kombinasi komponen secara factorial, memperluas korpus serta pertanyaan pengguna nyata, mengukur biaya dan latency, dan menambahkan benchmark kualitas relasi graf serta kompatibilitas versi \plugin{}.
+
+\section*{Ucapan Terima Kasih}
+Penulis mengucapkan terima kasih kepada anggota tim Capstone, project owner, dan pembimbing yang memungkinkan pengembangan OMNI-RAG sebagai sistem terintegrasi. Paper ini menyajikan fokus kontribusi penulis pada pembentukan basis pengetahuan, dengan tetap menempatkan komponen tersebut dalam arsitektur tim secara utuh.
+

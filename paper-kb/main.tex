@@ -1,0 +1,54 @@
+\documentclass[conference,a4paper,10pt]{IEEEtran}
+
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{amsmath,amssymb,booktabs,graphicx,microtype,tabularx,array,url,xurl,xspace}
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=4,giveninits=true,doi=false,url=false,isbn=false]{biblatex}
+\addbibresource{../capstone/proposal-tex/src/references.bib}
+
+\graphicspath{{../src/images/}{../src/images/manual/}{../src/images/experiments/customer_service_revision/final_eda/}{../src/images/experiments/legal_revision/final_eda/}{../capstone/proposal-tex/src/assets/}{../capstone/proposal-tex/src/assets/diagrams/}}
+
+\newcommand{\plugin}{\textit{plugin}\xspace}
+\newcommand{\chunker}{\textit{chunker}\xspace}
+\newcommand{\indexer}{\textit{indexer}\xspace}
+\newcommand{\kg}{\textit{knowledge graph}\xspace}
+\newcommand{\artifact}{\textit{artifact}\xspace}
+\newcommand{\profile}{\textit{profile}\xspace}
+\newcommand{\retrieval}{\textit{retrieval}\xspace}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\omnirag}{OMNI-RAG}
+\newcommand{\canon}[1]{\texttt{#1}}
+
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.08}
+
+\title{Basis Pengetahuan Modular OMNI-RAG:\\
+Eksperimen Chunker, Indexer, dan Knowledge Graph Multidomain}
+
+\author{\IEEEauthorblockN{Moh Fairuz Alauddin Yahya}
+\IEEEauthorblockA{Program Studi Informatika, Institut Teknologi Bandung\\
+Bandung, Indonesia\\
+13522057}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Sebuah proyek Capstone beranggotakan empat orang membangun OMNI-RAG, yaitu platform \textit{Retrieval-Augmented Generation} (RAG) multidomain untuk chatbot asisten hukum peraturan perundang-undangan Indonesia. Paper ini memusatkan kontribusi penulis pada jalur offline pembentukan basis pengetahuan: \textit{chunker}, \textit{indexer}, dan pembangun \textit{knowledge graph} yang dipasang sebagai \plugin. Kontrak \textit{canonical artifact} memisahkan orkestrator dari implementasi komponen, sedangkan \textit{profile}, pipeline run, attempt, dan provenance digunakan untuk memilih konfigurasi serta mereproduksi dan memantau setiap proses. Eksperimen \textit{one factor at a time} menggunakan sembilan \textit{User Manual} Netgear (1.400 halaman, 200 pertanyaan bilingual) dan korpus peraturan pendidikan (256 dokumen, 25 pertanyaan). Pada $K=30$, \textit{structure-aware chunker} mencapai \textit{recall} 0,740 pada \textit{User Manual} dan \textit{legal structure-aware} mencapai 0,6854 pada korpus hukum. \textit{Dense indexer} BAAI/BGE-M3 mencapai \textit{recall} 0,785 pada \textit{User Manual} dan 0,6854 pada hukum, sedangkan \textit{hybrid} memiliki MRR hukum tertinggi, 0,5439. Traversal \kg{} hingga kedalaman dua mencapai \textit{recall} lingkungan 1,0000 pada konfigurasi \textit{sliding-window}. Hasil menunjukkan bahwa kontrak dan \plugin{} memungkinkan strategi diganti secara terisolasi, tetapi konfigurasi terbaik tetap bergantung pada struktur dokumen dan tujuan metrik.
+\end{abstract}
+
+\begin{IEEEkeywords}
+OMNI-RAG, basis pengetahuan, \plugin, \textit{chunking}, \textit{indexing}, \textit{knowledge graph}, RAG.
+\end{IEEEkeywords}
+
+\input{sections/01-pendahuluan}
+\input{sections/02-konteks-dan-rancangan}
+\input{sections/03-metode-eksperimen}
+\input{sections/04-hasil-dan-pembahasan}
+\input{sections/05-kesimpulan}
+
+\balance
+\printbibliography[title={Daftar Pustaka}]
+\end{document}

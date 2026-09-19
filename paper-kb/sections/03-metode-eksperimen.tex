@@ -1,0 +1,68 @@
+\section{Metode dan Rancangan Eksperimen}
+
+\subsection{Lingkungan Implementasi}
+
+Pipeline dijalankan pada Python 3.13 dengan layanan penyimpanan metadata, object storage, antrean pesan, OpenSearch, dan Neo4j. OpenSearch digunakan untuk proyeksi sparse dan dense, sedangkan Neo4j digunakan untuk proyeksi graf. Embedding dibuat dengan BAAI/BGE-M3 karena model tersebut mendukung masukan multibahasa dan panjang \cite{chenM3Embedding2024}. Seluruh konfigurasi memakai API, worker, model, dan jumlah kandidat yang sama ketika satu faktor sedang dibandingkan.
+
+\begin{table}[t]
+\centering
+\caption{Komponen lingkungan eksperimen}
+\label{tab:lingkungan-paper}
+\scriptsize
+\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Komponen} & \textbf{Konfigurasi}\\
+\midrule
+Runtime & Python 3.13, worker asinkron, Docker\\
+Penyimpanan operasional & PostgreSQL dan object storage\\
+Pencarian & OpenSearch 3.3.0 untuk lexical dan dense\\
+Graf & Neo4j 5.26\\
+Embedding & BAAI/BGE-M3\\
+Protokol & OFAT, seed dan artefak dibekukan per run\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Korpus dan Pertanyaan}
+
+\textit{User Manual} terdiri atas sembilan manual produk Netgear: CM2000, LM1200, R6350, R7000, RAX120, RAX50, RAXE500, RBK852, dan XR500. Total korpus berjumlah 1.400 halaman. Dari kandidat konteks yang disampling secara terstratifikasi berdasarkan dokumen dan posisi halaman, dibekukan 100 slot menggunakan seed \code{20260831}. Setiap slot menghasilkan satu pertanyaan bahasa Inggris dan satu pertanyaan bahasa Indonesia sehingga terdapat 200 pertanyaan, tetapi dua pertanyaan dalam satu slot berbagi context reference yang sama. Pertanyaan Indonesia menguji kemampuan model multibahasa pada dokumen sumber berbahasa Inggris.
+
+Korpus hukum dibatasi pada peraturan bidang pendidikan Indonesia. Datasource eksperimen berisi 256 dokumen: 49 dokumen memuat context reference dan 207 dokumen noise yang dipilih secara terstratifikasi berdasarkan jenis, status, tahun, dan panjang. Dataset memiliki 25 pertanyaan yang disusun untuk eksperimen dan diverifikasi ahli, 148 baris reference, 144 konteks unik, dan 45 dokumen seed. Korpus dan pemetaan reference dibekukan sebelum perbandingan strategi.
+
+\begin{table*}[t]
+\centering
+\caption{Cakupan korpus dan unit evaluasi}
+\label{tab:korpus-paper}
+\begin{tabularx}{0.96\textwidth}{@{}p{0.18\textwidth}p{0.24\textwidth}p{0.22\textwidth}X@{}}
+\toprule
+\textbf{Korpus} & \textbf{Dokumen} & \textbf{Pertanyaan} & \textbf{Reference dan tujuan}\\
+\midrule
+User Manual & 9 manual Netgear, 1.400 halaman & 200, terdiri atas 100 pasangan Inggris-Indonesia & Satu context reference per slot; menguji pemeliharaan struktur dan retrieval lintas bahasa.\\
+Peraturan hukum & 256 dokumen, 49 dokumen reference dan 207 noise & 25 pertanyaan, 148 baris reference dan 144 konteks unik & Menguji unit Pasal/Ayat, pencarian lintas peraturan, dan perluasan lingkungan graf.\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Protokol Perbandingan}
+
+Eksperimen memakai pendekatan \textit{one factor at a time} (OFAT). Pada kelompok \chunker{}, datasource, parser, model embedding, dan \indexer{} dibuat tetap; hanya strategi segmentasi yang diganti. Pada kelompok \indexer{}, \chunker{}, datasource, parser, dan embedding dibuat tetap; hanya strategi sparse, dense, atau hybrid yang diganti. Jalur retrieval langsung menonaktifkan traversal \kg{} sehingga perbedaan hasil dapat dikaitkan dengan komponen yang sedang diuji. Eksperimen graf dijalankan terpisah pada graf hukum global.
+
+Pada \textit{User Manual}, \chunker{} dibandingkan dengan batas 512 karakter. \textit{Sliding-window} dan \textit{recursive} memakai overlap 51 karakter, sedangkan \textit{structure-aware} menggunakan target text block dan membawa parent context. Pada peraturan, \textit{legal structure-aware} memusatkan pemotongan pada Pasal dan memakai parent hydration. Semua \indexer{} dense menggunakan BAAI/BGE-M3, dan hybrid menggabungkan kanal lexical serta dense dengan RRF.
+
+Cutoff kandidat disapu dari 5 hingga 60 dengan interval 5. $K=30$ digunakan sebagai cutoff bersama karena menyediakan kandidat bagi tahap downstream tanpa meneruskan seluruh ekor ranking. Ketika dampak pada jawaban dibaca, sepuluh evidence teratas digunakan sebagai $K=10$. Pemilihan konfigurasi didasarkan pada recall, sedangkan precision, MRR, dan NDCG dipakai sebagai diagnosis kepadatan dan posisi hasil. Perancangan ini mengikuti kebutuhan evaluasi lintas korpus: konfigurasi dan sumber harus dikunci sebelum hasil dibandingkan \cite{thakurBEIRHeterogeneousBenchmark2021}.
+
+\subsection{Metrik}
+
+Untuk pertanyaan $q$, himpunan context reference dinyatakan sebagai $G_q$, sedangkan referensi yang dicakup oleh $K$ kandidat dinyatakan sebagai $C_q(K)$. Recall dihitung dengan
+\begin{equation}
+R_q@K=\frac{|G_q\cap C_q(K)|}{|G_q|}.
+\label{eq:recall-paper}
+\end{equation}
+Precision menggunakan penyebut $K$, sementara MRR memberi bobot pada posisi reference pertama dan NDCG memberi bobot lebih besar pada hasil relevan di posisi awal. Nilai agregat adalah rata-rata seluruh pertanyaan pada korpus terkait.
+
+Untuk graf, $N_q$ adalah himpunan dokumen tetangga yang menjadi ground truth dan $H_q(K)$ adalah dokumen yang dicapai setelah seed retrieval dan traversal hingga kedalaman dua. Metrik jangkauan lingkungan dihitung dengan
+\begin{equation}
+R^{\mathrm{KG}}_q@K=\frac{|N_q\cap H_q(K)|}{|N_q|}.
+\label{eq:kg-recall-paper}
+\end{equation}
+Metrik ini tidak menggantikan recall context reference: satu dokumen yang ditemukan dapat membuka beberapa tetangga meskipun reference teksnya bukan kandidat pertama.

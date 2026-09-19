@@ -31,3 +31,4 @@ src/main.bbl-SAVE-ERROR
 
 # Separate paper build intermediates
 paper/build/
+paper-kb/build/
