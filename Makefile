@@ -12,7 +12,7 @@ DIAGRAM_SRC := $(wildcard src/diagrams/*.mmd)
 DIAGRAM_OUT := $(patsubst src/diagrams/%.mmd,src/generated/diagrams/%.png,$(DIAGRAM_SRC))
 
 REPORT_OUTPUT_DIR := output/pdf
-REPORT_SIGNED_PDF := $(REPORT_OUTPUT_DIR)/IF4092_Laporan_SidangTA_13522057_22-September-2026-dengan-tanda-tangan.pdf
+REPORT_SIGNED_PDF := $(REPORT_OUTPUT_DIR)/IF4092_Laporan_SidangTA_13522057_21-September-2026-dengan-tanda-tangan.pdf
 REPORT_UNSIGNED_PDF := $(REPORT_OUTPUT_DIR)/IF4092_Laporan_SidangTA_13522057_22-September-2026-tanpa-tanda-tangan.pdf
 
 .PHONY: all pdf pdf-variants pdf-signed pdf-unsigned paper poster diagrams watch clean help

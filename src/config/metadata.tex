@@ -29,7 +29,13 @@
 \newcommand{\SubmissionMonth}{September}
 \newcommand{\SubmissionYear}{2026}
 \newcommand{\SubmissionCity}{Bandung}
-\newcommand{\ApprovalDate}{22 September 2026}
+% The signed submission is dated 21 September 2026.  Keep the unsigned
+% reference copy on 22 September 2026 through its dedicated wrapper.
+\ifdefined\ReportUnsigned
+    \newcommand{\ApprovalDate}{22 September 2026}
+\else
+    \newcommand{\ApprovalDate}{21 September 2026}
+\fi
 \newcommand{\AdvisorName}{Dr. Agung Dewandaru, S.T., M.Sc.}
 \newcommand{\AdvisorNIP}{122110013}
 \newcommand{\SecondAdvisorName}{I Wayan Gunada, S.H., M.H.}
