@@ -1,18 +1,21 @@
 # Bilingual Abstract PDFs
 
-This directory contains the source for two standalone abstract PDFs derived
-from `src/IF4092_Laporan_SidangTA_13522057.pdf` and the supporting material in
-`src/`:
+This directory contains two standalone abstract PDFs that use the same XeLaTeX
+font, report class, margins, heading hierarchy, and body typography as the
+individual report. The Indonesian version is included directly from the
+report's `src/frontmatter/abstract.tex`; the English version is a faithful,
+natural translation of that same abstract rather than a separately shortened
+summary:
 
 - `output/pdf/abstract-indonesia.pdf`
 - `output/pdf/abstract-english.pdf`
-
-The English abstract is written as an independent academic text rather than as
-a sentence-by-sentence translation of the Indonesian version. Both abstracts
-use the same scope, datasets, metrics, and results as the individual report.
 
 Regenerate both files with:
 
 ```bash
 python3 abstract/build_abstracts.py
 ```
+
+The builder invokes XeLaTeX with the same shared configuration used by the
+report, so it falls back to TeX Gyre Termes in environments without Times New
+Roman instead of substituting a separate sans-serif font.
