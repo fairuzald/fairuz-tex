@@ -11,7 +11,11 @@ MMDC := node_modules/@mermaid-js/mermaid-cli/src/cli.js
 DIAGRAM_SRC := $(wildcard src/diagrams/*.mmd)
 DIAGRAM_OUT := $(patsubst src/diagrams/%.mmd,src/generated/diagrams/%.png,$(DIAGRAM_SRC))
 
-.PHONY: all pdf paper poster diagrams watch clean help
+REPORT_OUTPUT_DIR := output/pdf
+REPORT_SIGNED_PDF := $(REPORT_OUTPUT_DIR)/IF4092_Laporan_SidangTA_13522057_22-September-2026-dengan-tanda-tangan.pdf
+REPORT_UNSIGNED_PDF := $(REPORT_OUTPUT_DIR)/IF4092_Laporan_SidangTA_13522057_22-September-2026-tanpa-tanda-tangan.pdf
+
+.PHONY: all pdf pdf-variants pdf-signed pdf-unsigned paper poster diagrams watch clean help
 
 all: pdf
 
@@ -29,6 +33,18 @@ pdf: diagrams
 	@test -f $(TEXDIR)/$(MAIN).pdf || { echo "Error: $(TEXDIR)/$(MAIN).pdf was not produced."; exit 1; }
 	cp $(TEXDIR)/$(MAIN).pdf $(TEXDIR)/$(OUTPUT).pdf
 	rm -f $(TEXDIR)/$(MAIN).pdf
+
+pdf-variants: pdf-signed pdf-unsigned
+
+pdf-signed: diagrams
+	@mkdir -p $(REPORT_OUTPUT_DIR)
+	cd $(TEXDIR) && $(LATEXMK) -pdfxe -interaction=nonstopmode -halt-on-error -file-line-error $(MAIN).tex
+	cp $(TEXDIR)/$(MAIN).pdf $(REPORT_SIGNED_PDF)
+
+pdf-unsigned: diagrams
+	@mkdir -p $(REPORT_OUTPUT_DIR)
+	cd $(TEXDIR) && $(LATEXMK) -pdfxe -interaction=nonstopmode -halt-on-error -file-line-error main-unsigned.tex
+	cp $(TEXDIR)/main-unsigned.pdf $(REPORT_UNSIGNED_PDF)
 
 diagrams: $(DIAGRAM_OUT)
 
@@ -65,6 +81,7 @@ help:
 	@printf '%s\n' '  make paper  Compile the short article in paper/'
 	@printf '%s\n' '  make        Compile the proposal PDF'
 	@printf '%s\n' '  make pdf    Compile the proposal PDF to src/IF4092_Laporan_SidangTA_13522057.pdf'
+	@printf '%s\n' '  make pdf-variants Build dated signed and unsigned report PDFs under output/pdf/'
 	@printf '%s\n' '  make diagrams Render Mermaid diagram sources to PNG assets'
 	@printf '%s\n' '  make watch  Watch sources and refresh the PDF preview'
 	@printf '%s\n' '  make clean  Remove generated LaTeX files'

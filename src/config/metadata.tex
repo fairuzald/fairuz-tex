@@ -4,19 +4,32 @@
 \newcommand{\ProjectTitle}{Sistem Chatbot OMNI-RAG Multidomain: Studi Kasus Peraturan Perundang-Undangan \mbox{Indonesia} dan \emph{User Manual}}
 \newcommand{\AuthorName}{Moh Fairuz Alauddin Yahya}
 \newcommand{\StudentID}{13522057}
-\newcommand{\AuthorSignature}{%
-    \begingroup
-    \settowidth{\dimen0}{\AuthorName}%
-    \makebox[\dimen0][c]{\includegraphics[width=2.8cm]{images/signature-moh-fairuz.png}}%
-    \endgroup
-}
+% The regular report build includes the author's signature.  The unsigned
+% variant defines \ReportUnsigned before loading main.tex; keeping the same
+% vertical footprint preserves the layout of the declaration pages.
+\newif\ifReportIncludesAuthorSignature
+\ifdefined\ReportUnsigned
+    \ReportIncludesAuthorSignaturefalse
+\else
+    \ReportIncludesAuthorSignaturetrue
+\fi
+\ifReportIncludesAuthorSignature
+    \newcommand{\AuthorSignature}{%
+        \begingroup
+        \settowidth{\dimen0}{\AuthorName}%
+        \makebox[\dimen0][c]{\includegraphics[width=2.8cm]{images/signature-moh-fairuz.png}}%
+        \endgroup
+    }
+\else
+    \newcommand{\AuthorSignature}{\rule{0pt}{2.8cm}}
+\fi
 \newcommand{\SubmissionPurpose}{Disusun sebagai syarat kelulusan tingkat sarjana}
 \newcommand{\CourseInfo}{Program Sarjana Teknik Informatika}
 \newcommand{\DepartmentInfo}{PROGRAM STUDI TEKNIK INFORMATIKA\\SEKOLAH TEKNIK ELEKTRO \& INFORMATIKA\\INSTITUT TEKNOLOGI BANDUNG}
 \newcommand{\SubmissionMonth}{September}
 \newcommand{\SubmissionYear}{2026}
 \newcommand{\SubmissionCity}{Bandung}
-\newcommand{\ApprovalDate}{18 September 2026}
+\newcommand{\ApprovalDate}{22 September 2026}
 \newcommand{\AdvisorName}{Dr. Agung Dewandaru, S.T., M.Sc.}
 \newcommand{\AdvisorNIP}{122110013}
 \newcommand{\SecondAdvisorName}{I Wayan Gunada, S.H., M.H.}
