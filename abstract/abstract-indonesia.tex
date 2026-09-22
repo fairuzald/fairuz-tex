@@ -1,0 +1,29 @@
+\clearpage
+\chapter*{ABSTRAK}
+\addcontentsline{toc}{chapter}{ABSTRAK}
+
+\begin{center}
+    \begin{singlespace}
+        {\large\bfseries KONSTRUKSI BASIS PENGETAHUAN MODULAR PADA OMNI-RAG \emph{MULTI-DOMAIN}: EVALUASI \emph{CHUNKER}, \emph{INDEXER}, DAN \emph{LEGAL KNOWLEDGE GRAPH}}
+
+        {\normalfont\normalsize Oleh:}
+
+        {\bfseries Moh Fairuz Alauddin Yahya\\
+        Agung Dewandaru\\
+        I Wayan Gunada}
+    \end{singlespace}
+\end{center}
+
+\begin{singlespace}
+    \small
+
+    Sistem \emph{Retrieval-Augmented Generation} (RAG) harus mengubah dokumen yang beragam menjadi unit informasi yang dapat dicari sebelum model bahasa menyusun jawaban. Paper ini menyajikan pendekatan modular berbasis representasi kanonik dan antarmuka \emph{plugin} umum untuk konstruksi basis pengetahuan pada OMNI-RAG. Fokus evaluasi bukan rincian mekanisme \emph{plugin}, melainkan perbandingan strategi \emph{chunker}, \emph{indexer}, dan \emph{knowledge graph} ketika hanya satu komponen diubah.
+
+    Eksperimen \emph{one factor at a time} menggunakan sembilan \emph{User Manual} Netgear dengan total 1.400 halaman dan 200 pertanyaan bilingual, serta korpus hukum berisi 256 dokumen dan 25 pertanyaan terverifikasi. Pada $K=30$, \emph{structure-aware hybrid} menghasilkan \emph{recall} 0,740 pada \emph{User Manual}, sedangkan \emph{structure-aware dense} menghasilkan 0,785. Pada korpus hukum, \emph{legal-structure dense} menghasilkan \emph{recall} 0,6854, sementara \emph{structure-aware hybrid} memiliki \emph{MRR} tertinggi, yaitu 0,5439. Traversal \emph{knowledge graph} hingga kedalaman dua mencapai \emph{neighborhood recall} 1,0000 pada konfigurasi \emph{sliding}.
+
+    Hasil menunjukkan bahwa pemeliharaan struktur dan pencocokan semantik meningkatkan cakupan konteks, tetapi konfigurasi terbaik bergantung pada \emph{domain} dan metrik yang diprioritaskan. Temuan ini memperlihatkan bahwa abstraksi \emph{plugin} dapat menjadi batas pertukaran strategi sekaligus pengendali eksperimen tanpa mengubah orkestrator inti.
+
+    \textit{\textbf{Kata kunci}:} OMNI-RAG, \emph{Retrieval-Augmented Generation}, konstruksi basis pengetahuan, \emph{chunking}, \emph{indexer}, \emph{knowledge graph}, arsitektur \emph{plugin}.
+\end{singlespace}
+
+\clearpage

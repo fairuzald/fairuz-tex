@@ -1,26 +1,27 @@
 \clearpage
 \chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{ABSTRACT}
 
 \begin{center}
     \begin{singlespace}
-        {\large\bfseries DEVELOPMENT OF A PLUGIN-BASED KNOWLEDGE-BASE CONSTRUCTION PIPELINE FOR A MULTI-DOMAIN OMNI-RAG SYSTEM: CASE STUDIES OF INDONESIAN REGULATIONS AND USER MANUALS}
+        {\large\bfseries MODULAR KNOWLEDGE-BASE CONSTRUCTION FOR MULTI-DOMAIN OMNI-RAG: EVALUATING CHUNKERS, INDEXERS, AND A LEGAL KNOWLEDGE GRAPH}
 
         {\normalfont\normalsize By:}
 
-        {\bfseries \AuthorName}
+        {\bfseries Moh Fairuz Alauddin Yahya\\
+        Agung Dewandaru\\
+        I Wayan Gunada}
     \end{singlespace}
 \end{center}
 
 \begin{singlespace}
     \small
 
-    Retrieval-Augmented Generation (RAG) systems must locate relevant information in documents before a language model formulates an answer. This challenge is greater in a multi-domain architecture because Indonesian education regulations and Netgear user manuals differ in structure, terminology, and search requirements. Structure-agnostic document chunking can break context or discard source identity, while indexing and relation-building strategies tailored to one domain are difficult to maintain when new sources are added. A pipeline is therefore needed that preserves information traceability while remaining extensible without modifying the core code.
+    Retrieval-Augmented Generation (RAG) systems must turn heterogeneous documents into searchable information units before a language model can produce an answer. This paper presents a modular approach based on a canonical representation and a common \emph{plugin} interface for knowledge-base construction in OMNI-RAG. The evaluation does not examine plugin internals; instead, it compares \emph{chunker}, \emph{indexer}, and \emph{knowledge-graph} strategies while changing one component at a time.
 
-    This research designs and implements a knowledge-base construction pipeline for OMNI-RAG as a plugin-based multi-domain architecture. Knowledge-base construction comprises three main processes: partitioning documents into smaller information units while preserving context; projecting those units into sparse, dense, or hybrid search indexes; and forming entities and relations in a knowledge graph from the same canonical chunks. The implementation provides four chunker strategies, three indexer strategies, and two knowledge-graph strategies, namely a legal graph and an LLM graph, through uniform contracts. Canonical artifacts, provenance, profiles, manifests, and compatibility contracts serve as integration boundaries between components. With this design, chunker, indexer, and knowledge-graph strategies can be selected or added through plugins without modifying the core orchestrator. Context PII, guardrail, and history-compactor components complement conversational-context management.
+    The experiments use nine Netgear \emph{User Manuals} comprising 1,400 pages and 200 bilingual questions, together with a legal corpus containing 256 documents and 25 verified questions. At $K=30$, the \emph{structure-aware hybrid} configuration reaches a recall of 0.740 on the User Manual corpus, while \emph{structure-aware dense} reaches 0.785. On the legal corpus, \emph{legal-structure dense} reaches a recall of 0.6854, whereas \emph{structure-aware hybrid} achieves the highest MRR at 0.5439. A knowledge-graph traversal to depth two reaches a neighborhood recall of 1.0000 with the \emph{sliding} configuration.
 
-    Experiments are conducted on two use cases. The User Manual use case covers nine Netgear manuals totaling 1,400 pages and 200 question rows derived from 100 slots in English and Indonesian. The legal use case uses 25 questions designed for the experiments and verified by an expert. The legal datasource contains 256 documents: 49 documents with context references and 207 noise documents selected through stratified sampling. Retrieval uses native parser text without OCR, compares five configurations, disables the reranker and knowledge graph on the direct path, and evaluates cutoffs up to $K = 60$. Recall is the primary metric, while precision, MRR, and NDCG are supporting metrics. Generation uses the ten highest-ranked evidence items ($K = 10$) and evaluates correctness and faithfulness with the Ragas framework and \texttt{openai/gpt-5.6-luna} under the reasoning settings specified for each run.
-
-    On the User Manual corpus, structure-aware hybrid outperforms the sliding-window baseline with recall of 0.740 versus 0.685 at $K = 30$. Structure-aware dense is the top indexer configuration with recall of 0.785, higher than the structure-aware sparse baseline at 0.420. On the legal use case, legal-structure dense achieves recall of 0.6854, outperforming the sliding baseline at 0.6345 and the sparse baseline at 0.6381. At $K = 10$, structure-aware dense yields generation correctness/faithfulness of 0.788/0.958 on User Manual documents, whereas legal-structure dense yields 0.690/0.972 on legal documents. The legal knowledge-graph experiment uses a legal graph and traverses the global neighborhood to depth two. The highest neighborhood-recall score is 1.000 for sliding, but this metric is interpreted separately from context-reference recall. These results indicate that preserving structure and matching semantics improve context coverage, while differences in precision, result ordering, and answer quality must be interpreted according to the purpose of each stage. The findings apply to the corpus, questions, and experimental configurations used.
+    The results indicate that preserving document structure and matching semantics improve context coverage, but the best configuration depends on the domain and the metric being prioritized. They also show that a \emph{plugin} abstraction can serve as both a strategy-exchange boundary and an experimental control mechanism without changing the core orchestrator.
 
     \textit{\textbf{Keywords}:} OMNI-RAG, Retrieval-Augmented Generation, knowledge-base construction, chunking, indexer, knowledge graph, plugin architecture.
 \end{singlespace}

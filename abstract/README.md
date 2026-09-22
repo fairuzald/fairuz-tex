@@ -2,10 +2,9 @@
 
 This directory contains two standalone abstract PDFs that use the same XeLaTeX
 font, report class, margins, heading hierarchy, and body typography as the
-individual report. The Indonesian version is included directly from the
-report's `src/frontmatter/abstract.tex`; the English version is a faithful,
-natural translation of that same abstract rather than a separately shortened
-summary:
+individual report. Their content follows the IEEE paper rather than the full
+individual report, with a natural English version prepared independently from
+the Indonesian wording:
 
 - `output/pdf/abstract-indonesia.pdf`
 - `output/pdf/abstract-english.pdf`
