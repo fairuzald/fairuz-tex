@@ -52,12 +52,12 @@ Metrik ini mengukur jangkauan lingkungan, bukan keberhasilan menemukan setiap co
 
 \subsection{Konfigurasi yang Dibandingkan}
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Konfigurasi OFAT pada dua korpus}
 \label{tab:konfigurasi}
 \scriptsize
-\begin{tabularx}{\textwidth}{@{}p{0.18\textwidth}p{0.31\textwidth}X@{}}
+\begin{tabularx}{\columnwidth}{@{}p{0.22\columnwidth}p{0.30\columnwidth}X@{}}
 \toprule
 \textbf{Korpus dan kelompok} & \textbf{Level yang dibandingkan} & \textbf{Parameter tetap}\\
 \midrule
@@ -67,6 +67,6 @@ Hukum--chunker & legal-structure dense; recursive; sliding & parent hydration, 5
 Hukum--indexer & legal-structure dense; structure-aware hybrid; structure-aware sparse & legal structure-aware chunker, corpus dan context reference yang sama; hybrid memakai RRF.\\
 \bottomrule
 \end{tabularx}
-\end{table*}
+\end{table}
 
 Konfigurasi manual menggunakan satu context reference per slot sehingga perubahan Recall@K dapat dibaca langsung sebagai perubahan cakupan unit acuan. Konfigurasi hukum menggunakan 144 context reference unik; hubungan legal graph dibangun dari 17 relasi berarah dan 24 relasi tak berarah yang tersedia pada benchmark. Pemilihan $K=30$ tidak menyatakan bahwa seluruh kurva telah datar, melainkan menyediakan titik kerja yang sama untuk membandingkan komponen dan meneruskan kandidat ke tahap berikutnya.
