@@ -35,10 +35,14 @@ def build(source_name: str, output_name: str) -> Path:
 
 
 def main() -> None:
-    indonesia = build("main-indonesia.tex", "abstract-indonesia.pdf")
-    english = build("main-english.tex", "abstract-english.pdf")
-    print(f"Created {indonesia}")
-    print(f"Created {english}")
+    variants = [
+        ("main-indonesia.tex", "abstract-indonesia.pdf"),
+        ("main-english.tex", "abstract-english.pdf"),
+        ("main-report-indonesia.tex", "abstract-laporan-indonesia.pdf"),
+        ("main-report-english.tex", "abstract-laporan-english.pdf"),
+    ]
+    for source_name, output_name in variants:
+        print(f"Created {build(source_name, output_name)}")
 
 
 if __name__ == "__main__":

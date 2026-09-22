@@ -1,15 +1,20 @@
 # Bilingual Abstract PDFs
 
-This directory contains two standalone abstract PDFs that use the same XeLaTeX
-font, report class, margins, heading hierarchy, and body typography as the
-individual report. Their content follows the IEEE paper rather than the full
-individual report, with a natural English version prepared independently from
-the Indonesian wording:
+This directory contains two content variants, each in Indonesian and English.
+All four standalone PDFs use the same XeLaTeX font, report class, margins,
+heading hierarchy, and body typography as the individual report.
+
+Paper variant:
 
 - `output/pdf/abstract-indonesia.pdf`
 - `output/pdf/abstract-english.pdf`
 
-Regenerate both files with:
+Report variant:
+
+- `output/pdf/abstract-laporan-indonesia.pdf`
+- `output/pdf/abstract-laporan-english.pdf`
+
+Regenerate all four files with:
 
 ```bash
 python3 abstract/build_abstracts.py
